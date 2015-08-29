@@ -1,0 +1,6 @@
+development:
+  url: redis://127.0.0.1:6379/1
+test:
+  url: redis://127.0.0.1:6379/2
+production:
+  url: redis://127.0.0.1:6379/3

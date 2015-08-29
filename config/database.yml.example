@@ -1,0 +1,22 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+
+development:
+  <<: *default
+  database: kano_development
+  username: postgres_user
+  password: password1
+
+test:
+  <<: *default
+  database: kano_test
+  username: postgres_user
+  password: password2
+
+production:
+  <<: *default
+  database: kano_production
+  username: postgres_user
+  password: password3

@@ -1,0 +1,49 @@
+doctype html
+html
+  head
+    meta[name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"]
+    title
+      = t(:logo_name)
+    = stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'application', 'data-turbolinks-track' => true
+    = csrf_meta_tags
+  body
+    nav#brand_navbar.navbar.navbar-inverse.navbar-fixed-top[role="navigation"]
+      .container-fluid
+        .navbar-header
+          a.navbar-brand.logo_brand[href="/"]
+            span.logo
+              = t(:logo_name)
+          a.visible-xs-inline-block.btn.navbar-btn.pull-right.nav_toggle[type="button" data-toggle="collapse" data-target="#navbar-collapse"]
+            span.sr-only
+              | Toggle navigation
+            span.fa-icon
+              = fa_icon('magic', class: 'navbar-toggle-button')
+        #navbar-collapse.collapse.navbar-collapse
+          ul.nav.navbar-nav.navbar-right
+            li
+              = link_to 'Item1', '#'
+            li
+              = link_to 'Item2', '#'
+            li.devider
+              li
+                = link_to 'Hi, Ming', '#'
+    .main
+      - if content_for?(:container)
+        .container
+          /= render_before_content
+          = yield :container
+      - elsif content_for?(:row)
+        .container
+          .row
+            /= render_before_content
+            = yield :row
+      - elsif content_for?(:grid)
+        .container
+          .row
+            .col-md-6.col-md-offset-3
+              /= render_before_content
+              = yield :grid
+      - else
+        /= render_before_content
+        = yield

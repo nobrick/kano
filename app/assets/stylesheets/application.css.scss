@@ -1,0 +1,132 @@
+/*
+ *= require font-awesome
+ *= require_tree .
+ *= require_self
+ */
+
+@import 'global';
+@import 'font-awesome';
+@import 'bootstrap';
+@import 'bourbon';
+/*@import 'fonts';*/
+
+/* Elements style */
+body {
+  padding-top: 65px;
+  color: #555555;
+}
+
+a {
+  color: #555555;
+  text-decoration: none;
+  &:hover, &:focus {
+    color: black;
+    text-decoration: none;
+  }
+}
+
+h1, .h1 {
+  font-size: 30px;
+  @media (min-width: $screen-sm-min) {
+    font-size: 36px;
+  }
+}
+
+h2, .h2 {
+  font-size: 22px;
+  @media (min-width: $screen-sm-min) {
+    font-size: 30px;
+  }
+}
+
+.alert {
+  border-radius: 0;
+}
+
+input[type=checkbox] {
+  margin-right: 5px;
+}
+
+.t-input {
+  box-shadow: none;
+  border: 1px solid #cccccc;
+  &:focus {
+    outline: medium none;
+    border-color: rgba(82, 168, 236, 0.8);
+  }
+}
+
+.btn-blue {
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+  border-radius: 25px;
+  color: $alphaWhite;
+  background-color: #049cdb;
+  border: none;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-align: center;
+  &:hover, &:focus {
+    color: $alphaWhite;
+    background-color: #3dbcf5;
+  }
+}
+
+.btn-simple-letters {
+  font-size: 18px;
+}
+
+/* App style */
+.field_with_errors {
+  display: inline;
+  color: #e84141;
+}
+
+#brand_navbar {
+  background-color: #36383A;
+  /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);*/
+  .logo_brand {
+    color: lighten(#3dbcf5, 10%);
+    line-height: 21px;
+
+    /*font-family: "orbitron-medium";*/
+    &:hover {
+      color: lighten(#3dbcf5, 35%);
+    }
+  }
+  a {
+    color: $alphaWhite;
+    &:hover {
+      color: #36a1de;
+    }
+  }
+  .navbar-toggle-button {
+    color: $alphaWhite;
+    font-size: 124%;
+    &:hover, &:focus {
+      color: #3dbcf5;
+    }
+  }
+}
+
+.title {
+  text-align: center;
+  border-bottom: 1px solid #eeeeee;
+  color: #b1b1b1;
+  margin: 10px auto 30px;
+  b {
+    margin: 0 14px;
+  }
+  a {
+    color: #b1b1b1;
+    &.active {
+      color: #555555;
+    }
+  }
+  span {
+    background: white none repeat scroll 0 0;
+    padding: 0 30px;
+    position: relative;
+    top: 10px;
+  }
+}

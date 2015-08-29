@@ -30,12 +30,13 @@ gen_tags
 # Ignore code coverage file.
 coverage
 
-# Miscellaneous.
-public/assets
-
 # Ignore wechat tokens config.
 /config/wechat.yml
 /config/wechat
 
 # Ignore redis config
 /config/redis.yml
+
+# Miscellaneous.
+public/assets
+spec/examples.txt

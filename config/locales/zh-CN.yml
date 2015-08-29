@@ -1,0 +1,30 @@
+zh-CN:
+  time:
+    formats:
+      default: '%F %T'
+  activerecord:
+    models:
+      user: '用户'
+      address: '地址'
+    attributes:
+      user:
+        username: '用户名'
+        nickname: '昵称'
+        phone: '手机号码'
+        address: '地址'
+        coins: '积分'
+        password: '密码'
+        password_confirmation: '密码确认'
+        current_password: '当前密码'
+      address:
+        province: '省'
+        city: '市'
+        district: '区'
+        address: '详细地址'
+  sign_in: '登录'
+  sign_up: '新用户'
+  sign_out: '注销'
+  password: '密码'
+  logo_name: 'Kano'
+  update: '更新'
+  back: '返回'

@@ -1,5 +1,8 @@
-source 'https://rubygems.org'
-
+if ENV['USE_CN_GEM_SOURCE']
+  source 'https://ruby.taobao.org'
+else
+  source 'https://rubygems.org'
+end
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.4'
@@ -27,14 +30,20 @@ gem 'sdoc', '~> 0.4.0', group: :doc
 # gem 'bcrypt', '~> 3.1.7'
 
 # Use Unicorn as the app server
-# gem 'unicorn'
-
-# Use Capistrano for deployment
-# gem 'capistrano-rails', group: :development
+gem 'unicorn'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug'
+
+  gem 'rspec-rails', '~> 3.3.0'
+  gem 'factory_girl_rails'
+  gem 'database_cleaner'
+  gem 'capybara'
+  gem 'poltergeist'
+  gem 'pry-rails'
+  gem 'jasmine'
+  gem 'launchy'
 end
 
 group :development do
@@ -43,5 +52,26 @@ group :development do
 
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
+
+  gem 'capistrano', '~> 3.4.0'
+  gem 'capistrano-rvm'
+  gem 'capistrano-rails', '~> 1.1'
+  gem 'better_errors'
+  gem 'binding_of_caller'
+  gem 'spring-commands-rspec'
+  gem 'quiet_assets'
+  gem 'guard-rspec', require: false
 end
 
+gem 'bootstrap-sass', '~> 3.3.3'
+gem 'font-awesome-rails'
+gem 'bourbon'
+gem 'devise', '~> 3.4.1'
+gem 'slim-rails'
+gem 'pg'
+gem 'redis-objects'
+gem 'wechat', '~> 0.2.0'
+gem 'omniauth-wechat-oauth2'
+gem 'connection_pool'
+gem 'sidekiq'
+gem 'sinatra', :require => nil
