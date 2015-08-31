@@ -21,29 +21,31 @@ html
               = fa_icon('magic', class: 'navbar-toggle-button')
         #navbar-collapse.collapse.navbar-collapse
           ul.nav.navbar-nav.navbar-right
-            li
-              = link_to 'Item1', '#'
-            li
-              = link_to 'Item2', '#'
+            /li = link_to 'Item1', '#'
+            /li = link_to 'Handyman', '#'
             li.devider
-              li
-                = link_to 'Hi, Ming', '#'
+              - if user_signed_in?
+                li = link_to "Hi, #{current_user.name}", '#'
+                li = link_to t(:sign_out), destroy_user_session_path, method: :delete
+              - else
+                li = link_to t(:sign_up), new_user_registration_path
+                li = link_to t(:sign_in), new_user_session_path
     .main
       - if content_for?(:container)
         .container
-          /= render_before_content
+          = render_flash_message
           = yield :container
       - elsif content_for?(:row)
         .container
           .row
-            /= render_before_content
+            = render_flash_message
             = yield :row
       - elsif content_for?(:grid)
         .container
           .row
             .col-md-6.col-md-offset-3
-              /= render_before_content
+              = render_flash_message
               = yield :grid
       - else
-        /= render_before_content
+        = render_flash_message
         = yield

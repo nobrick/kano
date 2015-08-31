@@ -3,8 +3,9 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   root 'home#index'
   get 'home/index'
-
   mount Sidekiq::Web => '/sidekiq'
+
+  devise_for :users, module: 'users'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
