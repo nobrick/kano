@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   get 'home/index'
   mount Sidekiq::Web => '/sidekiq'
 
-  devise_for :users, module: 'users'
+  devise_for :accounts, controllers: { sessions: :sessions }, skip: :registrations
+  [ :users, :handymen ].each { |r| devise_for r, module: r.to_s, only: :registrations }
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

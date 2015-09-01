@@ -6,10 +6,12 @@
     span
       - if false # wechat_request? && wechat_session_set?
         ' 完善资料并完成注册
+      - elsif resource_name == :handyman
+        ' 成为专业人士
       - else
         - active ||= :sign_in
         - options = { sign_in: {}, sign_up: {} }
         - options[active] = { class: 'active' }
-        = link_to '登录', new_user_session_path, options[:sign_in]
+        = link_to '登录', new_account_session_path, options[:sign_in]
         b ·
-        = link_to '注册', new_registration_path(resource_name), options[:sign_up]
+        = link_to '注册', new_user_registration_path, options[:sign_up]

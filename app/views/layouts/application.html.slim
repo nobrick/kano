@@ -24,12 +24,16 @@ html
             /li = link_to 'Item1', '#'
             /li = link_to 'Handyman', '#'
             li.devider
-              - if user_signed_in?
+              - if handyman_signed_in?
+                li = link_to "Hey, #{current_handyman.name}", '#'
+                li = link_to t(:sign_out), destroy_account_session_path, method: :delete
+              - elsif user_signed_in?
                 li = link_to "Hi, #{current_user.name}", '#'
-                li = link_to t(:sign_out), destroy_user_session_path, method: :delete
+                li = link_to t(:sign_out), destroy_account_session_path, method: :delete
               - else
+                li = link_to 'Apply', new_handyman_registration_path
                 li = link_to t(:sign_up), new_user_registration_path
-                li = link_to t(:sign_in), new_user_session_path
+                li = link_to t(:sign_in), new_account_session_path
     .main
       - if content_for?(:container)
         .container

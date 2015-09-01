@@ -4,10 +4,12 @@ zh-CN:
       default: '%F %T'
   activerecord:
     models:
+      account: '账户'
       user: '用户'
+      handyman: '管家'
       address: '地址'
     attributes:
-      user:
+      account:
         username: '用户名'
         name: '称呼'
         nickname: '昵称'
@@ -17,6 +19,8 @@ zh-CN:
         password: '密码'
         password_confirmation: '密码确认'
         current_password: '当前密码'
+      handyman:
+        name: '姓名'
       address:
         province: '省'
         city: '市'

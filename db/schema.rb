@@ -11,12 +11,12 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150830054929) do
+ActiveRecord::Schema.define(version: 20150901070807) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "users", force: :cascade do |t|
+  create_table "accounts", force: :cascade do |t|
     t.string   "email",                  default: "",    null: false
     t.string   "encrypted_password",     default: "",    null: false
     t.string   "phone"
@@ -28,7 +28,6 @@ ActiveRecord::Schema.define(version: 20150830054929) do
     t.datetime "last_sign_in_at"
     t.inet     "current_sign_in_ip"
     t.inet     "last_sign_in_ip"
-    t.boolean  "handyman",               default: false, null: false
     t.boolean  "admin",                  default: false, null: false
     t.integer  "coins",                  default: 0,     null: false
     t.string   "name",                                   null: false
@@ -39,16 +38,16 @@ ActiveRecord::Schema.define(version: 20150830054929) do
     t.string   "wechat_headimgurl"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type"
   end
 
-  add_index "users", ["admin"], name: "index_users_on_admin", using: :btree
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["gender"], name: "index_users_on_gender", using: :btree
-  add_index "users", ["handyman"], name: "index_users_on_handyman", using: :btree
-  add_index "users", ["name"], name: "index_users_on_name", using: :btree
-  add_index "users", ["phone"], name: "index_users_on_phone", unique: true, using: :btree
-  add_index "users", ["provider"], name: "index_users_on_provider", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["uid"], name: "index_users_on_uid", using: :btree
+  add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
+  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, using: :btree
+  add_index "accounts", ["gender"], name: "index_accounts_on_gender", using: :btree
+  add_index "accounts", ["name"], name: "index_accounts_on_name", using: :btree
+  add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, using: :btree
+  add_index "accounts", ["provider"], name: "index_accounts_on_provider", using: :btree
+  add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
+  add_index "accounts", ["uid"], name: "index_accounts_on_uid", using: :btree
 
 end
