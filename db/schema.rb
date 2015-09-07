@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150903080836) do
+ActiveRecord::Schema.define(version: 20150907110248) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -56,7 +56,7 @@ ActiveRecord::Schema.define(version: 20150903080836) do
     t.string   "taxon_code",           limit: 30,                       null: false
     t.string   "content",                                               null: false
     t.datetime "arrives_at",                                            null: false
-    t.datetime "established_at"
+    t.datetime "contracted_at"
     t.datetime "completed_at"
     t.decimal  "user_total"
     t.decimal  "payment_total"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20150903080836) do
   add_index "orders", ["canceled_at"], name: "index_orders_on_canceled_at", using: :btree
   add_index "orders", ["canceler_id"], name: "index_orders_on_canceler_id", using: :btree
   add_index "orders", ["completed_at"], name: "index_orders_on_completed_at", using: :btree
-  add_index "orders", ["established_at"], name: "index_orders_on_established_at", using: :btree
+  add_index "orders", ["contracted_at"], name: "index_orders_on_contracted_at", using: :btree
   add_index "orders", ["handyman_bonus_total"], name: "index_orders_on_handyman_bonus_total", using: :btree
   add_index "orders", ["handyman_id"], name: "index_orders_on_handyman_id", using: :btree
   add_index "orders", ["handyman_total"], name: "index_orders_on_handyman_total", using: :btree

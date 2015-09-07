@@ -6,20 +6,21 @@ class Order < ActiveRecord::Base
   belongs_to :transferee_order, class_name: 'Order'
   belongs_to :transferor, class_name: 'Account'
   belongs_to :canceler, class_name: 'Account'
+  accepts_nested_attributes_for :transferee_order
 
   validates :content, presence: true
   validates :arrives_at, presence: true
-  validates! :user, presence: true
-  validates! :taxon_code, presence: true
-  validates! :state, presence: true
-  validates! :payment_state, presence: true
+  validates :user, presence: true
+  validates :taxon_code, presence: true
+  validates :state, presence: true
+  validates :payment_state, presence: true
 
-  validates! :handyman, presence: true, if: 'to? :contracted'
+  validates :handyman, presence: true, if: 'to? :contracted'
 
   validates :transfer_reason, presence: true, if: 'to? :transferred'
-  validates! :transfer_type, inclusion: %w{ user handyman other },
+  validates :transfer_type, inclusion: %w{ user handyman other },
     if: 'to? :transferred'
-  validates! :transferor, presence: true, if: 'to? :transferred'
+  validates :transferor, presence: true, if: 'to? :transferred'
 
   aasm column: 'state', no_direct_assignment: true do
     # requested: The order has been requested by the user yet not been contracted by a handyman.
@@ -38,8 +39,7 @@ class Order < ActiveRecord::Base
     state :transferred
 
     event :contract do
-      transitions from: :requested, to: :contracted,
-        guard: :model_valid?, after: :do_contract
+      transitions from: :requested, to: :contracted, after: :do_contract
     end
 
     event :pay do
@@ -55,12 +55,11 @@ class Order < ActiveRecord::Base
     end
 
     event :report do
-      transitions from: [ :contracted, :completed ], to: :reported
+      transitions from: [ :contracted, :completed, :rated ], to: :reported
     end
 
     event :transfer do
-      transitions from: :contracted, to: :transferred,
-        guard: :model_valid?, after: :do_transfer
+      transitions from: :contracted, to: :transferred, after: :do_transfer
     end
   end
 
@@ -73,8 +72,8 @@ class Order < ActiveRecord::Base
 
   private
 
-  def do_contract(options = {})
-    self.handyman = options[:handyman] || handyman
+  def do_contract(*args)
+    self.contracted_at = Time.now
   end
 
   def do_transfer(*args)
@@ -84,15 +83,8 @@ class Order < ActiveRecord::Base
       content: content,
       arrives_at: arrives_at
     }
-    self.transferee_order = Order.create!(attrs)
-    self.transferred_at = transferee_order.created_at
-  end
-
-  def model_valid?(*args)
-    return false if invalid?
-    true
-  rescue ActiveModel::StrictValidationFailed
-    false
+    self.transferee_order_attributes = attrs
+    self.transferred_at = Time.now
   end
 
   def to?(state)
