@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150901070807) do
+ActiveRecord::Schema.define(version: 20150903080836) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,4 +50,67 @@ ActiveRecord::Schema.define(version: 20150901070807) do
   add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
   add_index "accounts", ["uid"], name: "index_accounts_on_uid", using: :btree
 
+  create_table "orders", force: :cascade do |t|
+    t.integer  "user_id",                                               null: false
+    t.integer  "handyman_id"
+    t.string   "taxon_code",           limit: 30,                       null: false
+    t.string   "content",                                               null: false
+    t.datetime "arrives_at",                                            null: false
+    t.datetime "established_at"
+    t.datetime "completed_at"
+    t.decimal  "user_total"
+    t.decimal  "payment_total"
+    t.decimal  "user_promo_total"
+    t.decimal  "handyman_bonus_total"
+    t.decimal  "handyman_total"
+    t.integer  "transferee_order_id"
+    t.string   "transfer_type",        limit: 30
+    t.string   "transfer_reason"
+    t.datetime "transferred_at"
+    t.integer  "transferor_id"
+    t.string   "cancel_type",          limit: 30
+    t.string   "cancel_reason"
+    t.datetime "canceled_at"
+    t.integer  "canceler_id"
+    t.integer  "rating"
+    t.string   "rating_content"
+    t.datetime "rated_at"
+    t.string   "report_type",          limit: 30
+    t.string   "report_content"
+    t.datetime "reported_at"
+    t.string   "state",                           default: "requested", null: false
+    t.string   "payment_state",                   default: "initial",   null: false
+    t.datetime "created_at",                                            null: false
+    t.datetime "updated_at",                                            null: false
+  end
+
+  add_index "orders", ["arrives_at"], name: "index_orders_on_arrives_at", using: :btree
+  add_index "orders", ["cancel_type"], name: "index_orders_on_cancel_type", using: :btree
+  add_index "orders", ["canceled_at"], name: "index_orders_on_canceled_at", using: :btree
+  add_index "orders", ["canceler_id"], name: "index_orders_on_canceler_id", using: :btree
+  add_index "orders", ["completed_at"], name: "index_orders_on_completed_at", using: :btree
+  add_index "orders", ["established_at"], name: "index_orders_on_established_at", using: :btree
+  add_index "orders", ["handyman_bonus_total"], name: "index_orders_on_handyman_bonus_total", using: :btree
+  add_index "orders", ["handyman_id"], name: "index_orders_on_handyman_id", using: :btree
+  add_index "orders", ["handyman_total"], name: "index_orders_on_handyman_total", using: :btree
+  add_index "orders", ["payment_state"], name: "index_orders_on_payment_state", using: :btree
+  add_index "orders", ["payment_total"], name: "index_orders_on_payment_total", using: :btree
+  add_index "orders", ["rated_at"], name: "index_orders_on_rated_at", using: :btree
+  add_index "orders", ["rating"], name: "index_orders_on_rating", using: :btree
+  add_index "orders", ["report_type"], name: "index_orders_on_report_type", using: :btree
+  add_index "orders", ["reported_at"], name: "index_orders_on_reported_at", using: :btree
+  add_index "orders", ["state"], name: "index_orders_on_state", using: :btree
+  add_index "orders", ["taxon_code"], name: "index_orders_on_taxon_code", using: :btree
+  add_index "orders", ["transfer_type"], name: "index_orders_on_transfer_type", using: :btree
+  add_index "orders", ["transferee_order_id"], name: "index_orders_on_transferee_order_id", using: :btree
+  add_index "orders", ["transferor_id"], name: "index_orders_on_transferor_id", using: :btree
+  add_index "orders", ["transferred_at"], name: "index_orders_on_transferred_at", using: :btree
+  add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
+  add_index "orders", ["user_promo_total"], name: "index_orders_on_user_promo_total", using: :btree
+  add_index "orders", ["user_total"], name: "index_orders_on_user_total", using: :btree
+
+  add_foreign_key "orders", "accounts", column: "canceler_id"
+  add_foreign_key "orders", "accounts", column: "handyman_id"
+  add_foreign_key "orders", "accounts", column: "transferor_id"
+  add_foreign_key "orders", "accounts", column: "user_id"
 end
