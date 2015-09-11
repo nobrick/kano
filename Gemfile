@@ -61,6 +61,7 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'quiet_assets'
   gem 'guard-rspec', require: false
+  gem 'terminal-notifier-guard'
 end
 
 gem 'bootstrap-sass', '~> 3.3.3'
@@ -75,3 +76,4 @@ gem 'omniauth-wechat-oauth2'
 gem 'connection_pool'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
+gem 'aasm', '~> 4.2.0'

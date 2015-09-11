@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe Handyman, type: :model do
-  let(:handyman) { create :handyman, email: 'john@email.com' }
+  let(:handyman) { create :handyman }
 
   it 'creates a handyman' do
     expect(handyman).to be_a Handyman
