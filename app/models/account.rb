@@ -8,7 +8,6 @@ class Account < ActiveRecord::Base
   validates :uid, uniqueness: { scope: :provider }, if: 'uid.present?'
   validates :name, length: { in: 1..30 }, allow_blank: true
   validates :phone, format: { with: /1\d{10,10}/ }, uniqueness: true, allow_blank: true
-  validates_presence_of :email, unless: 'uid.present?'
   validates_presence_of :name, :phone, on: :complete_info_context
 
   def self.from_omniauth(auth)
@@ -45,8 +44,8 @@ class Account < ActiveRecord::Base
 
   private
 
-  # Disable devise default validation for email.
+  # Disable devise email validation for omniauth
   def email_required?
-    false
+    uid.blank?
   end
 end
