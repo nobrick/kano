@@ -6,9 +6,10 @@ class Account < ActiveRecord::Base
   validates :password, length: { in: 6..128 }, on: :create
   validates :password, length: { in: 6..128 }, on: :update, allow_blank: true
   validates :uid, uniqueness: { scope: :provider }, if: 'uid.present?'
-
-  validates :name, presence: true, length: { in: 1..30 }, on: :complete_info
-  validates :phone, format: { with: /1\d{10,10}/ }, uniqueness: true, on: :complete_info
+  validates :name, length: { in: 1..30 }, allow_blank: true
+  validates :phone, format: { with: /1\d{10,10}/ }, uniqueness: true, allow_blank: true
+  validates_presence_of :email, unless: 'uid.present?'
+  validates_presence_of :name, :phone, on: :complete_info_context
 
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
@@ -40,5 +41,12 @@ class Account < ActiveRecord::Base
 
   def completed?
     valid?(:complete_info_context)
+  end
+
+  private
+
+  # Disable devise default validation for email.
+  def email_required?
+    false
   end
 end
