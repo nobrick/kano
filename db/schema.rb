@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150916152301) do
+ActiveRecord::Schema.define(version: 20150917141014) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,10 +42,11 @@ ActiveRecord::Schema.define(version: 20150916152301) do
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
-  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, using: :btree
+  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, where: "(email IS NOT NULL)", using: :btree
   add_index "accounts", ["gender"], name: "index_accounts_on_gender", using: :btree
   add_index "accounts", ["name"], name: "index_accounts_on_name", using: :btree
-  add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, using: :btree
+  add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, where: "(phone IS NOT NULL)", using: :btree
+  add_index "accounts", ["provider", "uid"], name: "index_accounts_on_provider_and_uid", unique: true, where: "(uid IS NOT NULL)", using: :btree
   add_index "accounts", ["provider"], name: "index_accounts_on_provider", using: :btree
   add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
   add_index "accounts", ["uid"], name: "index_accounts_on_uid", using: :btree
