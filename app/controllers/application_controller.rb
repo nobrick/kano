@@ -24,20 +24,30 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_USER_AGENT'].include?(' MicroMessenger/')
   end
 
-  def current_user
-    @current_user ||= current_account if current_account.try(:is_a?, User)
+  %w{ User Handyman }.each do |resource|
+    define_method "current_#{resource.underscore}" do
+      current_account if current_account.is_a? resource.constantize
+    end
+
+    define_method "#{resource.underscore}_signed_in?" do
+      !!send("current_#{resource.underscore}")
+    end
+
+    define_method "authenticate_#{resource.underscore}!" do
+      unless send("current_#{resource.underscore}")
+        set_return_path
+        redirect_to new_account_session_path, alert: t('devise.failure.unauthenticated')
+      end
+    end
   end
 
-  def current_handyman
-    @current_handyman ||= current_account if current_account.try(:is_a?, Handyman)
+  def after_sign_in_path_for(resource)
+    session['return_to'] || root_url
   end
 
-  def user_signed_in?
-    !!current_user
+  def set_return_path
+    unless devise_controller? || request.xhr? || !request.get?
+      session['return_to'] = request.url
+    end
   end
-
-  def handyman_signed_in?
-    !!current_handyman
-  end
-
 end
