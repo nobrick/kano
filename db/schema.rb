@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150917141014) do
+ActiveRecord::Schema.define(version: 20150918084951) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "accounts", force: :cascade do |t|
-    t.string   "email",                  default: ""
+    t.string   "email"
     t.string   "encrypted_password",     default: "",    null: false
     t.string   "phone"
     t.string   "reset_password_token"
