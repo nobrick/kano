@@ -11,13 +11,13 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150907110248) do
+ActiveRecord::Schema.define(version: 20150918084951) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "accounts", force: :cascade do |t|
-    t.string   "email",                  default: "",    null: false
+    t.string   "email"
     t.string   "encrypted_password",     default: "",    null: false
     t.string   "phone"
     t.string   "reset_password_token"
@@ -30,7 +30,7 @@ ActiveRecord::Schema.define(version: 20150907110248) do
     t.inet     "last_sign_in_ip"
     t.boolean  "admin",                  default: false, null: false
     t.integer  "coins",                  default: 0,     null: false
-    t.string   "name",                                   null: false
+    t.string   "name"
     t.string   "provider"
     t.string   "uid"
     t.string   "nickname"
@@ -38,14 +38,15 @@ ActiveRecord::Schema.define(version: 20150907110248) do
     t.string   "wechat_headimgurl"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type"
+    t.string   "type",                                   null: false
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
-  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, using: :btree
+  add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, where: "(email IS NOT NULL)", using: :btree
   add_index "accounts", ["gender"], name: "index_accounts_on_gender", using: :btree
   add_index "accounts", ["name"], name: "index_accounts_on_name", using: :btree
-  add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, using: :btree
+  add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, where: "(phone IS NOT NULL)", using: :btree
+  add_index "accounts", ["provider", "uid"], name: "index_accounts_on_provider_and_uid", unique: true, where: "(uid IS NOT NULL)", using: :btree
   add_index "accounts", ["provider"], name: "index_accounts_on_provider", using: :btree
   add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
   add_index "accounts", ["uid"], name: "index_accounts_on_uid", using: :btree
