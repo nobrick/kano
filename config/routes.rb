@@ -1,11 +1,11 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  resource :user_wechat, only: [ :show, :create ]
-
   root 'home#index'
   get 'home/index'
   mount Sidekiq::Web => '/sidekiq'
+  resource :user_wechat, only: [ :show, :create ]
+  resource :profile, only: [ :edit, :update ]
 
   devise_for :accounts, controllers:
     { :sessions => 'sessions', :omniauth_callbacks => 'omniauth_callbacks' }, skip: :registrations

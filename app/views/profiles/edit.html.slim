@@ -1,0 +1,19 @@
+- content_for :container
+  .signup-page
+    /= render 'shared/header_sign_in_or_up', active: :sign_up
+    = render 'shared/error_messages', model: @account
+    = form_for(@account, as: :profile, url: profile_path, class: 'form-horizontal') do |f|
+      .form-group
+        = f.email_field :email, autofocus: true, placeholder: '邮箱', class: 'control-group t-input'
+      .form-group
+        = f.text_field :phone, placeholder: '手机号码', class: 'control-group t-input'
+      .form-group
+        = f.text_field :name, placeholder: '您的称呼', class: 'control-group t-input'
+      .form-group
+        = f.text_field :nickname, placeholder: '昵称', class: 'control-group t-input'
+      /.form-group
+        = f.password_field :password, autocomplete: 'off', placeholder: '密码', class: 'control-group t-input'
+      /.form-group
+        = f.password_field :password_confirmation, autocomplete: 'off', placeholder: '密码确认', class: 'control-group t-input'
+      div
+        = f.submit '完善资料并完成注册', class: 'btn btn-blue t-input'
