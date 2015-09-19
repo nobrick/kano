@@ -37,8 +37,20 @@ class ApplicationController < ActionController::Base
       unless send("current_#{resource.underscore}")
         set_return_path
         redirect_to new_account_session_path, alert: t('devise.failure.unauthenticated')
+        return false
       end
+      true
     end
+  end
+
+  def authenticate_completed_user
+    return unless authenticate_user!
+    unless current_user.completed_info?
+      set_return_path
+      redirect_to edit_profile_path, alert: '继续操作前请您完善个人资料'
+      return false
+    end
+    true
   end
 
   def after_sign_in_path_for(resource)
