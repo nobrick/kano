@@ -3,11 +3,13 @@ class Account < ActiveRecord::Base
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
     :trackable, :validatable, :omniauthable, omniauth_providers: [ :wechat ]
+
   validates :password, length: { in: 6..128 }, on: :create
   validates :password, length: { in: 6..128 }, on: :update, allow_blank: true
   validates :name, length: { in: 1..30 }, allow_blank: true
-  validates :phone, format: { with: /1\d{10,10}/ }, uniqueness: true, allow_blank: true
+  validates :phone, format: { with: /\A1\d{10,10}\Z/ }, uniqueness: true, allow_blank: true
   validates! :uid, uniqueness: { scope: :provider }, if: 'uid.present?'
+  validates! :provider, presence: true, if: 'uid.present?'
   validates! :type, presence: true
   validates_presence_of :name, :phone, on: :complete_info_context
 
@@ -36,7 +38,11 @@ class Account < ActiveRecord::Base
   end
 
   def full_or_nickname
-    name || nickname
+    if name.present?
+      name
+    else
+      nickname
+    end
   end
 
   def valid_password?(password)
@@ -48,7 +54,7 @@ class Account < ActiveRecord::Base
     false
   end
 
-  def completed?
+  def completed_info?
     valid?(:complete_info_context)
   end
 
