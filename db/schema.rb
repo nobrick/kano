@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150918084951) do
+ActiveRecord::Schema.define(version: 20150920092919) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20150918084951) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "type",                                   null: false
+    t.integer  "primary_address_id"
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
@@ -46,10 +47,27 @@ ActiveRecord::Schema.define(version: 20150918084951) do
   add_index "accounts", ["gender"], name: "index_accounts_on_gender", using: :btree
   add_index "accounts", ["name"], name: "index_accounts_on_name", using: :btree
   add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, where: "(phone IS NOT NULL)", using: :btree
+  add_index "accounts", ["primary_address_id"], name: "index_accounts_on_primary_address_id", using: :btree
   add_index "accounts", ["provider", "uid"], name: "index_accounts_on_provider_and_uid", unique: true, where: "(uid IS NOT NULL)", using: :btree
   add_index "accounts", ["provider"], name: "index_accounts_on_provider", using: :btree
   add_index "accounts", ["reset_password_token"], name: "index_accounts_on_reset_password_token", unique: true, using: :btree
   add_index "accounts", ["uid"], name: "index_accounts_on_uid", using: :btree
+
+  create_table "addresses", force: :cascade do |t|
+    t.integer  "addressable_id",              null: false
+    t.string   "addressable_type",            null: false
+    t.string   "province",         limit: 20, null: false
+    t.string   "city",             limit: 20, null: false
+    t.string   "district",         limit: 20, null: false
+    t.string   "code",             limit: 10, null: false
+    t.string   "content",                     null: false
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+  end
+
+  add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
+  add_index "addresses", ["code"], name: "index_addresses_on_code", using: :btree
+  add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
 
   create_table "orders", force: :cascade do |t|
     t.integer  "user_id",                                               null: false
@@ -110,6 +128,7 @@ ActiveRecord::Schema.define(version: 20150918084951) do
   add_index "orders", ["user_promo_total"], name: "index_orders_on_user_promo_total", using: :btree
   add_index "orders", ["user_total"], name: "index_orders_on_user_total", using: :btree
 
+  add_foreign_key "accounts", "addresses", column: "primary_address_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
   add_foreign_key "orders", "accounts", column: "transferor_id"

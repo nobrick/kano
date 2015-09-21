@@ -77,3 +77,4 @@ gem 'connection_pool'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
 gem 'aasm', '~> 4.2.0'
+gem 'china_city'

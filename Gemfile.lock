@@ -78,6 +78,9 @@ GEM
       xpath (~> 2.0)
     celluloid (0.16.0)
       timers (~> 4.0.0)
+    china_city (0.0.4)
+      jquery-rails
+      rails (>= 3.1.0)
     cliver (0.3.2)
     coderay (1.1.0)
     coffee-rails (4.1.0)
@@ -374,6 +377,7 @@ DEPENDENCIES
   capistrano-rails (~> 1.1.1)
   capistrano-rbenv (~> 2.0)
   capybara
+  china_city
   coffee-rails (~> 4.1.0)
   connection_pool
   database_cleaner
