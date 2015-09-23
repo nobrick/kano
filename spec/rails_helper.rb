@@ -24,16 +24,42 @@ require 'capybara/rspec'
 #
 # Dir[Rails.root.join('spec/support/**/*.rb')].each { |f| require f }
 
-# Manually require support files for speed optimization.
-%w{ database_cleaner devise factory_girl wechat }.each do |filename|
-  require "#{Rails.root.join('spec/support')}/#{filename}.rb"
-end
-
 # Checks for pending migrations before tests are run.
 # If you are not using ActiveRecord, you can remove this line.
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
+  # Factory Girl configuration
+  config.include FactoryGirl::Syntax::Methods
+
+  # Devise configuration
+  config.include Devise::TestHelpers, type: :controller
+  methods = %w(current_account account_signed_in? current_user user_signed_in?
+  current_handyman handyman_signed_in?)
+  methods.each { |m| define_method(m) { |*p| @controller.send m, *p } }
+
+  # Database Cleaner configuration
+  config.use_transactional_examples = false
+  config.use_transactional_fixtures = false
+
+  # `Truncate` is not necessarily slower than `Delete` for PostgreSQL, so we
+  # use :deletion strategy for cleaning up before entire test suite.
+  # See http://stackoverflow.com/questions/11419536/postgresql-truncation-speed/11423886#11423886
+  config.before(:suite) { DatabaseCleaner.clean_with :deletion }
+
+  config.before(:each) do |example|
+    # `Transaction` may result in undesirable behaviors for JavaScript tests. Use :deletion instead.
+    DatabaseCleaner.strategy = example.metadata[:js] ? :deletion : :transaction
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
+    Redis::Objects.redis.flushdb
+  end
+
+  # Rspec default configuration
+
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   # config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
