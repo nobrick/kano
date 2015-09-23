@@ -20,6 +20,9 @@ zh-CN:
         password: '密码'
         password_confirmation: '密码确认'
         current_password: '当前密码'
+      account/primary_address:
+        content: '详细地址'
+        base: ''
       handyman:
         name: '姓名'
       order:
@@ -53,9 +56,6 @@ zh-CN:
         state: '状态'
         payment_state: '支付状态'
       address:
-        province: '省'
-        city: '市'
-        district: '区'
         content: '详细地址'
         code: '地区编号'
   sign_in: '登录'

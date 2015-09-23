@@ -4,6 +4,7 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'home/index'
   mount Sidekiq::Web => '/sidekiq'
+  mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
   resource :profile, only: [ :edit, :update ]
 

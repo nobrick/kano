@@ -5,29 +5,43 @@ class Address < ActiveRecord::Base
 
   validates :addressable, presence: true
   validates :content, presence: true
-  validates :code, format: /\A\d{6,6}\z/
-  validates! :province, presence: true
-  validates! :city, presence: true
-  validates! :district, presence: true
+  validate { errors.add(:base, '请选择您所在的地区') unless code_valid? }
 
   def primary?
     addressable.try(:primary_address_id) == id
   end
 
-  def code=(arg)
-    super.tap { set_from_code }
+  def code=(the_code)
+    if code_valid?(the_code)
+      super.tap { set_from_code }
+    else
+      nil
+    end
   end
 
   def district_with_prefix
     "#{province}#{city}#{district}"
   end
 
+  def city_code
+    code[0..3] + '00'
+  end
+
+  def province_code
+    code[0..1] + '0000'
+  end
+
   private
+
+  def code_valid?(the_code = code)
+    !!the_code.try(:match, /\A\d{6,6}\z/)
+  end
 
   def set_from_code
     self.district = ChinaCity.get(code)
-    self.city = ChinaCity.get(code[0..3] + '00')
-    self.province = ChinaCity.get(code[0..1] + '0000')
+    self.city = ChinaCity.get(city_code)
+    self.province = ChinaCity.get(province_code)
+    raise 'code invalid' if province.blank? || city.blank? || district.blank?
   end
 
   def nullify_primary_address

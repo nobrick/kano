@@ -6,6 +6,9 @@ class ProfilesController < ApplicationController
 
   # GET /profile/edit
   def edit
+    primary_address = @account.primary_address
+    @city_code = primary_address.try(:city_code) || '430100'
+    @district_code = primary_address.try(:code)
   end
 
   # PATCH/PUT /profile/
@@ -23,6 +26,8 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:email, :phone, :name, :nickname)
+    params.require(:profile)
+      .permit(:email, :phone, :name, :nickname,
+    primary_address_attributes: [ :code, :content ] )
   end
 end
