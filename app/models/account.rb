@@ -27,18 +27,14 @@ class Account < ActiveRecord::Base
   end
 
   def self.new_with_session(params, session)
-    Rails.logger.debug '-- new_with_session --'
     auth = session['devise.facebook_data']
-    account = super.tap do |account|
+    super.tap do |account|
       if auth && auth['extra']['raw_info']
         account.nickname = auth['info']['nickname'] if account.nickname.blank?
         account.password = Devise.friendly_token[0, 20]
         account.type = 'User'
-      else
-        Rails.logger.debug 'Wechat session auth loading failure.'
       end
     end
-    account.becomes(account.type.constantize)
   end
 
   def full_or_nickname

@@ -8,12 +8,12 @@ class SessionsController < Devise::SessionsController
 
   # POST /resource/sign_in
   def create
-    super do
-      # Also sign in the corresponding `User` or `Handyman` resource.
-      sti_scope = resource.type.underscore
-      sti_resource = resource.type.constantize.send(:find, resource.id)
-      sign_in(sti_scope, sti_resource) unless resource.type.nil?
-    end
+    self.resource = warden.authenticate!(auth_options)
+    set_flash_message(:notice, :signed_in) if is_flashing_format?
+
+    # Use inherited scope for STI instead of resource_name
+    sign_in(resource.type.underscore, resource)
+    respond_with resource, location: after_sign_in_path_for(resource)
   end
 
   # DELETE /resource/sign_out

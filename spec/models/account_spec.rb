@@ -11,6 +11,7 @@ RSpec.describe Account, type: :model do
   describe 'has_one primary_address' do
     let(:account) { create :account, address_attrs }
     let(:primary_address) { account.primary_address }
+    let(:new_address_attrs) { { code: '430105', content: 'new_address_content' } }
 
     it 'creates primary address by assigning account primary_address attrs' do
       expect(account).to be_persisted
@@ -30,6 +31,14 @@ RSpec.describe Account, type: :model do
       primary_address.destroy
       expect(primary_address).to be_destroyed
       expect(account.primary_address).to be_nil
+    end
+
+    it 'replaces existing primary_address' do
+      old_address = primary_address
+      args = { primary_address_attributes: new_address_attrs }
+      expect(account.update args).to eq true
+      new_address = account.reload.primary_address
+      expect(account.addresses).to match_array [ old_address, new_address ]
     end
   end
 end

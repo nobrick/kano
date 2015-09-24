@@ -14,7 +14,4 @@
       .form-group
         = f.password_field :password_confirmation, autocomplete: 'off', placeholder: '密码确认', class: 'control-group t-input'
       div
-        - if false # wechat_request? && wechat_session_set?
-          = f.submit '完善资料并完成注册', class: 'btn btn-blue t-input'
-        - else
-          = f.submit '注册', class: 'btn btn-blue btn-simple-letters t-input'
+        = f.submit '注册', class: 'btn btn-blue btn-simple-letters t-input'

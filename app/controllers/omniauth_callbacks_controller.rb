@@ -9,7 +9,8 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     @account = Account.from_omniauth(auth)
 
     if @account.persisted?
-      sign_in_and_redirect @account, :event => :authentication # This will throw if @user is not activated
+      scope = @account.type.underscore
+      sign_in_and_redirect scope, @account, :event => :authentication
       set_flash_message(:notice, :success, :kind => '微信') if is_navigational_format?
     else
       # All session data starting with 'devise' will be removed whenever a user signs in
