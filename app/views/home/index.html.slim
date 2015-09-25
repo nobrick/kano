@@ -1,2 +1,6 @@
 - content_for :row
-  h1.text-center Welcome to KANO
+  .home-index-page
+    - if @info_uncompleted
+      = content_tag :div, class: "alert alert-warning alert-dismissible" do
+        p.uncompleted 您还没有完善个人资料。
+        = link_to '完善资料', edit_profile_path, class: 'btn btn-danger btn-complete-info'

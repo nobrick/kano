@@ -173,3 +173,15 @@ input[type=checkbox] {
     }
   }
 }
+
+.home-index-page {
+  p.uncompleted {
+    /*margin: 0 auto 10px;*/
+    display: inline-block;
+  }
+  .btn-complete-info {
+    margin-left: 16px;
+    margin-top: -2px;
+    padding: 3px 25px;
+  }
+}
