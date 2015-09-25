@@ -175,13 +175,21 @@ input[type=checkbox] {
 }
 
 .home-index-page {
-  p.uncompleted {
+  p.normal-text {
     /*margin: 0 auto 10px;*/
     display: inline-block;
   }
-  .btn-complete-info {
-    margin-left: 16px;
+  .btn-in-flash {
     margin-top: -2px;
     padding: 3px 25px;
+    margin-left: 16px;
+  }
+  .btn-sign-in {
+    padding: 3px 9px;
+    margin-left: 18px;
+  }
+  .btn-sign-up {
+    padding: 3px 9px;
+    margin-left: 10px;
   }
 }
