@@ -4,9 +4,7 @@
     p = t :logo_desc
   h4.title
     span
-      - if false # wechat_request? && wechat_session_set?
-        ' 完善资料并完成注册
-      - elsif resource_name == :handyman
+      - if resource_name == :handyman
         ' 成为专业人士
       - else
         - active ||= :sign_in
