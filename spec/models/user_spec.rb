@@ -13,14 +13,15 @@ RSpec.describe User, type: :model do
       {
         content: 'something needs to be fixed',
         arrives_at: 4.hours.since,
-        taxon_code: 'general'
+        taxon_code: 'general',
+        address_attributes: attributes_for(:address)
       }
     end
 
     it 'may build orders' do
       order = user.orders.build(order_attrs)
       expect(order).to be_a Order
-      order.save!
+      expect(order.request!).to eq true
       expect(order.user).to eq user
       expect(user.orders).to eq [ order ]
     end

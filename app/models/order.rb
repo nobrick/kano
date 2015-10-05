@@ -1,18 +1,16 @@
 class Order < ActiveRecord::Base
   include AASM
 
-  # Nested address attributes which will be saved when order requested.
-  # { content: 'Address content', code: 'Address code' }
-  attr_accessor :address_attributes
-
   belongs_to :user
   belongs_to :handyman
   belongs_to :transferee_order, class_name: 'Order'
   belongs_to :transferor, class_name: 'Account'
   belongs_to :canceler, class_name: 'Account'
-  has_one :address, as: :addressable
+  has_one :address, as: :addressable, dependent: :destroy
   accepts_nested_attributes_for :transferee_order
+  accepts_nested_attributes_for :address
   after_initialize :set_payment_state
+  before_validation :set_address
 
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
@@ -20,19 +18,18 @@ class Order < ActiveRecord::Base
   validates :taxon_code, presence: true
   validates :state, presence: true
   validates :payment_state, presence: true
-
-  validates :arrives_at, inclusion:
-    { in: (10.minute.from_now)..(30.days.from_now), message: '无效' },
-    if: 'to? nil'
-
-  validates :address, associated: true, if: 'to? :contracted'
+  validates :address, presence: true, associated: true
+  validates :arrives_at, inclusion: {
+    in: (10.minute.from_now)..(30.days.from_now),
+    message: '无效'
+  }, if: 'to? :requested'
   validates :handyman, presence: true, if: 'to? :contracted'
   validates :transfer_reason, presence: true, if: 'to? :transferred'
   validates :transfer_type, inclusion: %w{ user handyman other }, if: 'to? :transferred'
   validates :transferor, presence: true, if: 'to? :transferred'
 
   STATES = %w{ requested contracted payment completed rated reported transferred }
-  #validates :state, inclusion: { in: STATES }
+  validates :state, inclusion: { in: STATES }
 
   aasm column: 'state', no_direct_assignment: true do
     # initial: The order has just been created, and currently invalid for persistence.
@@ -47,7 +44,7 @@ class Order < ActiveRecord::Base
     STATES.each { |s| state s.to_sym }
 
     event :request do
-      transitions from: :initial, to: :requested, after: :do_request
+      transitions from: :initial, to: :requested
     end
 
     event :contract do
@@ -86,31 +83,7 @@ class Order < ActiveRecord::Base
     [ [ '类别1', 'type1' ], [ '类别2', 'type2' ], [ '类别3', 'type3' ] ]
   end
 
-  def save_with_address!(address_params = nil)
-    address_params ||= address_attributes
-    raise ArgumentError, 'Address not set' unless address_params.present?
-
-    transaction(requires_new: true) do
-      self.address.try(:destroy)
-      self.save!
-      Address.create!(content: address_params[:content],
-                      code: address_params[:code],
-                      addressable: self)
-      yield if block_given?
-      self.address_attributes = nil
-    end
-    # Flush cache for address
-    self.address(true)
-    self
-  end
-
   private
-
-  def do_request(*args)
-    save_with_address!
-  rescue ActiveRecord::RecordInvalid
-    false
-  end
 
   def do_contract(*args)
     self.contracted_at = Time.now
@@ -121,12 +94,12 @@ class Order < ActiveRecord::Base
       user: user,
       taxon_code: taxon_code,
       content: content,
-      arrives_at: arrives_at
+      arrives_at: arrives_at,
+      address_attributes: {
+        content: address.content,
+        code: address.code
+      }
     )
-    transferee.address_attributes = {
-      content: address.content,
-      code: address.code
-    }
 
     transaction(requires_new: true) do
       raise 'Transferee request failure' unless transferee.request!
@@ -144,5 +117,9 @@ class Order < ActiveRecord::Base
 
   def set_payment_state
     self.payment_state ||= 'initial'
+  end
+
+  def set_address
+    self.address.addressable = self if address.present?
   end
 end

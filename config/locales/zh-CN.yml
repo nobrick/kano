@@ -28,9 +28,10 @@ zh-CN:
       order:
         user: '用户'
         handyman: '管家'
+        address: '地址'
         taxon_code: '服务类别'
-        content: '详情'
-        arrives_at: '预计到达时间'
+        content: '维修内容'
+        arrives_at: '预约到达时间'
         established_at: '管家接单时间'
         completed_at: '订单完成时间'
         user_total: '订单价格'

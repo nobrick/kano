@@ -1,23 +1,19 @@
 require 'rails_helper'
 
 RSpec.describe Order, type: :model do
+  let(:user) { create :user }
+  let(:handyman) { create :handyman }
   let(:address_hash) { { address_attributes: attributes_for(:address) } }
   let(:order_attrs) { attributes_for(:order).merge(address_hash) }
-  let(:order) { Order.new(order_attrs).tap { |o| o.user = create :user } }
+  let(:order) { Order.new(order_attrs).tap { |o| o.user = user } }
   let(:order_requested) { order.tap { |o| o.request! } }
 
   let(:order_contracted) do
-    order_requested.tap do |order|
-      order.handyman = handyman
-      order.contract!
-    end
+    order_requested.tap { |o| o.handyman = handyman; o.contract! }
   end
 
   let(:order_transferred) do
-    order_contracted.tap do |order|
-      order.assign_attributes(transfer_attrs)
-      order.transfer!
-    end
+    order_contracted.tap { |o| o.attributes = transfer_attrs; o.transfer! }
   end
 
   let(:transfer_attrs) do 
@@ -28,44 +24,41 @@ RSpec.describe Order, type: :model do
     }
   end
 
-  let(:handyman) { create :handyman }
-
   it 'creates an order' do
     expect(order_requested).to be_persisted
     expect(order_requested.user).to be_persisted
   end
 
   it 'arrives_at field must be valid' do
-    expect { create :order, arrives_at: 1.minutes.from_now }
-      .to raise_error ActiveRecord::RecordInvalid
-
-    expect { create :order, arrives_at: 11.minutes.from_now }
-      .to change { Order.count }.by 1
+    order.assign_attributes(arrives_at: 1.minutes.from_now)
+    expect(order.request!).to eq false
+    order.assign_attributes(arrives_at: 11.minutes.from_now)
+    expect(order.request!).to eq true
   end
 
-  describe '#save_with_address in transaction' do
+  describe 'nested address' do
     let(:new_address_attrs) { { content: 'CONTENT_NEW', code: '430105' } }
     let(:invalid_address_attrs) { { content: '', code: '430105' } }
 
     it 'saves with address' do
       order.address_attributes = new_address_attrs
-      order.save_with_address!
+      order.request!
       expect(order.address.content).to eq new_address_attrs[:content]
     end
 
     it 'raises error when invalid' do
-      expect{ order.save_with_address!(invalid_address_attrs) }
-        .to raise_error ActiveRecord:: RecordInvalid
+      order.address_attributes = invalid_address_attrs
+      expect{ order.save! }.to raise_error ActiveRecord:: RecordInvalid
     end
 
     it 'destroys existing associated address before assigning new one' do
-      order.save_with_address!
+      order.request!
       expect(Address.count).to eq 1
       previous_address_id = order.address.id
-
-      order.save_with_address!(new_address_attrs)
-      expect(Address.count).to eq 1
+      order.address_attributes = new_address_attrs
+      order.save!
       current_address_id = Address.first.id
+      expect(Address.count).to eq 1
       expect(current_address_id).not_to eq previous_address_id
       expect(order.address.id).to eq current_address_id
     end
