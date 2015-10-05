@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150920092919) do
+ActiveRecord::Schema.define(version: 20151005084703) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,11 +70,11 @@ ActiveRecord::Schema.define(version: 20150920092919) do
   add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "user_id",                                               null: false
+    t.integer  "user_id",                         null: false
     t.integer  "handyman_id"
-    t.string   "taxon_code",           limit: 30,                       null: false
-    t.string   "content",                                               null: false
-    t.datetime "arrives_at",                                            null: false
+    t.string   "taxon_code",           limit: 30, null: false
+    t.string   "content",                         null: false
+    t.datetime "arrives_at",                      null: false
     t.datetime "contracted_at"
     t.datetime "completed_at"
     t.decimal  "user_total"
@@ -97,10 +97,10 @@ ActiveRecord::Schema.define(version: 20150920092919) do
     t.string   "report_type",          limit: 30
     t.string   "report_content"
     t.datetime "reported_at"
-    t.string   "state",                           default: "requested", null: false
-    t.string   "payment_state",                   default: "initial",   null: false
-    t.datetime "created_at",                                            null: false
-    t.datetime "updated_at",                                            null: false
+    t.string   "state",                           null: false
+    t.string   "payment_state",                   null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
   end
 
   add_index "orders", ["arrives_at"], name: "index_orders_on_arrives_at", using: :btree
