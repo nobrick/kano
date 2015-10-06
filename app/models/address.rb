@@ -19,16 +19,28 @@ class Address < ActiveRecord::Base
     end
   end
 
+  def full_content
+    "#{district_with_prefix} #{content}"
+  end
+
   def district_with_prefix
     "#{province}#{city}#{district}"
   end
 
   def city_code
-    code[0..3] + '00'
+    if code
+      code[0..3] + '00'
+    else
+      nil
+    end
   end
 
   def province_code
-    code[0..1] + '0000'
+    if code
+      code[0..1] + '0000'
+    else
+      nil
+    end
   end
 
   private

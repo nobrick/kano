@@ -6,9 +6,7 @@ class ProfilesController < ApplicationController
 
   # GET /profile/edit
   def edit
-    primary_address = @account.primary_address
-    @city_code = primary_address.try(:city_code) || '430100'
-    @district_code = primary_address.try(:code)
+    set_address
   end
 
   # PATCH/PUT /profile/
@@ -17,12 +15,20 @@ class ProfilesController < ApplicationController
     if @account.save(context: :complete_info_context)
       redirect_to root_url, notice: '恭喜您成功更新个人资料。'
     else
+      set_address
       render :edit
     end
   end
 
   def set_account
     @account = current_account
+  end
+
+  def set_address
+    address = @account.primary_address
+    @account.build_primary_address(addressable: @account) if address.blank?
+    @city_code = address.try(:city_code) || '430100'
+    @district_code = address.try(:code)
   end
 
   def profile_params
