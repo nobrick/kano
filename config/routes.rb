@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   mount Sidekiq::Web => '/sidekiq'
   mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
+  resource :handyman_wechat, only: [ :show, :create ]
   resource :profile, only: [ :edit, :update ]
   resources :orders, only: [ :new, :create, :index, :show ]
 
