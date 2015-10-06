@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe OrdersController, type: :controller do
+RSpec.describe Users::OrdersController, type: :controller do
   before { sign_in :user, user }
   let(:user) { create :user }
   let(:address_params) { { address_attributes: attributes_for(:address) } }

@@ -1,4 +1,4 @@
-class OrdersController < ApplicationController
+class Users::OrdersController < ApplicationController
   before_action :authenticate_completed_user
 
   # GET /orders
@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   def create
     @order = current_user.orders.build(order_params)
     if @order.request!
-      redirect_to orders_url, notice: '下单成功'
+      redirect_to user_orders_url, notice: '下单成功'
     else
       set_address
       render :new

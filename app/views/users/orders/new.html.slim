@@ -2,7 +2,7 @@
   .order-new-page
     .col-md-6.col-md-offset-3
       = render 'shared/error_messages', model: @order
-      = form_for(@order, url: orders_path, class: 'form-horizontal') do |f|
+      = form_for(@order, url: user_orders_path, class: 'form-horizontal') do |f|
         .field.form-group
           = f.text_area :content, placeholder: '维修内容', class: 'control-group t-input'
         .field.form-group

@@ -2,8 +2,18 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   authenticated :user do
-    root 'orders#index', as: :user_root
+    root 'users/orders#index', as: :user_root
+    namespace :users, as: :user, path: '/' do
+      resources :orders, only: [ :new, :create, :index, :show ]
+    end
   end
+
+  authenticated :handyman do
+    namespace :handymen, as: :handyman, path: '/' do
+      resources :orders, only: [ :new, :create, :index, :show ]
+    end
+  end
+
   root 'home#index'
   get 'home/index'
   mount Sidekiq::Web => '/sidekiq'
@@ -11,7 +21,6 @@ Rails.application.routes.draw do
   resource :user_wechat, only: [ :show, :create ]
   resource :handyman_wechat, only: [ :show, :create ]
   resource :profile, only: [ :edit, :update ]
-  resources :orders, only: [ :new, :create, :index, :show ]
 
   devise_for :accounts, controllers:
     { :sessions => 'sessions', :omniauth_callbacks => 'omniauth_callbacks' }, skip: :registrations
