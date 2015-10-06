@@ -193,3 +193,39 @@ input[type=checkbox] {
     margin-left: 10px;
   }
 }
+
+.order-new-page {
+  #order_arrives_at_4i {
+  }
+
+  #order_content {
+    height: 85px;
+    width: 300px;
+  }
+
+  .btn-create-order {
+    width: 72px;
+  }
+}
+
+.orders-list {
+  list-style-type: none;
+  padding: 0 40px 0;
+  li {
+    &:first-of-type {
+      h2 {
+        margin-top: 15px;
+      }
+    }
+    border-bottom: 1px dashed #d9d9d9;
+    &:last-of-type {
+      border-bottom: none;
+    }
+    margin: 0 0 5px;
+    padding-bottom: 10px;
+    position: relative;
+    width: 100%;
+    word-wrap: break-word;
+    line-height : 20px;
+  }
+}

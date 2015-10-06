@@ -1,0 +1,11 @@
+- content_for :row
+  .order-index-page
+    .col-md-6.col-md-offset-3
+      ul
+        li handyman: #{@order.handyman.try(:name) || 'none'}
+        li taxcon: #{@order.taxon_code}
+        li content: #{@order.content}
+        li address: #{@order.address.full_content}
+        li created_at: #{l @order.created_at}
+        li arrives_at: #{l @order.arrives_at}
+      = @order.inspect

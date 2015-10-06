@@ -28,7 +28,8 @@ html
                 li = link_to "Hey, #{current_handyman.full_or_nickname}", '#'
                 li = link_to t(:sign_out), destroy_account_session_path, method: :delete
               - elsif user_signed_in?
-                li = link_to "Hi, #{current_user.full_or_nickname}", '#'
+                li = link_to '预约服务', new_order_path
+                li = link_to "#{current_user.full_or_nickname}的订单", orders_path
                 li = link_to t(:sign_out), destroy_account_session_path, method: :delete
               - elsif wechat_request? && !account_signed_in?
                 li = link_to '微信登录', account_omniauth_authorize_path(:wechat)
