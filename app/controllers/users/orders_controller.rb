@@ -9,6 +9,7 @@ class Users::OrdersController < ApplicationController
   # GET /orders/:id
   def show
     @order = Order.find(params[:id])
+    redirect_to user_orders_url, notice: '请求失败' unless @order.user == current_user
   end
 
   # GET
