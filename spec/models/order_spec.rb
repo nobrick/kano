@@ -52,13 +52,14 @@ RSpec.describe Order, type: :model do
     end
 
     it 'destroys existing associated address before assigning new one' do
+      addresses_scope = -> { Address.where(addressable_type: 'Order') }
       order.request!
-      expect(Address.count).to eq 1
+      expect(addresses_scope.call.count).to eq 1
       previous_address_id = order.address.id
       order.address_attributes = new_address_attrs
       order.save!
-      current_address_id = Address.first.id
-      expect(Address.count).to eq 1
+      current_address_id = addresses_scope.call.first.id
+      expect(addresses_scope.call.count).to eq 1
       expect(current_address_id).not_to eq previous_address_id
       expect(order.address.id).to eq current_address_id
     end
@@ -126,6 +127,7 @@ RSpec.describe Order, type: :model do
         end
 
         it 'transfers with all necessary attrs copied to new order' do
+          order_contracted.assign_attributes(transfer_attrs)
           order_contracted.transfer!
           attrs_transferred = [ :user, :taxon_code, :content, :arrives_at ]
           attrs_transferred.each do |sym|
@@ -136,6 +138,7 @@ RSpec.describe Order, type: :model do
         end
 
         it 'creates new address' do
+          order_contracted.assign_attributes(transfer_attrs)
           expect { order_contracted.transfer! }.to change { Address.count }.by 1
           %w{ district_with_prefix content code }.each do |method|
             expect(order_contracted.transferee_order.address.send method)
@@ -145,12 +148,19 @@ RSpec.describe Order, type: :model do
       end
 
       context 'when fails' do
-        it 'will not create new order' do
+        it 'will not create new order for invalid params' do
           invalid_sets.each do |set|
             order_contracted.reload.assign_attributes(transfer_attrs)
             set.call
             expect { order_contracted.transfer! }.not_to change { Order.count }
+            expect(order_contracted.transferee_order).to be_nil
           end
+        end
+
+        it 'resets transferee_order and transferred_at' do
+          expect(order_contracted.transfer!).to eq false
+          expect(order_contracted.transferee_order).to be_nil
+          expect(order_contracted.transferred_at).to be_nil
         end
 
         it 'fails to transfer for invalid params' do

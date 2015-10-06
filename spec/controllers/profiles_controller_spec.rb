@@ -36,22 +36,23 @@ RSpec.describe ProfilesController, type: :controller do
       end
 
       it 'updates the profile primary address' do
-        expect(user.primary_address).to be nil
         put :update, { profile: new_attrs }
         primary_address = user.reload.primary_address
         expect(primary_address.content).to eq 'NEW_ADDRESS_CONTENT'
-        expect(user.addresses).to eq [ primary_address ]
+        expect(user.addresses).to include primary_address
       end
 
-      it 'replaces existing primary address' do
+      it 'turns the replaced primary addresses into backup addresses' do
+        expected_addresses = []
+        expected_addresses << user.primary_address
         user.update!(address_attrs)
-        old_address = user.primary_address
-        expect(old_address).to be_present
+        expected_addresses << user.primary_address
+        expect(user.addresses).to match_array expected_addresses
 
         put :update, { profile: new_attrs }
-        new_address = user.reload.primary_address
-        expect(new_address.content).to eq 'NEW_ADDRESS_CONTENT'
-        expect(user.addresses).to match_array [ old_address, new_address ]
+        expected_addresses << user.reload.primary_address
+        expect(user.primary_address.content).to eq 'NEW_ADDRESS_CONTENT'
+        expect(user.addresses).to match_array expected_addresses
       end
     end
 

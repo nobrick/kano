@@ -107,7 +107,10 @@ class Order < ActiveRecord::Base
       self.transferred_at = Time.now
       self.save!
     end
-  rescue ActiveRecord::RecordInvalid
+  rescue ActiveRecord::RecordInvalid => e
+    self.transferee_order = nil
+    self.transferred_at = nil
+    raise e if args.last.try(:fetch, :raise, nil)
     false
   end
 
