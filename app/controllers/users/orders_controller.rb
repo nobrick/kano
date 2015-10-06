@@ -12,13 +12,13 @@ class Users::OrdersController < ApplicationController
     redirect_to user_orders_url, notice: '请求失败' unless @order.user == current_user
   end
 
-  # GET
+  # GET /orders/new
   def new
     @order = current_user.orders.build(arrives_at: 3.hours.since)
     set_address
   end
 
-  # POST
+  # POST /orders
   def create
     @order = current_user.orders.build(order_params)
     if @order.request!
