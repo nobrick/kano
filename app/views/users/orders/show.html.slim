@@ -1,11 +1,16 @@
 - content_for :row
   .order-index-page
     .col-md-6.col-md-offset-3
-      ul
-        li handyman: #{@order.handyman.try(:name) || 'none'}
-        li taxcon: #{@order.taxon_code}
-        li content: #{@order.content}
-        li address: #{@order.address.full_content}
-        li created_at: #{l @order.created_at}
-        li arrives_at: #{l @order.arrives_at}
+      - case @order.state
+      - when 'requested'
+        .text-center
+          h2 等待接单中
+      - when 'contracted'
+        .text-center
+          h2 #{@order.handyman.name} 师傅
+          h3 #{@order.handyman.readable_phone_number}
+          => link_to '在线支付', '#', class: 'btn btn-primary'
+          = link_to '现金支付', '#', class: 'btn btn-primary'
+      - else
+        / TODO
       = @order.inspect

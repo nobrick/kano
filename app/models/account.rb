@@ -37,6 +37,11 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def readable_phone_number
+    return nil if phone.blank?
+    "#{phone[0..2]}-#{phone[3..6]}-#{phone[7..10]}"
+  end
+
   def full_or_nickname
     if name.present?
       name

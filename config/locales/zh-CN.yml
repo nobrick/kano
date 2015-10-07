@@ -2,6 +2,14 @@ zh-CN:
   time:
     formats:
       default: '%F %T'
+  order:
+    requested: '未接单'
+    contracted: '已接单'
+    payment: '支付中'
+    completed: '已支付'
+    rated: '已评价'
+    reported: '已投诉'
+    transferred: '已转单'
   activerecord:
     models:
       account: '账户'

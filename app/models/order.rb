@@ -83,6 +83,10 @@ class Order < ActiveRecord::Base
     [ [ '类别1', 'type1' ], [ '类别2', 'type2' ], [ '类别3', 'type3' ] ]
   end
 
+  def state_description
+    I18n.translate "order.#{state}"
+  end
+
   private
 
   def do_contract(*args)
