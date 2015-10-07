@@ -9,8 +9,9 @@ Rails.application.routes.draw do
   end
 
   authenticated :handyman do
+    root 'handymen/orders#index', as: :handyman_root
     namespace :handymen, as: :handyman, path: '/' do
-      resources :orders, only: [ :new, :create, :index, :show ]
+      resources :orders, only: [ :update, :index, :show ]
     end
   end
 

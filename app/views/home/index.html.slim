@@ -1,11 +1,16 @@
 - content_for :row
   .home-index-page
-    - if current_user
+    - if user_signed_in?
       - if current_user.completed_info?.blank?
         = content_tag :div, class: "alert alert-warning" do
           p.normal-text 您还没有完善个人资料。
           = link_to '完善资料', edit_profile_path, class: 'btn btn-danger btn-in-flash'
-      - else
+    - elsif handyman_signed_in?
+      /- if current_handyman.completed_info?.blank?
+        = content_tag :div, class: "alert alert-warning" do
+          p.normal-text 您还没有完善个人资料。
+          = link_to '完善资料', '#', class: 'btn btn-danger btn-in-flash'
+      p Welcome, handyman
     - elsif wechat_request?
       = content_tag :div, class: "alert alert-warning" do
         p.normal-text 您还没有微信登录。

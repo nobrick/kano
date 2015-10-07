@@ -42,6 +42,11 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def authenticate_completed_handyman
+    # TODO Impletement this.
+    true
+  end
+
   def after_sign_in_path_for(resource)
     session['return_to'] || root_url
   end

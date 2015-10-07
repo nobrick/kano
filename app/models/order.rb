@@ -14,7 +14,7 @@ class Order < ActiveRecord::Base
 
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
-  validates :user, presence: true
+  validates :user, presence: true, associated: true
   validates :taxon_code, presence: true
   validates :state, presence: true
   validates :payment_state, presence: true
@@ -23,7 +23,7 @@ class Order < ActiveRecord::Base
     in: (10.minute.from_now)..(30.days.from_now),
     message: '无效'
   }, if: 'to? :requested'
-  validates :handyman, presence: true, if: 'to? :contracted'
+  validates :handyman, presence: true, associated: true, if: 'to? :contracted'
   validates :transfer_reason, presence: true, if: 'to? :transferred'
   validates :transfer_type, inclusion: %w{ user handyman other }, if: 'to? :transferred'
   validates :transferor, presence: true, if: 'to? :transferred'

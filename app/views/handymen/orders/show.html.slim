@@ -1,0 +1,12 @@
+- content_for :row
+  .order-index-page
+    .col-md-6.col-md-offset-3
+      ul
+        li user: #{@order.user.full_or_nickname}
+        li taxcon: #{@order.taxon_code}
+        li content: #{@order.content}
+        li address: #{@order.address.full_content}
+        li created_at: #{l @order.created_at}
+        li arrives_at: #{l @order.arrives_at}
+      p = link_to '接单', [ :handyman, @order ], method: :put, class: 'btn btn-primary'
+      = @order.inspect
