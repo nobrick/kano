@@ -47,6 +47,14 @@ class ApplicationController < ActionController::Base
     true
   end
 
+  def authenticate_handyman_order
+    if @order.handyman.present? && @order.handyman != current_handyman
+      redirect_to handyman_orders_url, alert: 'Sorry，订单可能已被别人抢走'
+      return false
+    end
+    true
+  end
+
   def after_sign_in_path_for(resource)
     session['return_to'] || root_url
   end

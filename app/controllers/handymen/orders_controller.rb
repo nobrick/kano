@@ -16,7 +16,7 @@ class Handymen::OrdersController < ApplicationController
   def update
     @order.handyman = current_handyman
     if @order.contract!
-      redirect_to handyman_orders_url, notice: '接单成功'
+      redirect_to handyman_contract_url(@order), notice: '接单成功'
     else
       redirect_to handyman_orders_url,
         alert: "接单失败: #{@order.errors.full_messages.join('；')}"
@@ -30,18 +30,11 @@ class Handymen::OrdersController < ApplicationController
   end
 
   def check_order_permission
-    if @order.handyman.present? && @order.handyman != current_handyman
-      redirect_to handyman_orders_url, alert: '请求失败，订单可能已经被别人抢走'
-      return false
-    end
+    return false unless authenticate_handyman_order
 
     case @order.state
-    when 'requested'
-      true
-    else
-      # TODO Redirect orders without :requested state to other controller actions.
-      redirect_to handyman_orders_url, notice: 'TODO'
-      false
+    when 'requested' then true
+    else redirect_to handyman_contract_url(@order) and return false
     end
   end
 end

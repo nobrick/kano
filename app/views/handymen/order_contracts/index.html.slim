@@ -1,0 +1,5 @@
+- content_for :row
+  .order-index-page
+    .col-md-6.col-md-offset-3
+      ul.orders-list
+        = render partial: 'handymen/orders/order', collection: @orders, cache: true

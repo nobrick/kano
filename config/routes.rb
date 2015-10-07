@@ -12,6 +12,7 @@ Rails.application.routes.draw do
     root 'handymen/orders#index', as: :handyman_root
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
+      resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
     end
   end
 

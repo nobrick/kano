@@ -25,7 +25,8 @@ html
             /li = link_to 'Handyman', '#'
             li.devider
               - if handyman_signed_in?
-                li = link_to "Hey, #{current_handyman.full_or_nickname}", '#'
+                li = link_to '开始抢单', handyman_orders_path
+                li = link_to "#{current_handyman.full_or_nickname}的订单", handyman_contracts_path
                 li = link_to t(:sign_out), destroy_account_session_path, method: :delete
               - elsif user_signed_in?
                 li = link_to '预约服务', new_user_order_path
@@ -34,7 +35,7 @@ html
               - elsif wechat_request? && !account_signed_in?
                 li = link_to '微信登录', account_omniauth_authorize_path(:wechat)
               - else
-                li = link_to 'Apply', new_handyman_registration_path
+                li = link_to '加盟管家', new_handyman_registration_path
                 li = link_to t(:sign_up), new_user_registration_path
                 li = link_to t(:sign_in), new_account_session_path
     .main

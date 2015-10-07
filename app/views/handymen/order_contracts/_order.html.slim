@@ -1,0 +1,6 @@
+li
+  h2
+    = link_to order.content, [ :handyman, order ]
+  p = order.arrives_at
+  p = order.user.full_or_nickname
+  p = order.taxon_code
