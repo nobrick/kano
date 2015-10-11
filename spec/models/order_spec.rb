@@ -6,11 +6,8 @@ RSpec.describe Order, type: :model do
   let(:address_hash) { { address_attributes: attributes_for(:address) } }
   let(:order_attrs) { attributes_for(:order).merge(address_hash) }
   let(:order) { Order.new(order_attrs).tap { |o| o.user = user } }
-  let(:order_requested) { order.tap { |o| o.request! } }
-
-  let(:order_contracted) do
-    order_requested.tap { |o| o.handyman = handyman; o.contract! }
-  end
+  let(:order_requested) { create :order, state: 'requested' }
+  let(:order_contracted) { create :order, state: 'contracted' }
 
   let(:order_transferred) do
     order_contracted.tap { |o| o.attributes = transfer_attrs; o.transfer! }
