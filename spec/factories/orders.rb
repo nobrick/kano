@@ -5,7 +5,15 @@ FactoryGirl.define do
     address
     taxon_code 'general'
     content 'content'
-    arrives_at 3.hours.since
+    arrives_at { 3.hours.since }
+
+    trait :payment do
+      user_total 500.00
+      user_promo_total 0.00
+      payment_total 500.00
+      handyman_bonus_total 0.00
+      handyman_total 500.00
+    end
 
     before(:create) do |order, evaluator|
       case evaluator.state
@@ -17,5 +25,8 @@ FactoryGirl.define do
         order.contract!
       end
     end
+
+    factory(:requested_order) { state 'requested' }
+    factory(:contracted_order) { state 'contracted' }
   end
 end
