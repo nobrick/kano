@@ -3,10 +3,12 @@ class Payment < ActiveRecord::Base
 
   belongs_to :order, touch: true
   belongs_to :payment_profile, polymorphic: true
+  has_one :balance_record, as: :adjustment_event
   accepts_nested_attributes_for :order, update_only: true
+  accepts_nested_attributes_for :balance_record
+  delegate :user, :handyman, *(Order::PAYMENT_TOTAL_ATTRIBUTES), to: :order
 
   validates :order, presence: true, associated: true
-  validates :total, numericality: { greater_than: 0, less_than: 5000 }
   validates :payment_method, inclusion: { in: %w{ cash wechat } }
   # validates :payment_profile, presence: true, associated: true, unless: :in_cash?
 
@@ -52,11 +54,11 @@ class Payment < ActiveRecord::Base
       transitions from: :pending, to: :failed
     end
 
-    event :complete do
+    event :complete, after: :do_complete do
       # Cash-only payment transition
-      transitions from: :checkout, to: :completed, if: :in_cash?, after: :do_cash_complete
+      transitions from: :checkout, to: :completed, if: :in_cash?
       # Non-cash payment transition
-      transitions from: :pending, to: :completed, after: :do_complete
+      transitions from: :pending, to: :completed
     end
   end
 
@@ -84,16 +86,21 @@ class Payment < ActiveRecord::Base
   def do_checkout
     # Validate the order and transition to :payment state if necessary
     unless order.pay!
-      raise TransitionFailure, 'Order payment failure'
+      raise TransitionFailure,
+        "Order payment failure: #{order.errors.full_messages.join('; ')}"
     end
     true
   end
 
-  def do_cash_complete
+  def do_complete
+    set_balance_record
     true
   end
 
-  def do_complete
-    true
+  private
+
+  def set_balance_record
+    self.balance_record_attributes = {}
+    # self.balance_record.adjustment_event = self
   end
 end

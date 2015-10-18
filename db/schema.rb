@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151011110142) do
+ActiveRecord::Schema.define(version: 20151017124356) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,25 @@ ActiveRecord::Schema.define(version: 20151011110142) do
   add_index "addresses", ["addressable_type", "addressable_id"], name: "index_addresses_on_addressable_type_and_addressable_id", using: :btree
   add_index "addresses", ["code"], name: "index_addresses_on_code", using: :btree
   add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
+
+  create_table "balance_records", force: :cascade do |t|
+    t.decimal  "balance",                               null: false
+    t.decimal  "previous_balance",                      null: false
+    t.decimal  "cash_total",                            null: false
+    t.decimal  "previous_cash_total",                   null: false
+    t.decimal  "adjustment",                            null: false
+    t.integer  "owner_id",                              null: false
+    t.string   "owner_type",                            null: false
+    t.integer  "adjustment_event_id",                   null: false
+    t.string   "adjustment_event_type",                 null: false
+    t.boolean  "in_cash",               default: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+  end
+
+  add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
+  add_index "balance_records", ["in_cash"], name: "index_balance_records_on_in_cash", using: :btree
+  add_index "balance_records", ["owner_id", "owner_type"], name: "index_balance_records_on_owner", using: :btree
 
   create_table "orders", force: :cascade do |t|
     t.integer  "user_id",                         null: false
@@ -129,7 +148,6 @@ ActiveRecord::Schema.define(version: 20151011110142) do
   create_table "payments", force: :cascade do |t|
     t.integer  "order_id",                        null: false
     t.string   "payment_method",       limit: 32, null: false
-    t.decimal  "total",                           null: false
     t.datetime "expires_at",                      null: false
     t.string   "state",                limit: 32, null: false
     t.inet     "last_ip"

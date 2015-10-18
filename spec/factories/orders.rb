@@ -1,6 +1,10 @@
 FactoryGirl.define do
   factory :order do
-    transient { state 'requested' }
+    transient do
+      state 'requested'
+      # TODO Randomize promo totals for both cash and non-cash
+      amount { rand(5..50) * 10.0 }
+    end
     user
     address
     taxon_code 'general'
@@ -8,11 +12,11 @@ FactoryGirl.define do
     arrives_at { 3.hours.since }
 
     trait :payment do
-      user_total 500.00
+      user_total { amount }
       user_promo_total 0.00
-      payment_total 500.00
+      payment_total { amount }
       handyman_bonus_total 0.00
-      handyman_total 500.00
+      handyman_total { amount }
     end
 
     before(:create) do |order, evaluator|

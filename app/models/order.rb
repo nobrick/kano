@@ -60,9 +60,11 @@ class Order < ActiveRecord::Base
     :handyman_bonus_total,
     :handyman_total
   ]
+  MAX_PAYMENT_AMOUNT = 5000
   validates_presence_of PAYMENT_TOTAL_ATTRIBUTES, if: 'to? :payment'
   validates_numericality_of PAYMENT_TOTAL_ATTRIBUTES,
-    numericality: { greater_than_or_equal_to: 0, less_than: 5000 }, if: 'to? :payment'
+    numericality: { greater_than_or_equal_to: 0, less_than: MAX_PAYMENT_AMOUNT },
+    if: 'to? :payment'
   validate :check_payment_totals, if: 'to? :payment'
 
   STATES = %w{ requested contracted payment completed rated reported transferred }
