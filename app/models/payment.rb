@@ -41,11 +41,12 @@ class Payment < ActiveRecord::Base
     STATES.each { |s| state s.to_sym }
 
     event :checkout do
-      transitions from: :initial, to: :checkout, if: :checkout_guard, after: :do_checkout
+      transitions from: :initial, to: :checkout, after: :do_checkout,
+        if: [ :not_in_cash?, :order_validity_guard, :checkout_guard ]
     end
 
     event :process do
-      transitions from: :checkout, to: :pending, unless: :in_cash?
+      transitions from: :checkout, to: :pending
     end
 
     event :void do
@@ -56,9 +57,9 @@ class Payment < ActiveRecord::Base
       transitions from: :pending, to: :failed
     end
 
-    event :complete, after: :do_complete do
+    event :complete, after: :do_complete, if: [ :order_validity_guard ] do
       # Cash-only payment transition
-      transitions from: :checkout, to: :completed, if: :in_cash?
+      transitions from: :initial, to: :completed, if: [ :in_cash? ]
       # Non-cash payment transition
       transitions from: :pending, to: :completed
     end
@@ -70,15 +71,21 @@ class Payment < ActiveRecord::Base
     payment_method == 'cash'
   end
 
-  private
+  def not_in_cash?
+    payment_method != 'cash'
+  end
 
-  def checkout_guard
+  private
+  def order_validity_guard
     raise TransitionFailure, 'Order is not present' unless order
     if order.valid_payment && order.valid_payment != self
       raise TransitionFailure,
         'Order valid payment already exists, set it void or failed first'
     end
+    true
+  end
 
+  def checkout_guard
     if [ 'contracted', 'payment' ].exclude?(order.state)
       raise TransitionFailure, 'Order state is invalid'
     end
@@ -96,9 +103,14 @@ class Payment < ActiveRecord::Base
 
   def do_complete
     set_balance_record
-    unless order.complete!
-      raise TransitionFailure,
-        "Order complete failure: #{order.errors.full_messages.join('; ')}"
+    success = if in_cash?
+                order.complete_in_cash!
+              else
+                order.complete!
+              end
+    unless success
+      message = "Order complete failure: #{order.errors.full_messages.join('; ')}"
+      raise TransitionFailure, message
     end
     true
   end

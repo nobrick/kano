@@ -119,6 +119,10 @@ class Order < ActiveRecord::Base
       transitions from: :payment, to: :completed
     end
 
+    event :complete_in_cash do
+      transitions from: :contracted, to: :completed
+    end
+
     event :rate do
       transitions from: :completed, to: :rated
     end
@@ -143,9 +147,14 @@ class Order < ActiveRecord::Base
   end
 
   def sync_from_user_total
-    self.payment_total = user_total - user_promo_total
-    raise 'Invalid payment total' if payment_total < 0
+    self.user_promo_total ||= 0
+    self.handyman_bonus_total ||= 0
+    return false if user_total.nil? || user_total < 0
+    t_payment_total = user_total - user_promo_total
+    return false if t_payment_total < 0
+    self.payment_total = t_payment_total
     self.handyman_total = user_total + handyman_bonus_total
+    true
   end
 
   private

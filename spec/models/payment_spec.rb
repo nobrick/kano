@@ -20,12 +20,19 @@ RSpec.describe Payment, type: :model do
 
   describe 'state machine' do
     describe 'checkout event' do
-      it 'checkouts(and persists) a payment' do
+      it 'checkouts(and persists) a non-cash payment' do
         expect(payment.checkout!).to eq true
         expect(payment).to be_a Payment
         expect(payment).to be_persisted
         expect(payment.state).to eq 'checkout'
         expect(payment.order.state).to eq 'payment'
+      end
+
+      it 'cannot checkout a cash payment' do
+        message = "Event 'checkout' cannot transition from 'initial'"
+        expect { cash_payment.checkout! }
+          .to raise_error(AASM::InvalidTransition, message)
+        expect(cash_payment.initial?).to eq true
       end
 
       it 'cannot checkout more than one valid(not void or failed) payment' do
@@ -38,10 +45,7 @@ RSpec.describe Payment, type: :model do
 
     describe 'process event' do
       it 'cannot process cash payment' do
-        cash_payment.checkout!
-        message = "Event 'process' cannot transition from 'checkout'"
-        expect { cash_payment.process! }
-          .to raise_error(AASM::InvalidTransition, message)
+        expect { cash_payment.process! }.to raise_error AASM::InvalidTransition
       end
 
       it 'processes non-cash payment' do
@@ -77,9 +81,8 @@ RSpec.describe Payment, type: :model do
         expect(order.completed?).to eq true
       end
 
-      it 'completes a contracted cash payment' do
-        cash_payment.checkout!
-        expect(cash_payment).to eq order.ongoing_payment
+      it 'completes a cash payment' do
+        expect(cash_payment.initial?).to eq true
         expect(cash_payment.complete!).to eq true
         expect(order.ongoing_payment).to eq nil
         expect(order.valid_payment).to eq cash_payment
