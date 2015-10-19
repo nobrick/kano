@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151017124356) do
+ActiveRecord::Schema.define(version: 20151019125556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,18 +70,18 @@ ActiveRecord::Schema.define(version: 20151017124356) do
   add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
 
   create_table "balance_records", force: :cascade do |t|
-    t.decimal  "balance",                               null: false
-    t.decimal  "previous_balance",                      null: false
-    t.decimal  "cash_total",                            null: false
-    t.decimal  "previous_cash_total",                   null: false
-    t.decimal  "adjustment",                            null: false
-    t.integer  "owner_id",                              null: false
-    t.string   "owner_type",                            null: false
-    t.integer  "adjustment_event_id",                   null: false
-    t.string   "adjustment_event_type",                 null: false
-    t.boolean  "in_cash",               default: false
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.decimal  "balance",               precision: 12, scale: 2,                 null: false
+    t.decimal  "previous_balance",      precision: 12, scale: 2,                 null: false
+    t.decimal  "cash_total",            precision: 12, scale: 2,                 null: false
+    t.decimal  "previous_cash_total",   precision: 12, scale: 2,                 null: false
+    t.decimal  "adjustment",            precision: 12, scale: 2,                 null: false
+    t.integer  "owner_id",                                                       null: false
+    t.string   "owner_type",                                                     null: false
+    t.integer  "adjustment_event_id",                                            null: false
+    t.string   "adjustment_event_type",                                          null: false
+    t.boolean  "in_cash",                                        default: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
   end
 
   add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
@@ -89,18 +89,18 @@ ActiveRecord::Schema.define(version: 20151017124356) do
   add_index "balance_records", ["owner_id", "owner_type"], name: "index_balance_records_on_owner", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "user_id",                         null: false
+    t.integer  "user_id",                                                  null: false
     t.integer  "handyman_id"
-    t.string   "taxon_code",           limit: 30, null: false
-    t.string   "content",                         null: false
-    t.datetime "arrives_at",                      null: false
+    t.string   "taxon_code",           limit: 30,                          null: false
+    t.string   "content",                                                  null: false
+    t.datetime "arrives_at",                                               null: false
     t.datetime "contracted_at"
     t.datetime "completed_at"
-    t.decimal  "user_total"
-    t.decimal  "payment_total"
-    t.decimal  "user_promo_total"
-    t.decimal  "handyman_bonus_total"
-    t.decimal  "handyman_total"
+    t.decimal  "user_total",                      precision: 12, scale: 2
+    t.decimal  "payment_total",                   precision: 12, scale: 2
+    t.decimal  "user_promo_total",                precision: 12, scale: 2
+    t.decimal  "handyman_bonus_total",            precision: 12, scale: 2
+    t.decimal  "handyman_total",                  precision: 12, scale: 2
     t.integer  "transferee_order_id"
     t.string   "transfer_type",        limit: 30
     t.string   "transfer_reason"
@@ -116,9 +116,9 @@ ActiveRecord::Schema.define(version: 20151017124356) do
     t.string   "report_type",          limit: 30
     t.string   "report_content"
     t.datetime "reported_at"
-    t.string   "state",                           null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.string   "state",                                                    null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
   end
 
   add_index "orders", ["arrives_at"], name: "index_orders_on_arrives_at", using: :btree
