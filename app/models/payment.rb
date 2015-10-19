@@ -10,6 +10,8 @@ class Payment < ActiveRecord::Base
 
   validates :order, presence: true, associated: true
   validates :payment_method, inclusion: { in: %w{ cash wechat } }
+  # TODO Finish up logic for :expires_at
+  validates :expires_at, presence: true
   # validates :payment_profile, presence: true, associated: true, unless: :in_cash?
 
   STATES = %w{ checkout processing pending failed void completed }
@@ -94,6 +96,10 @@ class Payment < ActiveRecord::Base
 
   def do_complete
     set_balance_record
+    unless order.complete!
+      raise TransitionFailure,
+        "Order complete failure: #{order.errors.full_messages.join('; ')}"
+    end
     true
   end
 

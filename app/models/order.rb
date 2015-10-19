@@ -115,7 +115,7 @@ class Order < ActiveRecord::Base
       transitions from: :payment, to: :payment
     end
 
-    event :finish do
+    event :complete do
       transitions from: :payment, to: :completed
     end
 
@@ -140,6 +140,12 @@ class Order < ActiveRecord::Base
 
   def state_description
     I18n.translate "order.#{state}"
+  end
+
+  def sync_from_user_total
+    self.payment_total = user_total - user_promo_total
+    raise 'Invalid payment total' if payment_total < 0
+    self.handyman_total = user_total + handyman_bonus_total
   end
 
   private

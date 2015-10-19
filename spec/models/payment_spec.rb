@@ -74,6 +74,7 @@ RSpec.describe Payment, type: :model do
         expect(pending_payment.complete!).to eq true
         expect(order.ongoing_payment).to eq nil
         expect(order.valid_payment).to eq pending_payment
+        expect(order.completed?).to eq true
       end
 
       it 'completes a contracted cash payment' do
@@ -82,6 +83,7 @@ RSpec.describe Payment, type: :model do
         expect(cash_payment.complete!).to eq true
         expect(order.ongoing_payment).to eq nil
         expect(order.valid_payment).to eq cash_payment
+        expect(order.completed?).to eq true
       end
     end
   end

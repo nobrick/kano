@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     namespace :users, as: :user, path: '/' do
       resources :orders, only: [ :new, :create, :index, :show ] do
         member do
-          get 'pay'
+          resource :checkout, only: [ :create ]
         end
       end
     end
