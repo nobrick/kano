@@ -6,13 +6,13 @@ class Users::CheckoutsController < ApplicationController
   # POST /orders/:id/checkout
   def create
     @order.assign_attributes(order_params)
-    @order.user_promo_total = 0
-    @order.handyman_bonus_total = 0
-    @order.sync_from_user_total
+    unless @order.sync_from_user_total
+      redirect_to [ :user, @order ], notice: '请您输入正确的金额' and return false
+    end
     if params[:p_method] == 'cash'
       pay_in_cash
     else
-      redirect_to user_orders_url, notice: '参数错误' and return false
+      redirect_to [ :user, @order ], notice: '参数错误' and return false
     end
   end
 
@@ -20,7 +20,6 @@ class Users::CheckoutsController < ApplicationController
 
   def pay_in_cash
     set_payment('cash')
-    raise unless @payment.checkout!
     if @payment.complete!
       redirect_to user_orders_url, notice: '支付成功'
     else

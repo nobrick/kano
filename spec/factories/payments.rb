@@ -16,8 +16,10 @@ FactoryGirl.define do
         payment.checkout!
         raise unless payment.process!
       when 'completed'
-        payment.checkout!
-        payment.process! unless payment.in_cash?
+        if payment.not_in_cash?
+          payment.checkout!
+          payment.process!
+        end
         raise unless payment.complete!
       end
     end
