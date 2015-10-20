@@ -9,8 +9,19 @@
         .text-center
           h2 #{@order.handyman.name} 师傅
           h3 #{@order.handyman.readable_phone_number}
-          => link_to '在线支付', '#', class: 'btn btn-primary'
-          = link_to '现金支付', '#', class: 'btn btn-primary'
+          = form_for(@order, url: user_checkout_path, method: :post) do |f|
+            .form-group
+              = f.number_field :user_total, min: 0, max: 1000
+            div
+              = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-primary' do
+                ' 现金支付
+              = f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-primary' do
+                ' 微信支付
+      - when 'completed'
+        .text-center
+          h2 已支付 #{number_to_currency @order.user_total, unit: '￥'} 元
+          h3 #{@order.handyman.name} 师傅
+          h3 #{@order.handyman.readable_phone_number}
       - else
         / TODO
       = @order.inspect

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151005084703) do
+ActiveRecord::Schema.define(version: 20151019125556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,19 +69,38 @@ ActiveRecord::Schema.define(version: 20151005084703) do
   add_index "addresses", ["code"], name: "index_addresses_on_code", using: :btree
   add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
 
+  create_table "balance_records", force: :cascade do |t|
+    t.decimal  "balance",               precision: 12, scale: 2,                 null: false
+    t.decimal  "previous_balance",      precision: 12, scale: 2,                 null: false
+    t.decimal  "cash_total",            precision: 12, scale: 2,                 null: false
+    t.decimal  "previous_cash_total",   precision: 12, scale: 2,                 null: false
+    t.decimal  "adjustment",            precision: 12, scale: 2,                 null: false
+    t.integer  "owner_id",                                                       null: false
+    t.string   "owner_type",                                                     null: false
+    t.integer  "adjustment_event_id",                                            null: false
+    t.string   "adjustment_event_type",                                          null: false
+    t.boolean  "in_cash",                                        default: false
+    t.datetime "created_at",                                                     null: false
+    t.datetime "updated_at",                                                     null: false
+  end
+
+  add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
+  add_index "balance_records", ["in_cash"], name: "index_balance_records_on_in_cash", using: :btree
+  add_index "balance_records", ["owner_id", "owner_type"], name: "index_balance_records_on_owner", using: :btree
+
   create_table "orders", force: :cascade do |t|
-    t.integer  "user_id",                         null: false
+    t.integer  "user_id",                                                  null: false
     t.integer  "handyman_id"
-    t.string   "taxon_code",           limit: 30, null: false
-    t.string   "content",                         null: false
-    t.datetime "arrives_at",                      null: false
+    t.string   "taxon_code",           limit: 30,                          null: false
+    t.string   "content",                                                  null: false
+    t.datetime "arrives_at",                                               null: false
     t.datetime "contracted_at"
     t.datetime "completed_at"
-    t.decimal  "user_total"
-    t.decimal  "payment_total"
-    t.decimal  "user_promo_total"
-    t.decimal  "handyman_bonus_total"
-    t.decimal  "handyman_total"
+    t.decimal  "user_total",                      precision: 12, scale: 2
+    t.decimal  "payment_total",                   precision: 12, scale: 2
+    t.decimal  "user_promo_total",                precision: 12, scale: 2
+    t.decimal  "handyman_bonus_total",            precision: 12, scale: 2
+    t.decimal  "handyman_total",                  precision: 12, scale: 2
     t.integer  "transferee_order_id"
     t.string   "transfer_type",        limit: 30
     t.string   "transfer_reason"
@@ -97,10 +116,9 @@ ActiveRecord::Schema.define(version: 20151005084703) do
     t.string   "report_type",          limit: 30
     t.string   "report_content"
     t.datetime "reported_at"
-    t.string   "state",                           null: false
-    t.string   "payment_state",                   null: false
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.string   "state",                                                    null: false
+    t.datetime "created_at",                                               null: false
+    t.datetime "updated_at",                                               null: false
   end
 
   add_index "orders", ["arrives_at"], name: "index_orders_on_arrives_at", using: :btree
@@ -112,7 +130,6 @@ ActiveRecord::Schema.define(version: 20151005084703) do
   add_index "orders", ["handyman_bonus_total"], name: "index_orders_on_handyman_bonus_total", using: :btree
   add_index "orders", ["handyman_id"], name: "index_orders_on_handyman_id", using: :btree
   add_index "orders", ["handyman_total"], name: "index_orders_on_handyman_total", using: :btree
-  add_index "orders", ["payment_state"], name: "index_orders_on_payment_state", using: :btree
   add_index "orders", ["payment_total"], name: "index_orders_on_payment_total", using: :btree
   add_index "orders", ["rated_at"], name: "index_orders_on_rated_at", using: :btree
   add_index "orders", ["rating"], name: "index_orders_on_rating", using: :btree
@@ -128,9 +145,27 @@ ActiveRecord::Schema.define(version: 20151005084703) do
   add_index "orders", ["user_promo_total"], name: "index_orders_on_user_promo_total", using: :btree
   add_index "orders", ["user_total"], name: "index_orders_on_user_total", using: :btree
 
+  create_table "payments", force: :cascade do |t|
+    t.integer  "order_id",                        null: false
+    t.string   "payment_method",       limit: 32, null: false
+    t.datetime "expires_at",                      null: false
+    t.string   "state",                limit: 32, null: false
+    t.inet     "last_ip"
+    t.integer  "payment_profile_id"
+    t.string   "payment_profile_type"
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
+  end
+
+  add_index "payments", ["order_id"], name: "index_payments_on_order_id", using: :btree
+  add_index "payments", ["payment_method"], name: "index_payments_on_payment_method", using: :btree
+  add_index "payments", ["payment_profile_type", "payment_profile_id"], name: "index_payments_on_payment_profile_type_and_payment_profile_id", using: :btree
+  add_index "payments", ["state"], name: "index_payments_on_state", using: :btree
+
   add_foreign_key "accounts", "addresses", column: "primary_address_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
   add_foreign_key "orders", "accounts", column: "transferor_id"
   add_foreign_key "orders", "accounts", column: "user_id"
+  add_foreign_key "payments", "orders"
 end

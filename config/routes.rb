@@ -4,7 +4,11 @@ Rails.application.routes.draw do
   authenticated :user do
     root 'users/orders#index', as: :user_root
     namespace :users, as: :user, path: '/' do
-      resources :orders, only: [ :new, :create, :index, :show ]
+      resources :orders, only: [ :new, :create, :index, :show ] do
+        member do
+          resource :checkout, only: [ :create ]
+        end
+      end
     end
   end
 
