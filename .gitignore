@@ -42,3 +42,4 @@ public/assets
 spec/examples.txt
 dump.rdb
 .rake_tasks
+todo.md
