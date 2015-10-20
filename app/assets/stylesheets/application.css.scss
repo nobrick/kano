@@ -35,7 +35,7 @@ h1, .h1 {
 h2, .h2 {
   font-size: 22px;
   @media (min-width: $screen-sm-min) {
-    font-size: 30px;
+    font-size: 26px;
   }
 }
 
@@ -226,6 +226,29 @@ input[type=checkbox] {
     position: relative;
     width: 100%;
     word-wrap: break-word;
-    line-height : 20px;
+    line-height : 24px;
+  }
+}
+
+.order-index-item {
+  .order-attr-bar {
+    .attr-bar-icon {
+      margin-right: 5px;
+    }
+    .created-at-attr {
+      margin-right: 4px;
+    }
+  }
+  .state-desc {
+    color: #4094c7;
+    font-weight: bold;
+    margin-right: 8px;
+  }
+  .requested-state {
+    color: #ff6666;
+    font-weight: bold;
+  }
+  .contracted-state {
+    color: #ff6666;
   }
 }

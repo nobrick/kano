@@ -1,6 +1,20 @@
-li
+li.order-index-item
   h2
-    = link_to order.content, [ :user, order ]
-  p = order.state_description
-  p = l order.arrives_at
-  p = order.taxon_code
+    = link_to order.content_in_short, [ :user, order ]
+  span.state-desc class="#{order.state}-state" = order.state_description
+  - if order.contracted?
+    span
+      b #{order.handyman.name}
+      '  师傅
+  .order-attr-bar
+    span.fa-icon
+      = fa_icon('clock-o', class: 'attr-bar-icon')
+    - if order.requested? || order.contracted?
+      span.arrives-at-attr #{time_ago_in_words order.arrives_at}后到达
+    - else
+      span.created-at-attr #{time_ago_in_words order.created_at}之前
+    .pull-right
+      span.fa-icon
+        = fa_icon('tag', class: 'attr-bar-icon')
+      span
+        = order.taxon_code

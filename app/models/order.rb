@@ -157,6 +157,14 @@ class Order < ActiveRecord::Base
     true
   end
 
+  def content_in_short(max = 50)
+    if content.length > max
+      "#{content[0..max]}..."
+    else
+      content
+    end
+  end
+
   private
 
   def do_contract(*args)
