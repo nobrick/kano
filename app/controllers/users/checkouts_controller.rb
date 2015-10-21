@@ -20,7 +20,7 @@ class Users::CheckoutsController < ApplicationController
 
   def pay_in_cash
     set_payment('cash')
-    if @payment.complete!
+    if @payment.complete && @payment.save
       redirect_to user_orders_url, notice: '支付成功'
     else
       redirect_to user_orders_url, notice: '支付失败'

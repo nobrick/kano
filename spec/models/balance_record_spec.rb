@@ -9,7 +9,33 @@ RSpec.describe BalanceRecord, type: :model do
   let(:order2) { create :contracted_order, :payment, handyman: handyman }
   let(:handyman) { create :handyman }
 
-  it 'creates balance record' do
+  describe 'Payment' do
+    before do
+      payment.order = order1
+      payment.expires_at = 3.hours.since
+      order1.user_total = 300
+      order1.sync_from_user_total
+    end
+    let(:payment) { Payment.new }
+
+    it 'creates balance record on cash payment' do
+      payment.payment_method = 'cash'
+      payment.complete
+      expect { payment.save! }.to change(BalanceRecord, :count).by 1
+      expect(payment.balance_record).to be_persisted
+    end
+
+    it 'creates balance record on non-cash payment' do
+      payment.payment_method = 'wechat'
+      payment.checkout && payment.save!
+      payment.process && payment.save!
+      payment.complete
+      expect { payment.save! }.to change(BalanceRecord, :count).by 1
+      expect(payment.balance_record).to be_persisted
+    end
+  end
+
+  it 'creates balance record by test helpers' do
     expect(record).to be_a BalanceRecord
     expect(record).to be_persisted
     expect(cash_record).to be_a BalanceRecord

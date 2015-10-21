@@ -21,7 +21,7 @@ class Users::OrdersController < ApplicationController
   # POST /orders
   def create
     @order = current_user.orders.build(order_params)
-    if @order.request!
+    if @order.request && @order.save
       redirect_to user_orders_url, notice: '下单成功'
     else
       set_address

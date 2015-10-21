@@ -22,11 +22,11 @@ FactoryGirl.define do
     before(:create) do |order, evaluator|
       case evaluator.state
       when 'requested'
-        order.request!
+        order.request && order.save!
       when 'contracted'
-        order.request!
+        order.request && order.save!
         order.handyman ||= create(:handyman)
-        order.contract!
+        order.contract && order.save!
       end
     end
 

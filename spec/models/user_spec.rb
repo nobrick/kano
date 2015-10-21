@@ -21,7 +21,7 @@ RSpec.describe User, type: :model do
     it 'may build orders' do
       order = user.orders.build(order_attrs)
       expect(order).to be_a Order
-      expect(order.request!).to eq true
+      expect(order.request && order.save!).to eq true
       expect(order.user).to eq user
       expect(user.orders).to eq [ order ]
     end

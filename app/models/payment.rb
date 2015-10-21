@@ -1,5 +1,5 @@
 class Payment < ActiveRecord::Base
-  include ConcernsForAASM
+  include AASM
 
   belongs_to :order, touch: true
   belongs_to :payment_profile, polymorphic: true
@@ -65,8 +65,6 @@ class Payment < ActiveRecord::Base
     end
   end
 
-  aasm_enable_only_persistence_methods
-
   def in_cash?
     payment_method == 'cash'
   end
@@ -94,9 +92,9 @@ class Payment < ActiveRecord::Base
 
   def do_checkout
     # Validate the order and transition to :payment state if necessary
-    unless order.pay!
-      raise TransitionFailure,
-        "Order payment failure: #{order.errors.full_messages.join('; ')}"
+    unless order.pay
+      message = "Order payment failure: #{order.errors.full_messages.join('; ')}"
+      raise TransitionFailure, message
     end
     true
   end
@@ -104,9 +102,9 @@ class Payment < ActiveRecord::Base
   def do_complete
     set_balance_record
     success = if in_cash?
-                order.complete_in_cash!
+                order.complete_in_cash
               else
-                order.complete!
+                order.complete
               end
     unless success
       message = "Order complete failure: #{order.errors.full_messages.join('; ')}"
@@ -119,6 +117,8 @@ class Payment < ActiveRecord::Base
 
   def set_balance_record
     self.balance_record_attributes = {}
-    # self.balance_record.adjustment_event = self
+    self.balance_record.adjustment_event = self
   end
 end
+
+class TransitionFailure < RuntimeError; end

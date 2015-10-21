@@ -1,3 +1,4 @@
+# For handyman receiving orders for public user requests
 class Handymen::OrdersController < ApplicationController
   before_action :authenticate_completed_handyman
   before_action :set_order, only: [ :show, :update ]
@@ -15,7 +16,7 @@ class Handymen::OrdersController < ApplicationController
   # POST /orders
   def update
     @order.handyman = current_handyman
-    if @order.contract!
+    if @order.contract && @order.save
       redirect_to handyman_contract_url(@order), notice: '接单成功'
     else
       redirect_to handyman_orders_url,

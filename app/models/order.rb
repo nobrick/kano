@@ -1,5 +1,5 @@
 class Order < ActiveRecord::Base
-  include ConcernsForAASM
+  include AASM
 
   belongs_to :user
   belongs_to :handyman
@@ -136,8 +136,6 @@ class Order < ActiveRecord::Base
     end
   end
 
-  aasm_enable_only_persistence_methods
-
   def self.taxons_for_select
     [ [ '类别1', 'type1' ], [ '类别2', 'type2' ], [ '类别3', 'type3' ] ]
   end
@@ -171,6 +169,7 @@ class Order < ActiveRecord::Base
     self.contracted_at = Time.now
   end
 
+  # TODO Close order on Wechat pay API.
   def do_transfer(*args)
     transferee = Order.new(
       user: user,
@@ -183,21 +182,13 @@ class Order < ActiveRecord::Base
       }
     )
 
-    transaction(requires_new: true) do
-      raise 'Transferee request failure' unless transferee.request!
-      self.transferee_order = transferee
-      self.transferred_at = Time.now
-      self.save!
-      if ongoing_payment && !(ongoing_payment.void)
-        raise 'Cannot close ongoing payment right not'
-      end
-      # TODO Close order on Wechat pay API.
+    transferee.request
+    self.transferee_order = transferee
+    self.transferred_at = Time.now
+    # TODO Test #void persistence
+    if ongoing_payment && !(ongoing_payment.void)
+      raise 'Cannot close ongoing payment right not'
     end
-  rescue ActiveRecord::RecordInvalid => e
-    self.transferee_order = nil
-    self.transferred_at = nil
-    raise e if args.last.try(:fetch, :raise, nil)
-    false
   end
 
   def to?(state)

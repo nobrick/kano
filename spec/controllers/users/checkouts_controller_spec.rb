@@ -17,6 +17,12 @@ RSpec.describe Users::CheckoutsController, type: :controller do
         expect(order.user_total).to eq 200
       end
 
+      it 'creates balloc record when payment completes' do
+        expect {
+          post :create, id: order.id, order: { user_total: 200 }, p_method: :cash
+        }.to change(BalanceRecord, :count).by 1
+      end
+
       it 'rollbacks and does not affect next POST when fails' do
         expect(order.contracted?).to eq true
         post :create, id: order.id, order: { user_total: -5 }, p_method: :cash

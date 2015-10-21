@@ -1,3 +1,4 @@
+# For handyman managing his own received orders
 class Handymen::OrderContractsController < ApplicationController
   before_action :authenticate_completed_handyman
 
