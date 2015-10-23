@@ -26,7 +26,7 @@ class Order < ActiveRecord::Base
 
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
-  validates :user, presence: true, associated: true
+  validates :user, presence: true
   validates :taxon_code, presence: true
   validates :state, presence: true
   validates :address, presence: true, associated: true
