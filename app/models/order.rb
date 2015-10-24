@@ -1,5 +1,6 @@
 class Order < ActiveRecord::Base
   include AASM
+  include IdRandomizable
 
   belongs_to :user
   belongs_to :handyman
