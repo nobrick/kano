@@ -79,3 +79,5 @@ gem 'sinatra', :require => nil
 gem 'aasm', '~> 4.2.0'
 gem 'china_city'
 gem 'pingpp'
+gem 'gon'
+gem 'message_bus'
