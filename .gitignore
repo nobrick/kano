@@ -39,6 +39,7 @@ coverage
 
 # Miscellaneous.
 public/assets
+/vendor/cache
 spec/examples.txt
 dump.rdb
 .rake_tasks
