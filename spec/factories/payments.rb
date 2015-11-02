@@ -7,18 +7,19 @@ FactoryGirl.define do
     last_ip nil
     payment_profile nil
     trait(:cash) { payment_method 'cash' }
+    trait(:pingpp_wx_pub) { payment_method 'pingpp_wx_pub' }
 
     before(:create) do |payment, evaluator|
       case evaluator.state
-      when 'checkout'
+      when 'processing'
         payment.checkout && payment.save!
       when 'pending'
         payment.checkout && payment.save!
-        payment.process && payment.save!
+        payment.prepare && payment.save!
       when 'completed'
         if payment.not_in_cash?
           payment.checkout && payment.save!
-          payment.process && payment.save!
+          payment.prepare && payment.save!
         end
         payment.complete && payment.save!
       end
@@ -27,5 +28,6 @@ FactoryGirl.define do
     factory(:pending_payment) { state 'pending' }
     factory(:completed_payment) { state 'completed' }
     factory(:cash_payment, traits: [ :cash ])
+    factory(:pingpp_wx_pub_payment, traits: [ :pingpp_wx_pub_payment ])
   end
 end

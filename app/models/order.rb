@@ -2,6 +2,7 @@ class Order < ActiveRecord::Base
   include AASM
   include IdRandomizable
 
+  # TODO Update :completes_at when order finishes
   belongs_to :user
   belongs_to :handyman
   belongs_to :transferee_order, class_name: 'Order'

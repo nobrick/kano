@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     namespace :users, as: :user, path: '/' do
       resources :orders, only: [ :new, :create, :index, :show ] do
         member do
-          resource :checkout, only: [ :create ]
+          resource :checkout, only: [ :create, :update ]
         end
       end
     end

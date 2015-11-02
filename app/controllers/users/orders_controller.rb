@@ -9,6 +9,13 @@ class Users::OrdersController < ApplicationController
   # GET /orders/:id
   def show
     @order = Order.find(params[:id])
+    if wechat_request? # || true # DEBUG mode(TODO)
+      js_params = UserWechatsController.wechat
+        .jsapi_ticket.signature(request.original_url)
+      signature = js_params[:signature]
+      charge = @order.ongoing_payment.try(:pingpp_charge).try(:value)
+      gon.pingpp = { signature: signature, charge: charge }
+    end
     redirect_to user_orders_url, notice: '请求失败' unless @order.user == current_user
   end
 
@@ -22,7 +29,7 @@ class Users::OrdersController < ApplicationController
   def create
     @order = current_user.orders.build(order_params)
     if @order.request && @order.save
-      redirect_to user_orders_url, notice: '下单成功'
+      redirect_to [ :user, @order ], notice: '下单成功'
     else
       set_address
       render :new

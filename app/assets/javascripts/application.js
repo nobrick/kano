@@ -1,0 +1,10 @@
+//= require jquery
+//= require jquery.turbolinks
+//= require jquery_ujs
+//= require china_city/jquery.china_city
+//= require turbolinks
+//= require bootstrap
+//= require message-bus
+//= require pingpp
+//= require app
+//= require_tree .

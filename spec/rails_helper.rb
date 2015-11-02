@@ -49,7 +49,8 @@ RSpec.configure do |config|
 
   config.before(:each) do |example|
     # `Transaction` may result in undesirable behaviors for JavaScript tests. Use :deletion instead.
-    DatabaseCleaner.strategy = example.metadata[:js] ? :deletion : :transaction
+    async = example.metadata[:js] || example.metadata[:async]
+    DatabaseCleaner.strategy = async ? :deletion : :transaction
     DatabaseCleaner.start
   end
 

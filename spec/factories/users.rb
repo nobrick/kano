@@ -5,5 +5,10 @@ FactoryGirl.define do
     password 'abcdefg'
     phone { "1#{rand(10**9...10**10)}" }
     name '小明'
+
+    trait :wechat do
+      provider 'wechat'
+      uid 'abcBXxFyinSQsyM5r6EOUJRmebAM'
+    end
   end
 end
