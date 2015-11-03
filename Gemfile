@@ -56,7 +56,6 @@ group :development do
   gem 'capistrano', '~> 3.4.0'
   gem 'capistrano-rails', '~> 1.1.1'
   gem 'capistrano-rbenv', '~> 2.0'
-  gem 'capistrano-sidekiq'
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'spring-commands-rspec'
