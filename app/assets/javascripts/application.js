@@ -5,6 +5,7 @@
 //= require turbolinks
 //= require bootstrap
 //= require message-bus
+//= require jweixin-1.0.0
 //= require pingpp
 //= require app
 //= require_tree .
