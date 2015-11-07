@@ -1,5 +1,6 @@
 class Users::OrdersController < ApplicationController
   before_action :authenticate_completed_user
+  before_action :set_order, only: [ :show, :charge ]
 
   # GET /orders
   def index
@@ -8,15 +9,11 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id
   def show
-    @order = Order.find(params[:id])
-    if wechat_request? # || true # DEBUG mode(TODO)
-      js_params = UserWechatsController.wechat
-        .jsapi_ticket.signature(request.original_url)
-      signature = js_params[:signature]
-      charge = @order.ongoing_payment.try(:pingpp_charge).try(:value)
-      gon.pingpp = { signature: signature, charge: charge }
+    redirect_to user_orders_url, notice: '请求失败' if @order.nil?
+    if wechat_request? || debug_wechat?
+      url = request.original_url
+      gon.push(auth_client(url))
     end
-    redirect_to user_orders_url, notice: '请求失败' unless @order.user == current_user
   end
 
   # GET /orders/new
@@ -36,7 +33,32 @@ class Users::OrdersController < ApplicationController
     end
   end
 
+  # GET /orders/:id/charge
+  def charge
+    render json: @order.pingpp_charge
+  end
+
   private
+
+  def auth_client(url)
+    user_wechat = UserWechatsController.wechat
+    signature_options = user_wechat.jsapi_ticket.signature(url)
+    {
+      pingpp_charge: @order.pingpp_charge,
+      order_id: @order.id,
+      wechat: {
+        appid: user_wechat.access_token.appid,
+        timestamp: signature_options.fetch(:timestamp),
+        noncestr: signature_options.fetch(:noncestr),
+        signature: signature_options.fetch(:signature)
+      }
+    }
+  end
+
+  def set_order
+    @order = Order.find(params[:id])
+    @order = nil unless @order.user == current_user
+  end
 
   def set_address
     address = @order.address

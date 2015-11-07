@@ -94,11 +94,9 @@ class Payment < ActiveRecord::Base
     payment_method == 'wechat'
   end
 
+  # TODO
   def push_pingpp_charge_notification(charge = pingpp_charge.value)
-    # TODO /order_id instead of /charge
     channel = "/channel/#{user.access_token}/charge"
-    Rails.logger.info channel
-    Rails.logger.info charge
     MessageBus.publish(channel, charge) if charge
   end
 
@@ -197,7 +195,7 @@ class Payment < ActiveRecord::Base
       raise TransitionFailure, message
     end
 
-    charge = Pingpp::Charge.create(
+    Pingpp::Charge.create(
       order_no:  order.id,
       app:       { id: Rails.application.secrets.pingpp_appid },
       channel:   'wx_pub',

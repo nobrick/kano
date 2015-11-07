@@ -7,6 +7,7 @@ Rails.application.routes.draw do
       resources :orders, only: [ :new, :create, :index, :show ] do
         member do
           resource :checkout, only: [ :create, :update ]
+          get :charge
         end
       end
     end

@@ -74,7 +74,7 @@ gem 'redis-objects'
 gem 'wechat', '~> 0.6.1'
 gem 'omniauth-wechat-oauth2'
 gem 'connection_pool'
-gem 'sidekiq'
+gem 'sidekiq', '~> 3.5.3'
 gem 'sinatra', :require => nil
 gem 'aasm', '~> 4.2.0'
 gem 'china_city'

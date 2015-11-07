@@ -165,6 +165,10 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def pingpp_charge
+    valid_payment.try(:pingpp_charge).try(:value)
+  end
+
   private
 
   def do_contract(*args)

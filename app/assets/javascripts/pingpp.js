@@ -163,14 +163,14 @@ PingppSDK.prototype = {
     var self = this;
     if (typeof wx != "undefined" && typeof self._signature != "undefined") {
       var wxConfigFailed = false;
-      wx.config({
-        debug: self._debug,
-        appId: self._jsApiParameters["appId"],
-        timestamp: self._jsApiParameters["timeStamp"],
-        nonceStr: self._jsApiParameters["nonceStr"],
-        signature: self._signature,
-        jsApiList: ['chooseWXPay']
-      });
+      //wx.config({
+        //debug: self._debug,
+        //appId: self._jsApiParameters["appId"],
+        //timestamp: self._jsApiParameters["timeStamp"],
+        //nonceStr: self._jsApiParameters["nonceStr"],
+        //signature: self._signature,
+        //jsApiList: ['chooseWXPay']
+      //});
       wx.ready(function(){
         if (wxConfigFailed) {
           return;

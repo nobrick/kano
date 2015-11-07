@@ -70,4 +70,8 @@ class ApplicationController < ActionController::Base
     token = current_account.try(:access_token) || ''
     gon.push(account_access_token: token)
   end
+
+  def debug_wechat?
+    false
+  end
 end
