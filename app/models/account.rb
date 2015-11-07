@@ -28,17 +28,6 @@ class Account < ActiveRecord::Base
     account.becomes(account.type.constantize)
   end
 
-  def self.new_with_session(params, session)
-    auth = session['devise.facebook_data']
-    super.tap do |account|
-      if auth && auth['extra']['raw_info']
-        account.nickname = auth['info']['nickname'] if account.nickname.blank?
-        account.password = Devise.friendly_token[0, 20]
-        account.type = 'User'
-      end
-    end
-  end
-
   def readable_phone_number
     return nil if phone.blank?
     "#{phone[0..2]}-#{phone[3..6]}-#{phone[7..10]}"

@@ -37,7 +37,7 @@ class ApplicationController < ActionController::Base
     return unless authenticate_user!
     unless current_user.completed_info?
       set_return_path
-      redirect_to edit_profile_path, alert: '继续操作前请您完善个人资料'
+      redirect_to edit_profile_path, notice: '继续操作前请您完善个人资料'
       return false
     end
     true

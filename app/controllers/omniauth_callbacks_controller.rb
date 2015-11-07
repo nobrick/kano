@@ -4,8 +4,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def wechat
     auth = request.env['omniauth.auth']
-    Rails.logger.debug '-- auth --'
-    Rails.logger.debug auth
     @account = Account.from_omniauth(auth)
 
     if @account.persisted?
@@ -14,11 +12,10 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       set_flash_message(:notice, :success, :kind => '微信') if is_navigational_format?
     else
       # All session data starting with 'devise' will be removed whenever a user signs in
-      session['devise.wechat_data'] = auth
+      # session['devise.wechat_data'] = auth
       Rails.logger.debug '-- wechat persistence failure --'
       Rails.logger.debug @account.errors.full_messages
       redirect_to root_url, alert: '抱歉，暂时无法完成微信登录。如需帮助，请联系客服。'
-      # redirect_to new_user_registration_url
     end
   end
 
