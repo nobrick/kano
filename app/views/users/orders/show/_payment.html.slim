@@ -1,0 +1,7 @@
+- if wechat_request?
+  h2 确认支付 #{number_to_currency @order.user_total, unit: '￥'} 元吗？
+  - payment = @order.valid_payment
+  = link_to '进入支付页面', '#', class: 'btn btn-primary', id: 'repayBtn'
+  = link_to '支付已经成功', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
+- else
+  h2 请用微信完成支付 #{number_to_currency @order.user_total, unit: '￥'}

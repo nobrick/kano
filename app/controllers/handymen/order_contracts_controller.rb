@@ -4,7 +4,7 @@ class Handymen::OrderContractsController < ApplicationController
 
   # GET /contracts
   def index
-    @orders = Order.where(state: 'contracted', handyman: current_handyman)
+    @orders = Order.where(handyman: current_handyman)
       .order(created_at: :desc)
   end
 

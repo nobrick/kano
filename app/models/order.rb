@@ -62,7 +62,7 @@ class Order < ActiveRecord::Base
     :handyman_bonus_total,
     :handyman_total
   ]
-  MAX_PAYMENT_AMOUNT = 5000
+  MAX_PAYMENT_AMOUNT = 1000
   validates_presence_of PAYMENT_TOTAL_ATTRIBUTES, if: 'to? :payment'
   validates_numericality_of PAYMENT_TOTAL_ATTRIBUTES,
     numericality: { greater_than_or_equal_to: 0, less_than: MAX_PAYMENT_AMOUNT },
@@ -157,7 +157,7 @@ class Order < ActiveRecord::Base
     true
   end
 
-  def content_in_short(max = 50)
+  def content_in_short(max = 32)
     if content.length > max
       "#{content[0..max]}..."
     else
