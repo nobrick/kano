@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :render_flash?, :enable_render_flash, :disable_render_flash,
     :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?, :wechat_request?
+  before_action :set_gon_data
 
   private
 
@@ -63,5 +64,14 @@ class ApplicationController < ActionController::Base
     unless devise_controller? || request.xhr? || !request.get?
       session['return_to'] = request.url
     end
+  end
+
+  def set_gon_data
+    token = current_account.try(:access_token) || ''
+    gon.push(account_access_token: token)
+  end
+
+  def debug_wechat?
+    false
   end
 end

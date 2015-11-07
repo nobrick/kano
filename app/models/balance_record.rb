@@ -27,7 +27,8 @@ class BalanceRecord < ActiveRecord::Base
   private
 
   def last_record
-    @last_record ||= owner.latest_balance_record
+    # @last_record ||= owner.latest_balance_record
+    @last_record ||= owner.reload.latest_balance_record
   end
 
   def update_previous_attributes

@@ -8,6 +8,7 @@ html
     = javascript_include_tag 'application', 'data-turbolinks-track' => true
     = csrf_meta_tags
   body
+    = Gon::Base.render_data({})
     nav#brand_navbar.navbar.navbar-inverse.navbar-fixed-top[role="navigation"]
       .container-fluid
         .navbar-header

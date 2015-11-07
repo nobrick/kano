@@ -6,7 +6,8 @@ Rails.application.routes.draw do
     namespace :users, as: :user, path: '/' do
       resources :orders, only: [ :new, :create, :index, :show ] do
         member do
-          resource :checkout, only: [ :create ]
+          resource :checkout, only: [ :create, :update ]
+          get :charge
         end
       end
     end
@@ -22,7 +23,10 @@ Rails.application.routes.draw do
 
   root 'home#index'
   get 'home/index'
+
+  # TODO Authentication for Sidekiq
   mount Sidekiq::Web => '/sidekiq'
+
   mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
   resource :handyman_wechat, only: [ :show, :create ]

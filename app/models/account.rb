@@ -65,6 +65,12 @@ class Account < ActiveRecord::Base
     valid?(:complete_info_context)
   end
 
+  def access_token
+    Rails.cache.fetch("user-#{id}-access_token-#{Date.today}") do
+      SecureRandom.hex
+    end
+  end
+
   private
 
   # Disable devise email validation for omniauth

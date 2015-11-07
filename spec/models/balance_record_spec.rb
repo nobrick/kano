@@ -28,7 +28,7 @@ RSpec.describe BalanceRecord, type: :model do
     it 'creates balance record on non-cash payment' do
       payment.payment_method = 'wechat'
       payment.checkout && payment.save!
-      payment.process && payment.save!
+      payment.prepare && payment.save!
       payment.complete
       expect { payment.save! }.to change(BalanceRecord, :count).by 1
       expect(payment.balance_record).to be_persisted

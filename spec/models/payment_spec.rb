@@ -1,9 +1,11 @@
 require 'rails_helper'
 
-RSpec.describe Payment, type: :model do
-  let(:order) { create :contracted_order, :payment }
+RSpec.describe Payment, type: :model, async: true do
+  let(:order) { create :contracted_order, :payment, user: wechat_user }
+  let(:wechat_user) { create :user, :wechat }
   let(:payment) { build :payment, order: order }
   let(:cash_payment) { build :cash_payment, order: order }
+  let(:pingpp_wx_payment) { build :pingpp_wx_pub_payment, order: order }
   let(:pending_payment) { create :pending_payment, order: order }
 
   context 'From Payment.new' do
@@ -21,12 +23,41 @@ RSpec.describe Payment, type: :model do
       payment.save!
     end
 
-    it 'completes non-cash payment' do
+    it 'completes wechat api payment' do
       payment.payment_method = 'wechat'
       expect(payment.checkout && payment.save).to eq true
-      expect(payment.process && payment.save).to eq true
+      expect(payment.prepare && payment.save).to eq true
       expect(payment.complete).to eq true
       payment.save!
+    end
+
+    context 'on pingpp_wx_pub payment', :skip do
+      before { payment.payment_method = 'pingpp_wx_pub' }
+      it 'completes payment' do
+        payment.checkout && payment.save!
+        # p "PID = #{payment.id}"
+        expect(payment.processing?).to eq true
+        expect(payment.reload.aasm.current_state).to eq :processing
+        state = wait_for(:pending) { payment.reload.aasm.current_state }
+        expect(state).to eq :pending
+        expect(payment.pingpp_charge.value).to be_present
+      end
+
+      it 'completes after failure due to network issue' do
+        # TODO
+      end
+    end
+
+    def wait_for(expected, period = 10, delta_time = 0.2)
+      total_time = 0
+      result = nil
+      while(total_time < period)
+        total_time += delta_time
+        got = yield
+        return expected if got == expected
+        sleep delta_time
+      end
+      got
     end
   end
 
@@ -44,11 +75,13 @@ RSpec.describe Payment, type: :model do
 
   describe 'state machine' do
     describe 'checkout event' do
+      let(:another_payment) { build :payment, order: order }
+
       it 'checkouts(and persists) a non-cash payment' do
         expect(payment.checkout && payment.save).to eq true
         expect(payment).to be_a Payment
         expect(payment).to be_persisted
-        expect(payment.state).to eq 'checkout'
+        expect(payment.state).to eq 'processing'
         expect(payment.order.state).to eq 'payment'
       end
 
@@ -63,28 +96,18 @@ RSpec.describe Payment, type: :model do
         payment.checkout && payment.save!
 
         message = 'Order valid payment already exists, set it void or failed first'
-        expect { create :payment, order: order }
+        expect { another_payment.checkout }
           .to raise_error(TransitionFailure, message)
       end
     end
 
-    describe 'process event' do
-      it 'cannot process cash payment' do
-        expect { cash_payment.process }.to raise_error AASM::InvalidTransition
-      end
-
-      it 'processes non-cash payment' do
-        payment.checkout && payment.save!
-
-        expect(payment.process && payment.save).to eq true
-        expect(payment.pending?).to eq true
-      end
+    describe 'prepare event' do
+      # TODO
     end
 
     describe 'void event' do
       it 'cancels a payment' do
         payment.checkout && payment.save!
-
         expect(payment.void && payment.save).to eq true
         expect(order.payments).to eq [ payment ]
         expect(order.valid_payment).to be_nil
@@ -100,7 +123,7 @@ RSpec.describe Payment, type: :model do
     end
 
     describe 'complete event' do
-      it 'completes a pending (non-cash) payment' do
+      it 'completes a pending (wechat-api) payment' do
         expect(pending_payment).to eq order.ongoing_payment
         expect(pending_payment.complete).to eq true
 

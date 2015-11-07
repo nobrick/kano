@@ -32,6 +32,9 @@ module Kano
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
 
+    # Remove Rack::Lock middleware to allow concurrent requests, especially for MessageBus.
+    config.middleware.delete Rack::Lock
+
     # Disable generators.
     config.generators do |g|
       g.stylesheets false

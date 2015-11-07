@@ -1,10 +1,10 @@
 - content_for :row
-  .order-index-page
+  .order-show-page
     .col-md-6.col-md-offset-3
       - case @order.state
       - when 'requested'
         .text-center
-          h2 等待接单中
+          h2 师傅接单中，请稍等
       - when 'contracted'
         .text-center
           h2 #{@order.handyman.name} 师傅
@@ -17,11 +17,34 @@
                 ' 现金支付
               = f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-primary' do
                 ' 微信支付
+      - when 'payment'
+        h2 确认支付 #{number_to_currency @order.user_total, unit: '￥'} 元吗？
+        - payment = @order.valid_payment
+        = link_to '进入支付页面', '#', class: 'btn btn-primary', id: 'repayBtn'
+        = link_to '支付已经成功', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
+        /p = payment.inspect
+        /p = payment.pingpp_charge.value
       - when 'completed'
         .text-center
           h2 已支付 #{number_to_currency @order.user_total, unit: '￥'} 元
           h3 #{@order.handyman.name} 师傅
           h3 #{@order.handyman.readable_phone_number}
+      p
+      strong 维修内容
+      p = @order.content
+      strong 预约时间
+      - if (@order.requested? || @order.contracted?) && @order.arrives_at < Time.now
+        p
+          = l @order.arrives_at
+          strong （时间已过，请您自行联系师傅预约）
       - else
-        / TODO
-      = @order.inspect
+        p = l @order.arrives_at
+      strong 您的称呼
+      p = current_user.name
+      strong 您的电话号码
+      p = current_user.readable_phone_number
+      strong 您的地址
+      p = @order.address.full_content
+      strong 下单时间
+      p = l @order.created_at
+      /= @order.inspect
