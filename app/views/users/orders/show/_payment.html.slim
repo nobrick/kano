@@ -1,17 +1,19 @@
-.text-center
-  h2
-    span.fa-icon
-      => fa_icon('user')
-    ' #{@order.handyman.name} 师傅
-  h3 #{@order.handyman.readable_phone_number}
-- if wechat_request?
-  h3.text-center
-    ' 支付金额：
-    b => number_to_currency @order.user_total, unit: '￥'
-  - payment = @order.valid_payment
-  = link_to '发起支付', '#', class: 'btn btn-normal', id: 'repayBtn'
-  = link_to '支付成功？', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
-- else
-  h3.text-center
-    ' 请用微信完成支付
-    b = number_to_currency @order.user_total, unit: '￥'
+.panel.panel-default
+  .panel-body
+    .text-center
+      h2
+        span.fa-icon
+          => fa_icon('user')
+        ' #{@order.handyman.name} 师傅
+      h3 #{@order.handyman.readable_phone_number}
+    - if wechat_request?
+      h3.text-center
+        ' 支付金额：
+        b => number_to_currency @order.user_total, unit: '￥'
+      - payment = @order.valid_payment
+      = link_to '发起支付', '#', class: 'btn btn-normal', id: 'repayBtn'
+      = link_to '支付成功？', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
+    - else
+      h3.text-center
+        ' 请用微信完成支付
+        b = number_to_currency @order.user_total, unit: '￥'

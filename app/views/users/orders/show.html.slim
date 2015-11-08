@@ -1,11 +1,9 @@
 - content_for :row
   .order-show-page
     .col-md-6.col-md-offset-3
-      .panel.panel-default
-        .panel-body
-          - case @order.state
-          - when 'requested', 'contracted', 'payment', 'completed'
-            = render "users/orders/show/#{@order.state}", order: @order
+      - case @order.state
+      - when 'requested', 'contracted', 'payment', 'completed'
+        = render "users/orders/show/#{@order.state}", order: @order
       .panel.panel-default
         .panel-body
           span.fa-icon

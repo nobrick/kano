@@ -1,19 +1,23 @@
-.text-center
-  h2
-    span.fa-icon
-      => fa_icon('user')
-    ' #{@order.handyman.name} 师傅
-  h3 #{@order.handyman.readable_phone_number}
-  = form_for(@order, url: user_checkout_path, method: :post) do |f|
-    .form-group
-      = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT,
-        step: 10, pattern: '\d*', class: 't-input'
-    .pay-buttons
-      = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-normal pull-left' do
+.panel.panel-default
+  .panel-body
+    .text-center
+      h2
         span.fa-icon
-          => fa_icon('money')
-        ' 现金支付
-      =< f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-normal pull-right' do
-        span.fa-icon
-          => fa_icon('wechat')
-        ' 微信支付
+          => fa_icon('user')
+        ' #{@order.handyman.name} 师傅
+      h3 #{@order.handyman.readable_phone_number}
+.panel.panel-default
+  .panel-body
+    = form_for(@order, url: user_checkout_path, method: :post) do |f|
+      .form-group
+        = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT,
+          step: 10, pattern: '\d*', class: 't-input', placeholder: '请在师傅完成维修后输入支付金额'
+      .pay-buttons
+        = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-normal pull-left' do
+          span.fa-icon
+            => fa_icon('money')
+          ' 现金支付
+        =< f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-normal pull-right' do
+          span.fa-icon
+            => fa_icon('wechat')
+          ' 微信支付
