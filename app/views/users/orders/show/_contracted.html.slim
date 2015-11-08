@@ -1,18 +1,19 @@
 .text-center
   h2
     span.fa-icon
-      = fa_icon('user')
-    '  #{@order.handyman.name} 师傅
+      => fa_icon('user')
+    ' #{@order.handyman.name} 师傅
   h3 #{@order.handyman.readable_phone_number}
   = form_for(@order, url: user_checkout_path, method: :post) do |f|
     .form-group
-      = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, step: 10, pattern: '\d*'
-    div
-      = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-primary' do
+      = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT,
+        step: 10, pattern: '\d*', class: 't-input'
+    .pay-buttons
+      = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-normal pull-left' do
         span.fa-icon
           => fa_icon('money')
         ' 现金支付
-      =< f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-primary' do
+      =< f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-normal pull-right' do
         span.fa-icon
           => fa_icon('wechat')
         ' 微信支付

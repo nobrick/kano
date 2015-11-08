@@ -10,5 +10,5 @@
         li created_at: #{l @order.created_at}
         li arrives_at: #{l @order.arrives_at}
         li state: #{@order.state}
-      p = link_to '完成修理', '#', class: 'btn btn-primary'
+      p = link_to '完成修理', '#', class: 'btn btn-normal'
       = @order.inspect

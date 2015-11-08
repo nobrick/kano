@@ -13,7 +13,9 @@
 /* Elements style */
 body {
   padding-top: 65px;
+  background-color: #f4f4f1;
   color: #555555;
+  font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
 }
 
 a {
@@ -33,14 +35,46 @@ h1, .h1 {
 }
 
 h2, .h2 {
-  font-size: 18px;
+  font-size: 20px;
   @media (min-width: $screen-sm-min) {
     font-size: 26px;
   }
 }
 
+h3, .h3 {
+  font-size: 16px;
+  @media (min-width: $screen-sm-min) {
+    font-size: 22px;
+  }
+}
+
 .alert {
   border-radius: 0;
+}
+
+.panel {
+  border-radius: 0;
+  box-shadow: none;
+  .panel-body {
+    padding: 12px;
+  }
+}
+
+.btn-normal {
+  border-radius: 0;
+  border: none;
+  background-color: #04b7b7;
+  display: inline-block;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
+  color: $alphaWhite;
+  border: none;
+  font-size: 16px;
+  letter-spacing: 2px;
+  text-align: center;
+  &:hover, &:focus {
+    color: $alphaWhite;
+    background-color: #3dbcf5;
+  }
 }
 
 input[type=checkbox] {
@@ -74,6 +108,17 @@ input[type=checkbox] {
 
 .btn-simple-letters {
   font-size: 18px;
+}
+
+@mixin h-center($max-width, $screen-sm-width) {
+  @extend .text-center;
+  width: 100%;
+  max-width: $max-width;
+  @media (min-width: $screen-sm-min) {
+    width: $screen-sm-width;
+  }
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* App style */
@@ -157,7 +202,12 @@ input[type=checkbox] {
     border-bottom: 1px solid #eeeeee;
     margin: 0 auto 25px;
     padding-bottom: 40px;
-    width: 300px;
+
+    width: 247px;
+    @media (min-width: $screen-sm-min) {
+      width: 300px;
+    }
+
     .t-input {
       height: 44px;
       padding: 4px 12px;
@@ -200,7 +250,13 @@ input[type=checkbox] {
 
   #order_content {
     height: 85px;
-    width: 300px;
+  }
+
+  #order_content, #order_address_attributes_content, input.btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
   }
 
   .btn-create-order {
@@ -251,4 +307,18 @@ input[type=checkbox] {
   .contracted-state {
     color: #ff6666;
   }
+}
+
+.order-show-page {
+  input#order_user_total {
+    display: block;
+  }
+
+  input#order_user_total, .pay-buttons {
+    @include h-center(250px, 250px);
+  }
+}
+
+#receive_order_btn {
+  @include h-center(100%, 100%);
 }

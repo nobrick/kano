@@ -1,8 +1,9 @@
 - content_for :row
   .order-index-page
-    .col-md-6.col-md-offset-3
-      - if @orders.blank?
-        p 您还没有任何订单。
-      - else
-        ul.orders-list
-          = render partial: 'handymen/orders/order', collection: @orders, cache: true
+    .panel.panel-default
+      .panel-body
+        - if @orders.blank?
+          p 您还没有任何订单。
+        - else
+          ul.orders-list
+            = render partial: 'handymen/orders/order', collection: @orders, cache: true

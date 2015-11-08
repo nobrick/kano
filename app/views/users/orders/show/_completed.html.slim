@@ -1,4 +1,9 @@
 .text-center
-  h2 已支付 #{number_to_currency @order.user_total, unit: '￥'} 元
-  h3 #{@order.handyman.name} 师傅
+  h2
+    span.fa-icon
+      => fa_icon('user')
+    ' #{@order.handyman.name} 师傅
   h3 #{@order.handyman.readable_phone_number}
+  h3
+    ' 已支付
+    b =< number_to_currency @order.user_total, unit: '￥'

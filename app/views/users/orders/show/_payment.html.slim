@@ -1,7 +1,17 @@
+.text-center
+  h2
+    span.fa-icon
+      => fa_icon('user')
+    ' #{@order.handyman.name} 师傅
+  h3 #{@order.handyman.readable_phone_number}
 - if wechat_request?
-  h2 确认支付 #{number_to_currency @order.user_total, unit: '￥'} 元吗？
+  h3.text-center
+    ' 支付金额：
+    b => number_to_currency @order.user_total, unit: '￥'
   - payment = @order.valid_payment
-  = link_to '进入支付页面', '#', class: 'btn btn-primary', id: 'repayBtn'
-  = link_to '支付已经成功', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
+  = link_to '发起支付', '#', class: 'btn btn-normal', id: 'repayBtn'
+  = link_to '支付成功？', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
 - else
-  h2 请用微信完成支付 #{number_to_currency @order.user_total, unit: '￥'}
+  h3.text-center
+    ' 请用微信完成支付
+    b = number_to_currency @order.user_total, unit: '￥'

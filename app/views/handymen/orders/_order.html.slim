@@ -14,7 +14,6 @@ li.order-index-item
       = fa_icon('clock-o', class: 'attr-bar-icon')
     - if order.arrives_at > Time.now
       span.arrives-at-attr
-        ' 需要
         b #{time_ago_in_words order.arrives_at}
         '  后到达
     - else

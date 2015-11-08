@@ -1,29 +1,37 @@
 - content_for :row
   .order-show-page
     .col-md-6.col-md-offset-3
-      .text-center
-        h2
+      .panel.panel-default
+        .panel-body
+          .text-center
+            h2
+              span.fa-icon
+                => fa_icon('user')
+                = @order.user.full_or_nickname
+            h2 = @order.user.readable_phone_number
+      .panel.panel-default
+        .panel-body
           span.fa-icon
-            => fa_icon('user')
-            = @order.user.full_or_nickname
-        h2 = @order.user.readable_phone_number
-      span.fa-icon
-        => fa_icon('location-arrow')
-        strong 联系地址
-        p = @order.address.full_content
+            => fa_icon('location-arrow')
+            strong 联系地址
+            p = @order.address.full_content
 
-      span.fa-icon
-        => fa_icon('clock-o')
-      strong 预约时间
-      p = l @order.arrives_at
+          span.fa-icon
+            => fa_icon('clock-o')
+          strong 预约时间
+          p = l @order.arrives_at
 
-      span.fa-icon
-        => fa_icon('envelope')
-      strong 维修内容
-      p = @order.content
+          span.fa-icon
+            => fa_icon('envelope')
+          strong 维修内容
+          p = @order.content
 
-      span.fa-icon
-        => fa_icon('tag')
-      strong 维修项目
-      p = @order.taxon_code
-      p = link_to '接单', [ :handyman, @order ], method: :put, class: 'btn btn-primary'
+          span.fa-icon
+            => fa_icon('tag')
+          strong 维修项目
+          p = @order.taxon_code
+      .text-center
+        p = link_to [ :handyman, @order ], method: :put, class: 'btn btn-normal', id: 'receive_order_btn' do
+          span.fa-icon
+            => fa_icon('check-circle')
+          ' 接单
