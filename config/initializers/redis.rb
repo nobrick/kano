@@ -8,7 +8,3 @@ redis_conf = conf[environment]
 Redis::Objects.redis = ConnectionPool.new(size: 5, timeout: 5) do
   Redis.new(redis_conf)
 end
-MessageBus.redis_config = redis_conf
-
-# Fix https://github.com/SamSaffron/message_bus/issues/44
-MessageBus.keepalive_interval = 0 if environment == 'test'

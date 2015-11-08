@@ -96,8 +96,6 @@ class Payment < ActiveRecord::Base
 
   # TODO
   def push_pingpp_charge_notification(charge = pingpp_charge.value)
-    channel = "/channel/#{user.access_token}/charge"
-    MessageBus.publish(channel, charge) if charge
   end
 
   def save_with_prepare!
