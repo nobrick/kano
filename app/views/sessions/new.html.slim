@@ -1,16 +1,14 @@
 - content_for :container
   .login-page
-    .panel.panel-default
-      .panel-body
-        = render 'shared/header_sign_in_or_up'
-        = form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f|
-          .form-group
-            = f.text_field :email, placeholder: '邮箱', autofocus: true, class: 'control-group t-input'
-          .form-group
-            = f.password_field :password, placeholder: '密码', autocomplete: 'off', class: 'control-group t-input'
-          = f.submit '登录', class: 'btn btn-blue btn-simple-letters t-input'
-          .foot-control-group
-            = f.check_box :remember_me
-            ' 记住我
-            .pull-right
-              = link_to '忘记密码', new_password_path(resource_name)
+    = render 'shared/header_sign_in_or_up'
+    = form_for(resource, as: resource_name, url: session_path(resource_name), class: 'form-horizontal') do |f|
+      .form-group
+        = f.text_field :email, placeholder: '邮箱', autofocus: true, class: 'control-group t-input'
+      .form-group
+        = f.password_field :password, placeholder: '密码', autocomplete: 'off', class: 'control-group t-input'
+      = f.submit '登录', class: 'btn btn-blue btn-simple-letters t-input'
+      .foot-control-group
+        = f.check_box :remember_me
+        ' 记住我
+        .pull-right
+          = link_to '忘记密码', new_password_path(resource_name)

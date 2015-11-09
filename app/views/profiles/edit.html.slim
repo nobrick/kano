@@ -1,6 +1,5 @@
 - content_for :container
   .signup-page
-    /= render 'shared/header_sign_in_or_up', active: :sign_up
     = render 'shared/error_messages', model: @account
     = form_for(@account, as: :profile, url: profile_path, class: 'form-horizontal') do |f|
       .form-group

@@ -74,4 +74,8 @@ class ApplicationController < ActionController::Base
   def debug_wechat?
     false
   end
+
+  def gray_background
+    @body_css_class = 'gray-backgroud'
+  end
 end

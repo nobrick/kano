@@ -1,9 +1,7 @@
 - content_for :row
   .order-index-page
-    .panel.panel-default
-      .panel-body
-        - if @orders.blank?
-          p 您还没有任何订单。
-        - else
-          ul.orders-list
-            = render partial: 'users/orders/order', collection: @orders, cache: true
+    - if @orders.blank?
+      p 您还没有任何订单。
+    - else
+      ul.orders-list
+        = render partial: 'users/orders/order', collection: @orders, cache: true
