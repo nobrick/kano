@@ -15,13 +15,14 @@ Rails.application.routes.draw do
 
   authenticated :handyman do
     root 'handymen/orders#index', as: :handyman_root
+    get '/handymen', to: 'handymen/orders#index'
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
     end
   end
 
-  authenticated :user, lambda { |u| u.admin? } do
+  authenticated :user, -> (u) { u.admin? } do
     namespace :admin, path: '/alpha' do
       DashboardManifest::DASHBOARDS.each do |dashboard_resource|
         resources dashboard_resource
@@ -31,6 +32,11 @@ Rails.application.routes.draw do
     end
 
     mount Sidekiq::Web => '/sidekiq'
+  end
+
+  namespace :handymen do
+    get 'home/index'
+    get '/', to: 'home#index'
   end
 
   root 'home#index'

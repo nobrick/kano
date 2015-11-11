@@ -1,0 +1,18 @@
+- content_for :row
+  .home-index-page
+    - if user_signed_in?
+      p 您已经以普通用户身份登录，请注销后重新访问本页面
+    - elsif handyman_signed_in?
+      p Welcome, handyman
+    - elsif wechat_request?
+      = content_tag :div, class: 'alert alert-warning' do
+        p.normal-text 您还没有微信登录。
+        = link_to '管家登录', account_omniauth_authorize_path(:handyman_wechat),
+          class: 'btn btn-danger btn-in-flash'
+    - else
+      = content_tag :div, class: 'alert alert-warning' do
+        p.normal-text 您还没有登录。
+        = link_to '登录', new_account_session_path,
+          class: 'btn btn-danger btn-in-flash btn-sign-in'
+        = link_to '加盟管家', new_handyman_registration_path,
+          class: 'btn btn-danger btn-in-flash btn-sign-up'

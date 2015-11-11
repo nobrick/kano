@@ -2,21 +2,21 @@
   .home-index-page
     - if user_signed_in?
       - if current_user.completed_info?.blank?
-        = content_tag :div, class: "alert alert-warning" do
+        = content_tag :div, class: 'alert alert-warning' do
           p.normal-text 您还没有完善个人资料。
-          = link_to '完善资料', edit_profile_path, class: 'btn btn-danger btn-in-flash'
+          = link_to '完善资料', edit_profile_path,
+            class: 'btn btn-danger btn-in-flash'
     - elsif handyman_signed_in?
-      /- if current_handyman.completed_info?.blank?
-        = content_tag :div, class: "alert alert-warning" do
-          p.normal-text 您还没有完善个人资料。
-          = link_to '完善资料', '#', class: 'btn btn-danger btn-in-flash'
-      p Welcome, handyman
+      p 您已经以管家身份登录，请注销后重新访问本页面
     - elsif wechat_request?
-      = content_tag :div, class: "alert alert-warning" do
+      = content_tag :div, class: 'alert alert-warning' do
         p.normal-text 您还没有微信登录。
-        = link_to '微信登录', account_omniauth_authorize_path(:wechat), class: 'btn btn-danger btn-in-flash'
+        = link_to '微信登录', account_omniauth_authorize_path(:wechat),
+          class: 'btn btn-danger btn-in-flash'
     - else
-      = content_tag :div, class: "alert alert-warning" do
+      = content_tag :div, class: 'alert alert-warning' do
         p.normal-text 您还没有登录或注册。
-        = link_to '登录', new_account_session_path, class: 'btn btn-danger btn-in-flash btn-sign-in'
-        = link_to '注册', new_user_registration_path, class: 'btn btn-danger btn-in-flash btn-sign-up'
+        = link_to '登录', new_account_session_path,
+          class: 'btn btn-danger btn-in-flash btn-sign-in'
+        = link_to '注册', new_user_registration_path,
+          class: 'btn btn-danger btn-in-flash btn-sign-up'

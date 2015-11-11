@@ -1,3 +1,11 @@
+module OmniAuth::Strategies
+  class HandymanWechat < Wechat
+    def name
+      :handyman_wechat
+    end
+  end
+end
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -234,6 +242,9 @@ Devise.setup do |config|
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
   config.omniauth :wechat, Wechat.config[:appid], Wechat.config[:secret],
+    authorize_params: { :scope => 'snsapi_userinfo' }
+
+  config.omniauth :handyman_wechat, ENV['HANDYMAN_WECHAT_APPID'], ENV['HANDYMAN_WECHAT_SECRET'],
     authorize_params: { :scope => 'snsapi_userinfo' }
 
   # ==> Warden configuration

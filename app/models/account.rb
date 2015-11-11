@@ -4,7 +4,7 @@ class Account < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-    :trackable, :validatable, :omniauthable, omniauth_providers: [ :wechat ]
+    :trackable, :validatable, :omniauthable, omniauth_providers: [ :wechat, :handyman_wechat ]
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'
   accepts_nested_attributes_for :primary_address
@@ -19,11 +19,11 @@ class Account < ActiveRecord::Base
   validates! :type, presence: true
   validates_presence_of :name, :phone, :primary_address, on: :complete_info_context
 
-  def self.from_omniauth(auth)
+  def self.from_omniauth(auth, type)
     account = where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
       account.nickname = auth.info.nickname
       account.password = Devise.friendly_token[0, 20]
-      account.type = 'User'
+      account.type = type
     end
     account.becomes(account.type.constantize)
   end
