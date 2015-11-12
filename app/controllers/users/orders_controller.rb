@@ -5,7 +5,7 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders
   def index
-    @orders = current_user.orders.order(created_at: :desc)
+    @orders = current_user.orders.order(updated_at: :desc)
   end
 
   # GET /orders/:id

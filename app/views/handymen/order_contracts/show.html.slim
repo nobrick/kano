@@ -1,14 +1,53 @@
 - content_for :row
   .order-show-page
     .col-md-6.col-md-offset-3
-      ul
-        li user: #{@order.user.full_or_nickname}
-        li phone: #{@order.user.phone}
-        li taxcon: #{@order.taxon_code}
-        li content: #{@order.content}
-        li address: #{@order.address.full_content}
-        li created_at: #{l @order.created_at}
-        li arrives_at: #{l @order.arrives_at}
-        li state: #{@order.state}
-      p = link_to '完成修理', '#', class: 'btn btn-normal'
-      = @order.inspect
+      .panel.panel-default
+        .panel-body
+          .text-center
+            h2
+              span.fa-icon
+                => fa_icon('user')
+                = @order.user.full_or_nickname
+            h3 = @order.user.readable_phone_number
+            - case @order.state
+            - when 'contracted'
+              h3 请您按预约时间上门维修
+            - when 'payment'
+              h3 等待用户付款
+            - when 'completed'
+              h3
+                ' 已支付
+                b =< number_to_currency @order.user_total, unit: '￥'
+      .panel.panel-default
+        .panel-body
+          - if @order.completed?
+            - record = @order.handyman.latest_balance_record
+            - if record.balance > 0
+              span.fa-icon
+                => fa_icon('archive')
+                strong 当前余额
+                p =< number_to_currency record.balance, unit: '￥'
+            - if record.cash_total > 0
+              span.fa-icon
+                => fa_icon('ticket')
+                strong 现金累计
+                p =< number_to_currency record.cash_total, unit: '￥'
+          span.fa-icon
+            => fa_icon('location-arrow')
+            strong 联系地址
+            p = @order.address.full_content
+
+          span.fa-icon
+            => fa_icon('clock-o')
+          strong 预约时间
+          p = l @order.arrives_at
+
+          span.fa-icon
+            => fa_icon('envelope')
+          strong 维修内容
+          p = @order.content
+
+          span.fa-icon
+            => fa_icon('tag')
+          strong 维修项目
+          p = @order.taxon_code
