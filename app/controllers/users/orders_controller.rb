@@ -29,6 +29,7 @@ class Users::OrdersController < ApplicationController
     if @order.request && @order.save
       redirect_to [ :user, @order ], notice: '下单成功'
     else
+      gray_background
       set_address
       render :new
     end
