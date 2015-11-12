@@ -1,6 +1,29 @@
-li
-  h2
-    = link_to order.content, [ :handyman, order ]
-  p = order.arrives_at
-  p = order.user.full_or_nickname
-  p = order.taxon_code
+li.order-index-item
+  h2 = link_to order.content_in_short, [ :user, order ]
+  .pull-right
+    span.state-desc class="#{order.state}-state" = order.state_description
+  span.fa-icon
+    => fa_icon('user', class: 'attr-bar-icon')
+  span
+    b = order.user.full_or_nickname
+  br
+  span.fa-icon
+    => fa_icon('location-arrow', class: 'attr-bar-icon')
+  span = order.address.full_content
+  .order-attr-bar
+    span.fa-icon
+      = fa_icon('clock-o', class: 'attr-bar-icon')
+    - if order.state == 'contracted'
+      - if order.arrives_at > Time.now
+        span.arrives-at-attr
+          b #{time_ago_in_words order.arrives_at}
+          '  后到达
+      - else
+        ' 需要预约
+    - else
+      span.arrives-at-attr #{time_ago_in_words order.created_at}前
+    .pull-right
+      span.fa-icon
+        = fa_icon('tag', class: 'attr-bar-icon')
+      span
+        = order.taxon_code

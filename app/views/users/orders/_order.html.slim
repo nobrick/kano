@@ -1,6 +1,5 @@
 li.order-index-item
-  h2
-    = link_to order.content_in_short, [ :user, order ]
+  h2 = link_to order.content_in_short, [ :user, order ]
   span.state-desc class="#{order.state}-state" = order.state_description
   - if order.contracted?
     span

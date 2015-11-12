@@ -300,14 +300,12 @@ input[type=checkbox] {
   }
   .state-desc {
     color: #4094c7;
-    font-weight: bold;
     margin-right: 8px;
   }
   .requested-state {
-    color: #ff6666;
     font-weight: bold;
   }
-  .contracted-state {
+  .requested-state, .contracted-state, .payment-state {
     color: #ff6666;
   }
 }
