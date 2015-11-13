@@ -5,7 +5,7 @@
         span.fa-icon
           => fa_icon('user')
         ' #{@order.handyman.name} 师傅
-      h3 #{@order.handyman.readable_phone_number}
+      h3 = phone_link_for @order.handyman
 .panel.panel-default
   .panel-body
     = form_for(@order, url: user_checkout_path, method: :post) do |f|

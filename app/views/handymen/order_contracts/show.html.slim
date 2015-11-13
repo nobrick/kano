@@ -8,7 +8,7 @@
               span.fa-icon
                 => fa_icon('user')
                 = @order.user.full_or_nickname
-            h3 = @order.user.readable_phone_number
+            h3 = phone_link_for @order.user
             - case @order.state
             - when 'contracted'
               h3 请您按预约时间上门维修

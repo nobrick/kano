@@ -8,7 +8,7 @@
               span.fa-icon
                 => fa_icon('user')
                 = @order.user.full_or_nickname
-            h2 = @order.user.readable_phone_number
+            h2 = phone_link_for @order.user
       .panel.panel-default
         .panel-body
           span.fa-icon

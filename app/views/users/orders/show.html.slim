@@ -17,7 +17,7 @@
           p
             = current_user.name
             br
-            = current_user.readable_phone_number
+            = phone_link_for current_user
             br
             = @order.address.full_content
 
