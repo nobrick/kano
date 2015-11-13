@@ -42,6 +42,9 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'home/index'
 
+  get 'orders/new', to: 'home#index'
+  get 'contracts', to: 'handymen/home#index'
+
   mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
   resource :handyman_wechat, only: [ :show, :create ]
