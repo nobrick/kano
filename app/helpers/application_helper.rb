@@ -4,6 +4,10 @@ module ApplicationHelper
   end
 
   def phone_link_for(account)
-    link_to account.readable_phone_number, "tel:#{account.phone}"
+    if account.phone.present?
+      link_to account.readable_phone_number, "tel:#{account.phone}"
+    else
+      nil
+    end
   end
 end
