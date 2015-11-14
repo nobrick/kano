@@ -1,6 +1,12 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  concern :with_account_profile do
+    resource :profile, only: [ :edit, :update ] do
+      get :complete
+    end
+  end
+
   authenticated :user do
     root 'users/orders#index', as: :user_root
     namespace :users, as: :user, path: '/' do
@@ -10,6 +16,7 @@ Rails.application.routes.draw do
           get :charge
         end
       end
+      concerns :with_account_profile
     end
   end
 
@@ -19,6 +26,7 @@ Rails.application.routes.draw do
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
+      concerns :with_account_profile
     end
   end
 
@@ -48,7 +56,6 @@ Rails.application.routes.draw do
   mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
   resource :handyman_wechat, only: [ :show, :create ]
-  resource :profile, only: [ :edit, :update ]
 
   devise_for :accounts, controllers:
     { :sessions => 'sessions', :omniauth_callbacks => 'omniauth_callbacks' }, skip: :registrations

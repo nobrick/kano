@@ -1,7 +1,5 @@
 .header-sign-in-or-up
-  .jumbotron.logo
-    h1 = t :logo_name
-    p = t :logo_desc
+  = render 'shared/logo'
   h4.title
     span
       - if resource_name == :handyman

@@ -18,7 +18,8 @@ class Handymen::OrderContractsController < ApplicationController
   private
 
   def check_order_permission
-    return false unless authenticate_handyman_order
+    unauthorized_options = { alert: '订单不存在' }
+    return false unless authenticate_handyman_order(unauthorized_options)
 
     case @order.state
     when 'requested' then redirect_to [ :handyman, @order ] and return false

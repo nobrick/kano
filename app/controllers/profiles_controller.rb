@@ -1,24 +1,30 @@
 class ProfilesController < ApplicationController
-  # This controller is for filling up additional necessary user infomation
-  # after signing up by omniauth.
-  before_action :authenticate_user!
+  # For filling up additional necessary account infomation after sign up.
   before_action :set_account
+  before_action :set_address, only: [ :edit, :complete ]
 
   # GET /profile/edit
   def edit
-    set_address
+  end
+
+  # GET /profile/complete
+  def complete
   end
 
   # PATCH/PUT /profile/
   def update
+    previous_action = @account.completed_info? ? :edit : :complete
     @account.assign_attributes(profile_params)
     if @account.save(context: :complete_info_context)
-      redirect_to root_url, notice: '恭喜您成功更新个人资料。'
+      i18n_key = "controllers.profile.#{previous_action}.success"
+      redirect_to root_url, notice: I18n.t(i18n_key)
     else
       set_address
-      render :edit
+      render previous_action
     end
   end
+
+  private
 
   def set_account
     @account = current_account
@@ -32,8 +38,15 @@ class ProfilesController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile)
-      .permit(:email, :phone, :name, :nickname,
-    primary_address_attributes: [ :code, :content ] )
+    params.require(:profile).permit(
+      :email,
+      :phone,
+      :name,
+      :nickname,
+      primary_address_attributes: [
+        :code,
+        :content
+      ]
+    )
   end
 end

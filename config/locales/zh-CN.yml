@@ -2,6 +2,12 @@ zh-CN:
   time:
     formats:
       default: '%F %T'
+  controllers:
+    profile:
+      edit:
+        success: '成功更新个人资料。'
+      complete:
+        success: '恭喜您注册成功'
   order:
     requested: '未接单'
     contracted: '已接单'

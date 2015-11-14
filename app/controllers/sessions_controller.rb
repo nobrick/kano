@@ -17,9 +17,14 @@ class SessionsController < Devise::SessionsController
   end
 
   # DELETE /resource/sign_out
-  # def destroy
-  #   super
-  # end
+  def destroy
+    if account_signed_in?
+      scope = current_account.type.underscore
+      sign_out
+      redirect_to handymen_home_index_url and return if scope == 'handyman'
+    end
+    redirect_to home_index_url
+  end
 
   # protected
 

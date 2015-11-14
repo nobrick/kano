@@ -32,7 +32,7 @@ zh-CN:
       updated_not_active: "您的密码已修改成功。"
     registrations:
       destroyed: "再见！您的帐户已成功注销。"
-      signed_up: "欢迎您！您已注册成功。"
+      signed_up: ''
       signed_up_but_inactive: "您已注册，但尚未激活账号。"
       signed_up_but_locked: "您已注册，但账号被锁定了。"
       signed_up_but_unconfirmed: "一封带有确认链接的邮件已经发送至您的邮箱，请检查邮箱（包括垃圾邮箱），并点击该链接激活您的账号。"

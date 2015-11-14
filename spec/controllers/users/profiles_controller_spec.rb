@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe ProfilesController, type: :controller do
+RSpec.describe Users::ProfilesController, type: :controller do
   before { sign_in :user, user }
   let(:user) { create :user }
   let(:address_attrs) { { primary_address_attributes: attributes_for(:address) } }
@@ -8,7 +8,18 @@ RSpec.describe ProfilesController, type: :controller do
   describe 'GET #profile/edit' do
     it 'returns http success' do
       get :edit
+      expect(assigns(:account)).to be current_user
       expect(response).to have_http_status(:success)
+      expect(response).to render_template :edit
+    end
+  end
+
+  describe 'GET #profile/complete' do
+    it 'returns http success' do
+      get :complete
+      expect(assigns(:account)).to be current_user
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template :complete
     end
   end
 
@@ -66,8 +77,9 @@ RSpec.describe ProfilesController, type: :controller do
         ]
       end
 
-      it 're-renders the :edit template' do
+      it 're-renders the :complete template' do
         invalids.each do |invalid|
+          current_account.reload
           put :update, { profile: new_attrs.merge(invalid) }
           expect(response).to render_template :edit
         end

@@ -1,0 +1,36 @@
+- content_for :container
+  .signup-page
+    = render 'shared/error_messages', model: @account
+    = form_for(@account, as: :profile, url: user_profile_path, class: 'form-horizontal') do |f|
+      .form-group
+        = f.email_field :email, autofocus: true, placeholder: '邮箱', class: 'control-group t-input'
+      .form-group
+        = f.text_field :phone, placeholder: '手机号码', class: 'control-group t-input'
+      .form-group
+        = f.text_field :name, placeholder: '您的称呼', class: 'control-group t-input'
+      .form-group
+        = f.text_field :nickname, placeholder: '昵称', class: 'control-group t-input'
+      /.form-group
+        = f.password_field :password, autocomplete: 'off', placeholder: '密码', class: 'control-group t-input'
+      /.form-group
+        = f.password_field :password_confirmation, autocomplete: 'off', placeholder: '密码确认', class: 'control-group t-input'
+      /.form-group.city-group
+          select.city-select
+            option - 省份 -
+            = options_for_select(ChinaCity.list)
+          select.city-select
+            option - 城市 -
+          select.city-select
+            option - 地区 -
+      .form-group.city-group
+        select.city-select
+          option value="" - 城市 -
+          = options_for_select(ChinaCity.list('430000'), @city_code)
+        select.city-select name="profile[primary_address_attributes][code]"
+          option value="" - 地区 -
+          = options_for_select(ChinaCity.list(@city_code), @district_code)
+      = f.fields_for :primary_address do |fields|
+        .form-group
+          = fields.text_field :content, placeholder: '详细地址', class: 'control-group t-input'
+      div
+        = f.submit '更新个人信息', class: 'btn btn-blue t-input'

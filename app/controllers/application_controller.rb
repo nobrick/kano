@@ -33,24 +33,48 @@ class ApplicationController < ActionController::Base
     current_user || current_handyman
   end
 
-  def authenticate_completed_user
+  def authenticate_completed_user(options = {})
     return unless authenticate_user!
-    unless current_user.completed_info?
-      set_return_path
-      redirect_to edit_profile_path, notice: '继续操作前请您完善个人资料'
-      return false
+    if current_user.completed_info?
+      true
+    else
+      sign_up_uncompleted('user', options)
     end
-    true
   end
 
-  def authenticate_completed_handyman
-    # TODO Impletement this.
-    true
+  def authenticate_completed_handyman(options = {})
+    return unless authenticate_handyman!
+    if current_handyman.completed_info?
+      true
+    else
+      sign_up_uncompleted('handyman', options)
+    end
   end
 
-  def authenticate_handyman_order
+  def complete_profile_url_for(scope)
+    case scope.to_s
+    when 'user'
+      complete_user_profile_url
+    when 'handyman'
+      complete_handyman_profile_url
+    else
+      nil
+    end
+  end
+
+  def sign_up_uncompleted(scope, options = {})
+    unless options[:notice] || options[:alert]
+      options[:notice] = '继续操作前请您完善个人资料'
+    end
+
+    set_return_path
+    redirect_to complete_profile_url_for(scope), options
+    false
+  end
+
+  def authenticate_handyman_order(options = {})
     if @order.handyman.present? && @order.handyman != current_handyman
-      redirect_to handyman_orders_url, alert: 'Sorry，订单可能已被别人抢走'
+      redirect_to handyman_orders_url, options
       return false
     end
     true

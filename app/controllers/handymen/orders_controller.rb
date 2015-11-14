@@ -32,7 +32,8 @@ class Handymen::OrdersController < ApplicationController
   end
 
   def check_order_permission
-    return false unless authenticate_handyman_order
+    unauthorized_options = { alert: 'Sorry，订单可能已被别人抢走' }
+    return false unless authenticate_handyman_order(unauthorized_options)
 
     case @order.state
     when 'requested' then true

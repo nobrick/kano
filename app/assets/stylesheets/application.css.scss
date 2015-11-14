@@ -157,22 +157,20 @@ input[type=checkbox] {
   }
 }
 
-.header-sign-in-or-up {
-  .logo {
-    padding: 5px 0 0 0;
-    margin: 0;
-    background: white;
-    /*@include background-image(url("/images/logo.svg"));*/
-    background-position: center 0;
-    background-repeat: no-repeat;
-    p {
-      letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
-    h1 {
-      color: $logoRed;
-      /*font-family: "orbitron-medium";*/
-    }
+.header-logo {
+  padding: 5px 0 0 0;
+  margin: 0;
+  background: white;
+  /*@include background-image(url("/images/logo.svg"));*/
+  background-position: center 0;
+  background-repeat: no-repeat;
+  p {
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  h1 {
+    color: $logoRed;
+    /*font-family: "orbitron-medium";*/
   }
 }
 
