@@ -18,8 +18,4 @@ li.order-index-item
         '  后到达
     - else
       ' 需要预约
-    .pull-right
-      span.fa-icon
-        = fa_icon('tag', class: 'attr-bar-icon')
-      span
-        = order.taxon_name
+    = render 'shared/orders/taxon_in_order_right', order: order

@@ -22,8 +22,4 @@ li.order-index-item
         ' 需要预约
     - else
       span.arrives-at-attr #{time_ago_in_words order.created_at}前
-    .pull-right
-      span.fa-icon
-        = fa_icon('tag', class: 'attr-bar-icon')
-      span
-        = order.taxon_name
+    = render 'shared/orders/taxon_in_order_right', order: order
