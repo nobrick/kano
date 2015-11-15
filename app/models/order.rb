@@ -160,11 +160,11 @@ class Order < ActiveRecord::Base
     else
       category = category_or_taxon
     end
-    I18n.t("taxons.items.#{category}.#{taxon}")
+    I18n.t("taxons.items.#{category}.#{taxon}", default: category_or_taxon)
   end
 
   def self.category_name(category)
-    I18n.t("taxons.categories.#{category}")
+    I18n.t("taxons.categories.#{category}", default: category)
   end
 
   def self.taxons_for_grouped_select
