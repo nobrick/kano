@@ -1,0 +1,22 @@
+taxons:
+  categories:
+    - electronic
+    - water
+    - misc
+  items:
+    electronic:
+      - lighting
+      - socket
+      - appliance
+      - other
+    water:
+      - pipe
+      - faucet
+      - toilet
+      - other
+    misc:
+      - shelf
+      - air_conditioning
+      - whitewash
+      - lock
+      - other

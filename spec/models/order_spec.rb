@@ -25,6 +25,27 @@ RSpec.describe Order, type: :model do
     expect(order_requested.user).to be_persisted
   end
 
+  describe 'taxons' do
+    let(:order) { build :order, taxon_code: 'electronic/socket' }
+
+    it 'self.taxon_name translates taxon key' do
+      expect(Order.taxon_name('electronic', 'lighting')).to eq '灯具维修'
+      expect(Order.taxon_name('electronic/lighting')).to eq '灯具维修'
+    end
+
+    it 'self.category_name traslates category key' do
+      expect(Order.category_name('electronic')).to eq '电'
+    end
+
+    it '#taxon_name' do
+      expect(order.taxon_name).to eq '插座维修'
+    end
+
+    it '#category_name' do
+      expect(order.category_name).to eq '电'
+    end
+  end
+
   describe 'arrives_at field' do
     it 'fails if invalid' do
       order.assign_attributes(arrives_at: 1.minutes.from_now)

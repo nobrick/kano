@@ -29,7 +29,7 @@
           span.fa-icon
             => fa_icon('tag')
           strong 维修项目
-          p = @order.taxon_code
+          p = @order.taxon_name
       .text-center
         p = link_to [ :handyman, @order ], method: :put, class: 'btn btn-normal', id: 'receive_order_btn' do
           span.fa-icon

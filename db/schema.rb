@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151019125556) do
+ActiveRecord::Schema.define(version: 20151115070857) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,18 +89,18 @@ ActiveRecord::Schema.define(version: 20151019125556) do
   add_index "balance_records", ["owner_id", "owner_type"], name: "index_balance_records_on_owner", using: :btree
 
   create_table "orders", force: :cascade do |t|
-    t.integer  "user_id",                                                  null: false
+    t.integer  "user_id",                                                   null: false
     t.integer  "handyman_id"
-    t.string   "taxon_code",           limit: 30,                          null: false
-    t.string   "content",                                                  null: false
-    t.datetime "arrives_at",                                               null: false
+    t.string   "taxon_code",           limit: 128,                          null: false
+    t.string   "content",                                                   null: false
+    t.datetime "arrives_at",                                                null: false
     t.datetime "contracted_at"
     t.datetime "completed_at"
-    t.decimal  "user_total",                      precision: 12, scale: 2
-    t.decimal  "payment_total",                   precision: 12, scale: 2
-    t.decimal  "user_promo_total",                precision: 12, scale: 2
-    t.decimal  "handyman_bonus_total",            precision: 12, scale: 2
-    t.decimal  "handyman_total",                  precision: 12, scale: 2
+    t.decimal  "user_total",                       precision: 12, scale: 2
+    t.decimal  "payment_total",                    precision: 12, scale: 2
+    t.decimal  "user_promo_total",                 precision: 12, scale: 2
+    t.decimal  "handyman_bonus_total",             precision: 12, scale: 2
+    t.decimal  "handyman_total",                   precision: 12, scale: 2
     t.integer  "transferee_order_id"
     t.string   "transfer_type",        limit: 30
     t.string   "transfer_reason"
@@ -116,9 +116,9 @@ ActiveRecord::Schema.define(version: 20151019125556) do
     t.string   "report_type",          limit: 30
     t.string   "report_content"
     t.datetime "reported_at"
-    t.string   "state",                                                    null: false
-    t.datetime "created_at",                                               null: false
-    t.datetime "updated_at",                                               null: false
+    t.string   "state",                                                     null: false
+    t.datetime "created_at",                                                null: false
+    t.datetime "updated_at",                                                null: false
   end
 
   add_index "orders", ["arrives_at"], name: "index_orders_on_arrives_at", using: :btree

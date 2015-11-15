@@ -2,6 +2,29 @@ zh-CN:
   time:
     formats:
       default: '%F %T'
+  taxons:
+    categories:
+      electronic: '电'
+      water: '水'
+      misc: '其它'
+    items:
+      electronic:
+        lighting: '灯具维修'
+        socket: '插座维修'
+        appliance: '电器维修'
+        other: '其它电路问题'
+      water:
+        pipe: '水管维修'
+        faucet: '龙头维修'
+        toilet: '厕所维修'
+        other: '其余管道问题'
+      misc:
+        shelf: '相框和书架'
+        air_conditioning: '空调清洁'
+        whitewash: '粉刷及内部修缮'
+        lock: '门锁问题'
+        other: '其它定制服务'
+
   controllers:
     profile:
       edit:
@@ -78,6 +101,6 @@ zh-CN:
   sign_out: '注销'
   password: '密码'
   logo_name: '大象管家'
-  logo_desc: '让生活更美好'
+  logo_desc: '用心呵护您的家'
   update: '更新'
   back: '返回'
