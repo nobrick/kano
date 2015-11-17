@@ -1,6 +1,5 @@
 li.order-index-item
-  h2
-    = link_to order.content_in_short, [ :user, order ]
+  h2.item-title = link_to order.content_in_short, [ :handyman, order ]
   span.fa-icon
     => fa_icon('user', class: 'attr-bar-icon')
   span

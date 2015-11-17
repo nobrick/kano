@@ -113,6 +113,10 @@ input[type=checkbox] {
   font-size: 18px;
 }
 
+.less-color {
+  color: #777777;
+}
+
 @mixin h-center($max-width, $screen-sm-width) {
   @extend .text-center;
   width: 100%;
@@ -288,6 +292,9 @@ input[type=checkbox] {
 }
 
 .order-index-item {
+  .item-title a {
+    color: darken(#00c2eb, 11%);
+  }
   .order-attr-bar {
     .attr-bar-icon {
       margin-right: 5px;
@@ -300,7 +307,7 @@ input[type=checkbox] {
     }
   }
   .state-desc {
-    color: #4094c7;
+    @extend .less-color;
     margin-right: 8px;
   }
   .requested-state {
