@@ -1,11 +1,12 @@
 GIT
   remote: git://github.com/thoughtbot/administrate.git
-  revision: cf4078b0a281403c8b091a54dc8cf01362981098
+  revision: 7403023524d824456533f7a00fd86df5a19d6e46
   specs:
-    administrate (0.1.0)
+    administrate (0.1.1)
       autoprefixer-rails (~> 6.0)
       datetime_picker_rails (~> 0.0.5)
       inline_svg (~> 0.6)
+      jquery-rails (~> 4.0)
       kaminari (~> 0.16)
       momentjs-rails (~> 2.8)
       neat (~> 1.1)
@@ -55,7 +56,7 @@ GEM
       tzinfo (~> 1.1)
     addressable (2.3.8)
     arel (6.0.3)
-    autoprefixer-rails (6.0.3)
+    autoprefixer-rails (6.1.0.1)
       execjs
       json
     bcrypt (3.1.10)
@@ -215,7 +216,7 @@ GEM
     method_source (0.8.2)
     mime-types (2.6.2)
     mini_portile (0.6.2)
-    minitest (5.8.1)
+    minitest (5.8.3)
     momentjs-rails (2.10.6)
       railties (>= 3.1)
     multi_json (1.11.2)
@@ -229,7 +230,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (3.0.1)
     netrc (0.10.3)
-    nokogiri (1.6.6.2)
+    nokogiri (1.6.6.3)
       mini_portile (~> 0.6.0)
     normalize-rails (3.0.3)
     notiffany (0.0.8)
