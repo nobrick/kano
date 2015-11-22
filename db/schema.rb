@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151115070857) do
+ActiveRecord::Schema.define(version: 20151122080907) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -162,10 +162,21 @@ ActiveRecord::Schema.define(version: 20151115070857) do
   add_index "payments", ["payment_profile_type", "payment_profile_id"], name: "index_payments_on_payment_profile_type_and_payment_profile_id", using: :btree
   add_index "payments", ["state"], name: "index_payments_on_state", using: :btree
 
+  create_table "taxons", force: :cascade do |t|
+    t.integer  "handyman_id",             null: false
+    t.string   "code",        limit: 128, null: false
+    t.datetime "created_at",              null: false
+    t.datetime "updated_at",              null: false
+  end
+
+  add_index "taxons", ["handyman_id", "code"], name: "index_taxons_on_handyman_id_and_code", unique: true, using: :btree
+  add_index "taxons", ["handyman_id"], name: "index_taxons_on_handyman_id", using: :btree
+
   add_foreign_key "accounts", "addresses", column: "primary_address_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
   add_foreign_key "orders", "accounts", column: "transferor_id"
   add_foreign_key "orders", "accounts", column: "user_id"
   add_foreign_key "payments", "orders"
+  add_foreign_key "taxons", "accounts", column: "handyman_id"
 end
