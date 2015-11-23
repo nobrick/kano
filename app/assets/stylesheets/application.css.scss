@@ -331,3 +331,28 @@ input[type=checkbox] {
 #receive_order_btn {
   @include h-center(100%, 100%);
 }
+
+.taxonBox {
+  text-align: left;
+  width: 80%;
+  margin: 10px auto 10px;
+
+  .taxonList {
+    .taxon {
+      margin: 14px auto 14px;
+
+      .label {
+        font-size: 14px;
+      }
+
+      i.fa-trash {
+        color: #555;
+      }
+    }
+  }
+  .newTaxon {
+    select {
+      width: 80%;
+    }
+  }
+}

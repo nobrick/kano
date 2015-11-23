@@ -1,0 +1,33 @@
+{
+  "name": "kano",
+  "version": "1.0.0",
+  "description": "== README",
+  "main": "index.js",
+  "browserify": {
+    "transform": [
+      ["reactify", {"es6": true}]
+    ]
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nobrick/kano.git"
+  },
+  "author": "Ming Qu",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nobrick/kano/issues"
+  },
+  "devDependencies": {
+    "browserify": "^10.2.4",
+    "browserify-incremental": "^3.0.1",
+    "reactify": "^1.1.1",
+    "react": "^0.13.3"
+  },
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "homepage": "https://github.com/nobrick/kano"
+}

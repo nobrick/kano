@@ -20,5 +20,6 @@
       = f.fields_for :primary_address do |fields|
         .form-group
           = fields.text_field :content, placeholder: '详细地址', class: 'control-group t-input'
+      = react_component('TaxonBox')
       div
         = f.submit '完成', class: 'btn btn-blue t-input'

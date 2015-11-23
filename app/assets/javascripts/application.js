@@ -3,8 +3,8 @@
 //= require jquery_ujs
 //= require china_city/jquery.china_city
 //= require turbolinks
+//= require components
 //= require bootstrap
 //= require jweixin-1.0.0
 //= require pingpp
 //= require app
-//= require_tree .

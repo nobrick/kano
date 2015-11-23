@@ -59,6 +59,10 @@ GEM
     autoprefixer-rails (6.1.0.1)
       execjs
       json
+    babel-source (5.8.34)
+    babel-transpiler (0.7.0)
+      babel-source (>= 4.0, < 6)
+      execjs (~> 2.0)
     bcrypt (3.1.10)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
@@ -72,6 +76,9 @@ GEM
     bourbon (4.2.6)
       sass (~> 3.4)
       thor (~> 0.19)
+    browserify-rails (2.0.2)
+      railties (>= 4.0.0, < 5.0)
+      sprockets (> 3.0.2)
     builder (3.2.2)
     byebug (6.0.2)
     capistrano (3.4.0)
@@ -307,6 +314,13 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.0)
       json (~> 1.4)
+    react-rails (1.4.2)
+      babel-transpiler (>= 0.7.0)
+      coffee-script-source (~> 1.8)
+      connection_pool
+      execjs
+      rails (>= 3.2)
+      tilt
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
@@ -429,6 +443,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass (~> 3.3.3)
   bourbon
+  browserify-rails (~> 2.0.2)
   byebug
   capistrano (~> 3.4.0)
   capistrano-rails (~> 1.1.1)
@@ -455,6 +470,7 @@ DEPENDENCIES
   pry-rails
   quiet_assets
   rails (= 4.2.4)
+  react-rails
   redis-objects
   rspec-rails (~> 3.3.0)
   sass-rails (~> 5.0)

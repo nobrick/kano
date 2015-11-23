@@ -41,5 +41,8 @@ module Kano
       g.request_specs false
       g.helper false
     end
+
+    # Browserify trasformation for react jsx files.
+    config.browserify_rails.commandline_options = '-t [ reactify --es6 ] --extension=".jsx"'
   end
 end
