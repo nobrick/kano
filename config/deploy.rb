@@ -7,7 +7,7 @@ set :linked_dirs, %w{ log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sy
 # set :linked_dirs, fetch(:linked_dirs).push(%w{public/assets})
 set :keep_releases, 5
 set :rails_env, :production
-set :branch, ENV['cap_branch'] || 'taxons'
+set :branch, ENV['cap_branch'] || 'master'
 
 # set :rvm_type, :user
 # set :rvm_ruby_version, 'ruby-2.2.2'
