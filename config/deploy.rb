@@ -3,11 +3,11 @@
 
 set :application, 'kano'
 set :linked_files, %w{ config/database.yml config/secrets.yml config/unicorn.rb config/wechat.yml config/redis.yml }
-set :linked_dirs, %w{ log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system }
+set :linked_dirs, %w{ log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system node_modules }
 # set :linked_dirs, fetch(:linked_dirs).push(%w{public/assets})
 set :keep_releases, 5
 set :rails_env, :production
-set :branch, ENV['cap_branch'] || 'master'
+set :branch, ENV['cap_branch'] || 'taxons'
 
 # set :rvm_type, :user
 # set :rvm_ruby_version, 'ruby-2.2.2'
@@ -71,6 +71,17 @@ namespace :deploy do
     end
   end
 
+  desc 'Npm install'
+  task :npm_install do
+    on roles(:web) do
+      within release_path do
+        with rails_env: :production do
+          execute :npm, "install --production"
+        end
+      end
+    end
+  end
+
   desc 'Load db'
   task :db_load do
     on roles(:web) do
@@ -93,6 +104,7 @@ namespace :deploy do
 
   after :publishing, :restart
   before :restart, :bundle_install
+  before :restart, :npm_install
   before :restart, :precompile_assets
   before :restart, :db_load
   # after :restart, :clear_cache

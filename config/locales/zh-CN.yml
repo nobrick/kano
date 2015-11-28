@@ -46,6 +46,7 @@ zh-CN:
       handyman: '管家'
       order: '订单'
       address: '地址'
+      taxons: '服务类别'
     attributes:
       account:
         username: '用户名'
@@ -60,6 +61,8 @@ zh-CN:
       account/primary_address:
         content: '详细地址'
         base: ''
+      account/taxons:
+        code: '服务类别'
       handyman:
         name: '姓名'
       order:
@@ -96,6 +99,8 @@ zh-CN:
       address:
         content: '详细地址'
         code: '地区编号'
+      taxon:
+        code: '服务类别'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

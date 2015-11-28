@@ -1,3 +1,5 @@
+#= require ./users/orders
+
 @Global =
   debug: false
   getDebugInfo: ->
@@ -50,14 +52,15 @@
       alertOnDebug("Request failed: #{textStatus}")
 
 jQuery ->
-  wx.config
-    debug: Global.debug
-    appId: gon.wechat.appid
-    timestamp: gon.wechat.timestamp
-    nonceStr: gon.wechat.noncestr
-    signature: gon.wechat.signature
-    jsApiList: ['chooseWXPay']
-  wx.ready ->
-    alertOnDebug('WX_READY')
-  wx.error (res) ->
-    alertOnDebug("ERR.\n#{Global.getDebugInfo()}")
+  if gon.wechat?.appid
+    wx.config
+      debug: Global.debug
+      appId: gon.wechat.appid
+      timestamp: gon.wechat.timestamp
+      nonceStr: gon.wechat.noncestr
+      signature: gon.wechat.signature
+      jsApiList: ['chooseWXPay']
+    wx.ready ->
+      alertOnDebug('WX_READY')
+    wx.error (res) ->
+      alertOnDebug("ERR.\n#{Global.getDebugInfo()}")

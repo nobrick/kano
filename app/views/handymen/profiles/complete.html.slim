@@ -20,5 +20,8 @@
       = f.fields_for :primary_address do |fields|
         .form-group
           = fields.text_field :content, placeholder: '详细地址', class: 'control-group t-input'
+      p.notie 请添加您的维修技能
+      = react_component('Taxons', initial: @account.taxons_redux_state)
+      = hidden_field_tag 'view_action', @view_action
       div
         = f.submit '完成', class: 'btn btn-blue t-input'

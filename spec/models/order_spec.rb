@@ -28,15 +28,6 @@ RSpec.describe Order, type: :model do
   describe 'taxons' do
     let(:order) { build :order, taxon_code: 'electronic/socket' }
 
-    it 'self.taxon_name translates taxon key' do
-      expect(Order.taxon_name('electronic', 'lighting')).to eq '灯具维修'
-      expect(Order.taxon_name('electronic/lighting')).to eq '灯具维修'
-    end
-
-    it 'self.category_name traslates category key' do
-      expect(Order.category_name('electronic')).to eq '电'
-    end
-
     it '#taxon_name' do
       expect(order.taxon_name).to eq '插座维修'
     end
