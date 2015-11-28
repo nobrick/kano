@@ -14,7 +14,7 @@
             .field.form-group
               = f.label :taxon_code
               br
-              = f.select :taxon_code, Order.taxons_for_grouped_select, include_blank: true
+              = f.select :taxon_code, Taxon.taxons_for_grouped_select, include_blank: true
             .form-group.city-group
               select.city-select
                 option value="" - 城市 -

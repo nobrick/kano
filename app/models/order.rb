@@ -139,51 +139,12 @@ class Order < ActiveRecord::Base
     end
   end
 
-  def self.taxons_config
-    @@taxons_config ||= nil
-    if @@taxons_config.nil?
-      config_file = File.join('config','taxons.yml')
-      config = YAML.load(File.read(config_file))
-      @@taxons_config = config['taxons']
-    end
-    @@taxons_config
-  end
-
-  # Usage1: taxon_name(category, taxon)
-  # Usage2: taxon_name(taxon)
-  # Examples:
-  #   taxon_name('electronic', 'lighting')
-  #   taxon_name('electronic/lighting')
-  def self.taxon_name(category_or_taxon, taxon = nil)
-    category = nil
-    if taxon.nil?
-      category, taxon = category_or_taxon.split('/')
-    else
-      category = category_or_taxon
-    end
-    I18n.t("taxons.items.#{category}.#{taxon}", default: category_or_taxon)
-  end
-
-  def self.category_name(category)
-    I18n.t("taxons.categories.#{category}", default: category)
-  end
-
-  def self.taxons_for_grouped_select
-    @@taxons_for_grouped_select ||= taxons_config['categories'].map do |category|
-      group = [ category_name(category), [] ]
-      taxons_config['items'][category].each do |taxon|
-        group[1] << [ taxon_name(category, taxon), "#{category}/#{taxon}" ]
-      end
-      group
-    end
-  end
-
   def taxon_name
-    @taxon_name ||= Order.taxon_name(taxon_code)
+    @taxon_name ||= Taxon.taxon_name(taxon_code)
   end
 
   def category_name
-    @category_name ||= Order.category_name(taxon_code.split('/').first)
+    @category_name ||= Taxon.category_name(taxon_code.split('/').first)
   end
 
   def state_description

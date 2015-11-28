@@ -227,6 +227,9 @@ input[type=checkbox] {
       padding: 0 22px;
     }
   }
+  p.notie {
+    color: #b1b1b1;
+  }
 }
 
 .home-index-page {
@@ -353,6 +356,10 @@ input[type=checkbox] {
   .newTaxon {
     select {
       width: 80%;
+    }
+
+    i.fa-plus {
+      color: #ff6666;
     }
   }
 }

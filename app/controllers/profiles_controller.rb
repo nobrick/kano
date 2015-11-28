@@ -2,6 +2,7 @@ class ProfilesController < ApplicationController
   # For filling up additional necessary account infomation after sign up.
   before_action :set_account
   before_action :set_address, only: [ :edit, :complete ]
+  before_action :set_previous_action, only: [ :update ]
 
   # GET /profile/edit
   def edit
@@ -13,14 +14,14 @@ class ProfilesController < ApplicationController
 
   # PATCH/PUT /profile/
   def update
-    previous_action = @account.completed_info? ? :edit : :complete
     @account.assign_attributes(profile_params)
     if @account.save(context: :complete_info_context)
-      i18n_key = "controllers.profile.#{previous_action}.success"
+      i18n_key = "controllers.profile.#{@previous_action}.success"
       redirect_to root_url, notice: I18n.t(i18n_key)
     else
+      @account.taxons.reload
       set_address
-      render previous_action
+      render @previous_action
     end
   end
 
@@ -35,6 +36,10 @@ class ProfilesController < ApplicationController
     @account.build_primary_address(addressable: @account) if address.blank?
     @city_code = address.try(:city_code) || '430100'
     @district_code = address.try(:code)
+  end
+
+  def set_previous_action
+    @previous_action = @account.completed_info? ? :edit : :complete
   end
 
   def profile_params

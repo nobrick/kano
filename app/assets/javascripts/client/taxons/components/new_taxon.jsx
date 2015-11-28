@@ -1,8 +1,21 @@
-class NewTaxon extends React.Component {
-  render () {
+import { Component } from 'react';
+
+export default class NewTaxon extends Component {
+  handleClick(e) {
+    e.preventDefault();
+    const select = this.refs.select;
+    const index = select.selectedIndex;
+    if (index !== 0) {
+      const code = select.options[index].value;
+      this.props.onAddClick(code);
+      select.selectedIndex = 0;
+    }
+  }
+
+  render() {
     return (
       <div className="newTaxon">
-        <select id="profile_taxons" name="profile[taxons_attributes][0][code]">
+        <select ref='select' >
           <option value=""></option>
           <optgroup label="电">
             <option value="electronic/lighting">灯具维修</option>
@@ -24,12 +37,10 @@ class NewTaxon extends React.Component {
             <option value="misc/other">其它定制服务</option>
           </optgroup>
         </select>
-        <a className="pull-right" href="#">
+        <a className="pull-right" href="#" onClick={e => this.handleClick(e)}>
           <i className="fa fa-plus"></i>
         </a>
       </div>
     );
   }
 }
-
-module.exports = NewTaxon;

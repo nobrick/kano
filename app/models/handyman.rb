@@ -10,4 +10,18 @@ class Handyman < Account
   def handyman?
     true
   end
+
+  def taxon_codes
+    taxons.map(&:code)
+  end
+
+  def taxons_redux_state
+    {
+      'result' => {
+        'selectedTaxons' => taxon_codes,
+        'taxons' => Taxon.taxon_codes
+      },
+      'entities' => Taxon.redux_entities
+    }
+  end
 end
