@@ -77,10 +77,10 @@ RSpec.describe Users::ProfilesController, type: :controller do
         ]
       end
 
-      it 're-renders the :complete template' do
+      it 're-renders the :edit template' do
         invalids.each do |invalid|
           current_account.reload
-          put :update, { profile: new_attrs.merge(invalid) }
+          put :update, { profile: new_attrs.merge(invalid), view_action: 'edit' }
           expect(response).to render_template :edit
         end
       end

@@ -2,8 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Handymen::ProfilesController, type: :controller do
   before { sign_in :handyman, handyman }
-  # TODO pre-create taxons for handyman (for it is info-complete attribute)
-  let(:handyman) { create :handyman }
+  let(:handyman) { create :handyman_with_taxons }
   let(:address_attrs) { { primary_address_attributes: attributes_for(:address) } }
 
   describe 'GET #profile/edit' do
@@ -85,7 +84,7 @@ RSpec.describe Handymen::ProfilesController, type: :controller do
       it 're-renders the :complete template' do
         invalids.each do |invalid|
           current_account.reload
-          put :update, { profile: new_attrs.merge(invalid) }
+          put :update, { profile: new_attrs.merge(invalid), view_action: 'complete' }
           expect(response).to render_template :complete
         end
       end

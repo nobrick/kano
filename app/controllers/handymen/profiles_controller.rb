@@ -5,6 +5,8 @@ class Handymen::ProfilesController < ProfilesController
     codes_to_destroy = @account.taxon_codes - selected_codes
     @account.taxons.where(code: codes_to_destroy).destroy_all
     @account.taxons.create(codes_to_create.map { |e| { code: e } })
-    super
+    super do |event|
+      @account.taxons.reload if event == :failure
+    end
   end
 end
