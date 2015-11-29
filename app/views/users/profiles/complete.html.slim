@@ -5,21 +5,16 @@
       span 完善个人资料
     = render 'shared/error_messages', model: @account
     = form_for(@account, as: :profile, url: user_profile_path, class: 'form-horizontal') do |f|
-      - if wechat_request?
+      - if @account.name.blank?
         .form-group
-          = f.text_field :name, placeholder: '您的称呼', class: 'control-group t-input'
+          = f.text_field :name, placeholder: '您的称呼',
+            class: 'control-group t-input'
+      - if @account.phone.blank?
         .form-group
-          = f.text_field :phone, placeholder: '手机号码', class: 'control-group t-input'
-      .form-group.city-group
-        select.city-select
-          option value="" - 城市 -
-          = options_for_select(ChinaCity.list('430000'), @city_code)
-        select.city-select name="profile[primary_address_attributes][code]"
-          option value="" - 地区 -
-          = options_for_select(ChinaCity.list(@city_code), @district_code)
-      = f.fields_for :primary_address do |fields|
-        .form-group
-          = fields.text_field :content, placeholder: '详细地址', class: 'control-group t-input'
+          = f.text_field :phone, placeholder: '手机号码',
+            class: 'control-group t-input'
+      = render 'shared/profile_area_select',
+        form: f, city_code: @city_code, district_code: @district_code
       = hidden_field_tag 'view_action', @view_action
       div
         = f.submit '完成', class: 'btn btn-blue t-input'
