@@ -9,10 +9,14 @@
         .form-group
           = f.text_field :name, placeholder: '您的称呼',
             class: 'control-group t-input'
+      - else
+        = f.hidden_field :name
       - if @account.phone.blank?
         .form-group
           = f.text_field :phone, placeholder: '手机号码',
             class: 'control-group t-input'
+      - else
+        = f.hidden_field :phone
       = render 'shared/profile_area_select',
         form: f, city_code: @city_code, district_code: @district_code
       = hidden_field_tag 'view_action', @view_action
