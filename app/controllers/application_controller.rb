@@ -22,7 +22,7 @@ class ApplicationController < ActionController::Base
   end
 
   def wechat_request?
-    request.env['HTTP_USER_AGENT'].include?(' MicroMessenger/')
+    request.env['HTTP_USER_AGENT'].try(:include?, ' MicroMessenger/')
   end
 
   def account_signed_in?
