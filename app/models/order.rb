@@ -29,8 +29,7 @@ class Order < ActiveRecord::Base
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
   validates :user, presence: true
-  # TODO validates :code inclusion
-  validates :taxon_code, presence: true
+  validates :taxon_code, presence: true, inclusion: { in: Taxon.taxon_codes }
   validates :state, presence: true
   validates :address, presence: true, associated: true
   validates :arrives_at, inclusion: {

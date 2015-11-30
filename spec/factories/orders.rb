@@ -2,12 +2,11 @@ FactoryGirl.define do
   factory :order do
     transient do
       state 'requested'
-      # TODO Randomize promo totals for both cash and non-cash
       amount { rand(5..50) * 10.0 }
     end
     user
     address
-    taxon_code 'general'
+    taxon_code 'electronic/lighting'
     content 'content'
     arrives_at { 3.hours.since }
 

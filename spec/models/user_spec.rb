@@ -13,7 +13,7 @@ RSpec.describe User, type: :model do
       {
         content: 'something needs to be fixed',
         arrives_at: 4.hours.since,
-        taxon_code: 'general',
+        taxon_code: 'electronic/lighting',
         address_attributes: attributes_for(:address)
       }
     end

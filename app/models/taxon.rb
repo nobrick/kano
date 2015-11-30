@@ -3,7 +3,6 @@ class Taxon < ActiveRecord::Base
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
-  # TODO validates :code inclusion
 
   def self.taxons_config
     @@taxons_config ||= nil
@@ -19,6 +18,7 @@ class Taxon < ActiveRecord::Base
     @@taxon_codes ||= taxons_config['items']
       .map { |c, l| l.map { |t| "#{c}/#{t}" } }.flatten
   end
+  validates_inclusion_of :code, in: self.taxon_codes
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)

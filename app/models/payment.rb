@@ -178,7 +178,8 @@ class Payment < ActiveRecord::Base
     self.balance_record.adjustment_event = self
   end
 
-  # TODO Make it async
+  # TODO: Make it async by receiving WebHooks.
+  # TODO: Check timestamp for cache to reduce submit frequency.
   def update_pingpp_charge
     charge_id = JSON.parse(pingpp_charge.value)['id']
     new_charge = Pingpp::Charge.retrieve(charge_id)
