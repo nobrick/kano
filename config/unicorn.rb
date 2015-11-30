@@ -4,7 +4,9 @@ timeout 15
 preload_app true
 working_directory APP_ROOT
 pid "#{APP_ROOT}/tmp/pids/unicorn.pid"
-listen '127.0.0.1:8080'
+stderr_path "#{APP_ROOT}/log/unicorn_stderr.log"
+stdout_path "#{APP_ROOT}/log/unicorn_stdout.log"
+listen "#{APP_ROOT}/tmp/pids/.unicorn.sock"
 
 before_fork do |server, worker|
   Signal.trap 'TERM' do
