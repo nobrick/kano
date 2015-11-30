@@ -15,30 +15,30 @@ html
           a.navbar-brand.logo_brand[href="/"]
             span.logo
               = t(:logo_name)
-          a.visible-xs-inline-block.btn.navbar-btn.pull-right.nav_toggle[type="button" data-toggle="collapse" data-target="#navbar-collapse"]
-            span.sr-only
-              | Toggle navigation
-            span.fa-icon
-              = fa_icon('wrench', class: 'navbar-toggle-button')
-        #navbar-collapse.collapse.navbar-collapse
-          ul.nav.navbar-nav.navbar-right
-            /li = link_to 'Item1', '#'
-            /li = link_to 'Handyman', '#'
-            li.devider
-              - if handyman_signed_in?
-                li = link_to '开始抢单', handyman_orders_path
-                li = link_to "#{current_handyman.full_or_nickname}的订单", handyman_contracts_path
-                li = link_to t(:sign_out), destroy_account_session_path, method: :delete
-              - elsif user_signed_in?
-                li = link_to '预约服务', new_user_order_path
-                li = link_to "#{current_user.full_or_nickname}的订单", user_orders_path
-                li = link_to t(:sign_out), destroy_account_session_path, method: :delete
-              - elsif wechat_request? && !account_signed_in?
-                li = link_to '微信登录', account_omniauth_authorize_path(:wechat)
-              - else
-                li = link_to '加盟管家', new_handyman_registration_path
-                li = link_to t(:sign_up), new_user_registration_path
-                li = link_to t(:sign_in), new_account_session_path
+          - if display_nav_button?
+            a.visible-xs-inline-block.btn.navbar-btn.pull-right.nav_toggle[type="button" data-toggle="collapse" data-target="#navbar-collapse"]
+              span.sr-only
+                | Toggle navigation
+              span.fa-icon
+                = fa_icon('wrench', class: 'navbar-toggle-button')
+        - if display_nav_button?
+          #navbar-collapse.collapse.navbar-collapse
+            ul.nav.navbar-nav.navbar-right
+              /li = link_to 'Item1', '#'
+              /li = link_to 'Handyman', '#'
+              li.devider
+                - if handyman_signed_in?
+                  li = link_to '开始抢单', handyman_orders_path
+                  li = link_to "#{current_handyman.full_or_nickname}的订单", handyman_contracts_path
+                  li = link_to t(:sign_out), destroy_account_session_path, method: :delete
+                - elsif user_signed_in?
+                  li = link_to '预约服务', new_user_order_path
+                  li = link_to "#{current_user.full_or_nickname}的订单", user_orders_path
+                  li = link_to t(:sign_out), destroy_account_session_path, method: :delete
+                - else
+                  li = link_to '加盟管家', new_handyman_registration_path
+                  li = link_to t(:sign_up), new_user_registration_path
+                  li = link_to t(:sign_in), new_account_session_path
     .main
       - if content_for?(:container)
         .container

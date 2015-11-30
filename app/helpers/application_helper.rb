@@ -10,4 +10,8 @@ module ApplicationHelper
       nil
     end
   end
+
+  def display_nav_button?
+    account_signed_in? || !wechat_request?
+  end
 end
