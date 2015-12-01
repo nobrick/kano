@@ -37,7 +37,7 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id/charge
   def charge
-    render json: @order.pingpp_charge
+    render json: @order.pingpp_charge_json
   end
 
   private
@@ -46,7 +46,7 @@ class Users::OrdersController < ApplicationController
     user_wechat = UserWechatsController.wechat
     signature_options = user_wechat.jsapi_ticket.signature(url)
     {
-      pingpp_charge: @order.pingpp_charge,
+      pingpp_charge: @order.pingpp_charge_json,
       order_id: @order.id,
       wechat: {
         appid: user_wechat.access_token.appid,

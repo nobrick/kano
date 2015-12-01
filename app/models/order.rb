@@ -169,8 +169,12 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def pingpp_charge_json
+    valid_payment.try(:pingpp_charge_json)
+  end
+
   def pingpp_charge
-    valid_payment.try(:pingpp_charge).try(:value)
+    valid_payment.try(:pingpp_charge)
   end
 
   private

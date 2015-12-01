@@ -8,8 +8,9 @@ class Payment < ActiveRecord::Base
   accepts_nested_attributes_for :order, update_only: true
   accepts_nested_attributes_for :balance_record
   delegate :user, :handyman, *(Order::PAYMENT_TOTAL_ATTRIBUTES), to: :order
-  value :pingpp_charge
-  value :pingpp_succeeded_event
+  value :redis_pingpp_charge
+  value :redis_pingpp_charge_timestamp
+  attr_accessor :pingpp_retrieve_min_interval
   after_commit :perform_async_prepare
 
   validates :order, presence: true, associated: true
@@ -52,8 +53,6 @@ class Payment < ActiveRecord::Base
         if: [ :not_in_cash?, :order_validity_guard, :checkout_guard ]
     end
 
-    # TODO reprocess from :processing but to avoid double submission
-
     # Get ready for user payments
     event :prepare do
       transitions from: :processing, to: :pending, after: :do_prepare
@@ -94,35 +93,37 @@ class Payment < ActiveRecord::Base
     payment_method == 'wechat'
   end
 
-  # TODO
-  def push_pingpp_charge_notification(charge = pingpp_charge.value)
-  end
-
+  # Fetch pre-payment data from gateway and transition to :pending state.
+  #
+  # This method will be called asynchronously by Payment::PrepareEventWorker.
   def save_with_prepare!
-    with_lock do
-      if prepare
-        save!
-      else
-        raise 'prepare event failure'
-      end
-    end
+    return unless processing?
+    with_lock { prepare && save! }
   end
 
+  # Check (and fetch if necessary) the payment state, and transition to
+  # :completed state if paid.
   def check_and_complete!
     case aasm.current_state
     when :completed
       return true
     when :pending
-      if pingpp_wx_pub?
-        paid = JSON.parse(pingpp_charge.value)['paid']
-        paid ||= update_pingpp_charge['paid']
-        if paid
-          complete && save!
-          return true
-        end
+      if pingpp_wx_pub? && pingpp_paid?
+        complete && save!
+        return true
       end
     end
     false
+  end
+
+  def pingpp_charge_json
+    redis_pingpp_charge.value
+  end
+
+  def pingpp_charge
+    json = pingpp_charge_json
+    return nil unless json
+    JSON.parse(json)
   end
 
   private
@@ -152,11 +153,7 @@ class Payment < ActiveRecord::Base
   end
 
   def do_prepare
-    if pingpp_wx_pub?
-      charge = charge_pingpp_wx_pub
-      push_pingpp_charge_notification(charge)
-      pingpp_charge.value = charge
-    end
+    set_pingpp_charge(charge_pingpp_wx_pub) if pingpp_wx_pub?
   end
 
   def do_complete
@@ -178,15 +175,36 @@ class Payment < ActiveRecord::Base
     self.balance_record.adjustment_event = self
   end
 
-  # TODO: Make it async by receiving WebHooks.
-  # TODO: Check timestamp for cache to reduce submit frequency.
-  def update_pingpp_charge
-    charge_id = JSON.parse(pingpp_charge.value)['id']
+  def set_pingpp_charge(charge)
+    redis_pingpp_charge_timestamp.value = Time.now
+    redis_pingpp_charge.value = charge.to_json
+    charge
+  end
+
+  def retrieve_pingpp_charge_if_needed
+    @pingpp_retrieve_min_interval ||= 2.5
+    min_interval = @pingpp_retrieve_min_interval.seconds
+    time_string = redis_pingpp_charge_timestamp.value
+    timestamp = time_string ? Time.parse(time_string) : nil
+    if pingpp_charge && timestamp && (Time.now - timestamp < min_interval)
+      pingpp_charge
+    else
+      retrieve_pingpp_charge
+    end
+  end
+
+  def retrieve_pingpp_charge
+    charge_id = pingpp_charge['id']
     new_charge = Pingpp::Charge.retrieve(charge_id)
     raise 'charge_id is inconsistent' if charge_id != new_charge['id']
-    pingpp_charge.value = new_charge
-    new_charge
+    set_pingpp_charge(new_charge)
   end
+
+  def pingpp_paid?
+    paid = pingpp_charge.try(:[], 'paid')
+    paid ||= retrieve_pingpp_charge_if_needed['paid']
+  end
+
 
   def charge_pingpp_wx_pub
     unless user.provider == 'wechat'

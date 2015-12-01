@@ -9,7 +9,6 @@ class Payment::PrepareEventWorker
     return unless payment_id
     payment = Payment.find(payment_id)
     logger.info payment.inspect
-    return unless payment.processing?
     payment.save_with_prepare!
   end
 end

@@ -31,33 +31,59 @@ RSpec.describe Payment, type: :model, async: true do
       payment.save!
     end
 
-    context 'on pingpp_wx_pub payment', :skip do
-      before { payment.payment_method = 'pingpp_wx_pub' }
-      it 'completes payment' do
+    context 'On pingpp_wx_pub payment' do
+      let(:paid_hash) { { 'order_no' => order_no, 'paid' => true } }
+      let(:unpaid_hash) { { 'order_no' => order_no, 'paid' => false } }
+      let(:order_no) { payment.order.id }
+
+      before do
+        payment.payment_method = 'pingpp_wx_pub'
         payment.checkout && payment.save!
-        # p "PID = #{payment.id}"
+      end
+
+      it '#checkout into :processing state' do
         expect(payment.processing?).to eq true
         expect(payment.reload.aasm.current_state).to eq :processing
-        state = wait_for(:pending) { payment.reload.aasm.current_state }
-        expect(state).to eq :pending
-        expect(payment.pingpp_charge.value).to be_present
       end
 
-      it 'completes after failure due to network issue' do
-        # TODO
+      it '#save_with_prepare! into :pending state with charge' do
+        allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
+        payment.save_with_prepare!
+        expect(payment.pingpp_charge_json).to be_present
+        expect(payment.reload.aasm.current_state).to eq :pending
       end
-    end
 
-    def wait_for(expected, period = 10, delta_time = 0.2)
-      total_time = 0
-      result = nil
-      while(total_time < period)
-        total_time += delta_time
-        got = yield
-        return expected if got == expected
-        sleep delta_time
+      describe '#check_and_complete!' do
+        it 'gets into :completed state if paid' do
+          allow(Pingpp::Charge).to receive(:create).and_return(paid_hash)
+          payment.save_with_prepare!
+          payment.check_and_complete!
+          expect(payment.reload.aasm.current_state).to eq :completed
+        end
+
+        it 'stays :pending state if not paid' do
+          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
+          payment.save_with_prepare!
+          payment.check_and_complete!
+          expect(payment.reload.aasm.current_state).to eq :pending
+        end
+
+        it 'gets into :completed by retrieving new charge object' do
+          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
+          allow(Pingpp::Charge).to receive(:retrieve).and_return(unpaid_hash)
+          payment.save_with_prepare!
+
+          # Call #retrieve_pingpp_charge instead of caching version every time.
+          payment.pingpp_retrieve_min_interval = -1
+
+          payment.check_and_complete!
+          expect(payment.reload.aasm.current_state).to eq :pending
+
+          allow(Pingpp::Charge).to receive(:retrieve).and_return(paid_hash)
+          payment.check_and_complete!
+          expect(payment.reload.aasm.current_state).to eq :completed
+        end
       end
-      got
     end
   end
 
@@ -73,8 +99,8 @@ RSpec.describe Payment, type: :model, async: true do
     end
   end
 
-  describe 'state machine' do
-    describe 'checkout event' do
+  describe 'State machine' do
+    describe 'Checkout event' do
       let(:another_payment) { build :payment, order: order }
 
       it 'checkouts(and persists) a non-cash payment' do
@@ -101,11 +127,7 @@ RSpec.describe Payment, type: :model, async: true do
       end
     end
 
-    describe 'prepare event' do
-      # TODO
-    end
-
-    describe 'void event' do
+    describe 'Void event' do
       it 'cancels a payment' do
         payment.checkout && payment.save!
         expect(payment.void && payment.save).to eq true
