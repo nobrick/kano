@@ -5,13 +5,13 @@
       span 完善个人资料
     = render 'shared/error_messages', model: @account
     = form_for(@account, as: :profile, url: handyman_profile_path, class: 'form-horizontal') do |f|
-      - if @account.name.blank?
+      - if @account.name_was.blank?
         .form-group
           = f.text_field :name, placeholder: '您的姓名',
             class: 'control-group t-input'
       - else
         = f.hidden_field :name
-      - if @account.phone.blank?
+      - if @account.phone_was.blank?
         .form-group
           = f.text_field :phone, placeholder: '手机号码',
             class: 'control-group t-input'
