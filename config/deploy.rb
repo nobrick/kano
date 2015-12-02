@@ -162,14 +162,14 @@ namespace :unicorn do
   desc 'Reload unicorn'
   task :reload do
     on roles(:app) do
-      execute "kill -USR2 $(#{cat_pid_command})"
+      execute "kill -USR2 $(#{cat_pid_command})", raise_on_non_zero_exit: false
     end
   end
 
   desc 'Stop unicorn'
   task :stop do
     on roles(:app) do
-      execute "kill $(#{cat_pid_command})"
+      execute "kill $(#{cat_pid_command})", raise_on_non_zero_exit: false
     end
   end
 
