@@ -18,7 +18,7 @@ class Handymen::OrderContractsController < ApplicationController
   private
 
   def check_order_permission
-    unauthorized_options = { alert: '订单不存在' }
+    unauthorized_options = { alert: t('.order_not_exist') }
     return false unless authenticate_handyman_order(unauthorized_options)
 
     case @order.state

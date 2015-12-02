@@ -24,13 +24,32 @@ zh-CN:
         whitewash: '粉刷及内部修缮'
         lock: '门锁问题'
         other: '其它定制服务'
-
   controllers:
-    profile:
-      edit:
-        success: '成功更新个人资料。'
-      complete:
-        success: '恭喜您注册成功'
+    root:
+      should_complete_profile: '继续操作前请您完善个人资料'
+      profiles:
+        edit_success: '成功更新个人资料'
+        complete_success: '恭喜您注册成功'
+    omniauth_callbacks:
+      failure: '获取您的微信资料失败，请稍后重试'
+      persist_failure: '暂时无法微信登录。如需帮助，请联系客服'
+    users/orders:
+      request_failure: '请求失败'
+      order_success: '下单成功'
+    users/checkouts:
+      total_incorrect: '请您输入正确的金额'
+      payment_success: '支付成功'
+      payment_failure: '支付失败'
+      no_payment_result: '没有收到支付结果，请您稍后再试'
+      should_pay_in_wechat_client: '请在微信客户端中完成支付'
+      param_invalid: '参数错误'
+      request_failure: '请求失败'
+    handymen/order_contracts:
+      order_not_exist: '订单不存在'
+    handymen/orders:
+      update_success: '接单成功'
+      update_failure: '接单失败：%{reasons}'
+      order_unauthorized: 'Sorry，订单可能已被别人抢走'
   order:
     requested: '未接单'
     contracted: '已接单'

@@ -17,7 +17,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   # GET|POST /users/auth/wechat/callback
   def failure
-    redirect_to root_path, alert: '获取您的微信资料失败，请稍后重试'
+    redirect_to root_path, alert: t('.failure')
   end
 
   private
@@ -29,7 +29,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       omniauth_sign_in
     else
       Rails.logger.debug "wechat persistence failed: #{@account.errors.full_messages}"
-      redirect_to root_url, alert: '暂时无法微信登录。如需帮助，请联系客服。'
+      redirect_to root_url, alert: t('.persist_failure')
     end
   end
 

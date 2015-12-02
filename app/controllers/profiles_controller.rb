@@ -16,8 +16,7 @@ class ProfilesController < ApplicationController
   def update
     @account.assign_attributes(profile_params)
     if @account.save(context: :complete_info_context)
-      i18n_key = "controllers.profile.#{@view_action}.success"
-      redirect_to root_url, notice: I18n.t(i18n_key)
+      redirect_to root_url, notice: t("^profiles.#{@view_action}_success")
     else
       set_address
       yield :failure if block_given?

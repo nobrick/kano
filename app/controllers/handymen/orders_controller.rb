@@ -19,10 +19,10 @@ class Handymen::OrdersController < ApplicationController
   def update
     @order.handyman = current_handyman
     if @order.contract && @order.save
-      redirect_to handyman_contract_url(@order), notice: '接单成功'
+      redirect_to handyman_contract_url(@order), notice: t('.update_success')
     else
       redirect_to handyman_orders_url,
-        alert: "接单失败: #{@order.errors.full_messages.join('；')}"
+        alert: t('.update_failure', reasons: @order.errors.full_messages.join('；'))
     end
   end
 
@@ -33,7 +33,7 @@ class Handymen::OrdersController < ApplicationController
   end
 
   def check_order_permission
-    unauthorized_options = { alert: 'Sorry，订单可能已被别人抢走' }
+    unauthorized_options = { alert: t('.order_unauthorized') }
     return false unless authenticate_handyman_order(unauthorized_options)
 
     case @order.state

@@ -10,7 +10,8 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id
   def show
-    redirect_to user_orders_url, notice: '请求失败' if @order.nil?
+    redirect_to user_orders_url, notice: t('.request_failure') unless @order
+
     if wechat_request? || debug_wechat?
       url = request.original_url
       gon.push(auth_client(url))
@@ -27,7 +28,7 @@ class Users::OrdersController < ApplicationController
   def create
     @order = current_user.orders.build(order_params)
     if @order.request && @order.save
-      redirect_to [ :user, @order ], notice: '下单成功'
+      redirect_to [ :user, @order ], notice: t('.order_success')
     else
       gray_background
       set_address

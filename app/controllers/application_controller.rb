@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
 
   def sign_up_uncompleted(scope, options = {})
     unless options[:notice] || options[:alert]
-      options[:notice] = '继续操作前请您完善个人资料'
+      options[:notice] = t('^should_complete_profile')
     end
 
     set_return_path
@@ -101,5 +101,16 @@ class ApplicationController < ActionController::Base
 
   def gray_background
     @body_css_class = 'gray-backgroud'
+  end
+
+  def t(key, options = {})
+    case key[0]
+    when '.'
+      I18n.t("controllers.#{controller_path}#{key}", options)
+    when '^'
+      I18n.t("controllers.root.#{key[1..-1]}", options)
+    else
+      I18n.t(key, options)
+    end
   end
 end
