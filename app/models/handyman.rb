@@ -5,7 +5,7 @@ class Handyman < Account
   has_one :latest_balance_record, -> { order(created_at: :desc) },
     class_name: 'BalanceRecord', as: :owner
   accepts_nested_attributes_for :taxons, allow_destroy: true
-  validates :taxons, presence: true, on: :complete_info_context
+  validate :taxons_presence, on: :complete_info_context
 
   def handyman?
     true
@@ -23,5 +23,11 @@ class Handyman < Account
       },
       'entities' => Taxon.redux_entities
     }
+  end
+
+  private
+
+  def taxons_presence
+    errors.add(:base, '维修项目不能为空') if taxons.blank?
   end
 end

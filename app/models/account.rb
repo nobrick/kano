@@ -1,8 +1,13 @@
 class Account < ActiveRecord::Base
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable, :recoverable, :rememberable,
-    :trackable, :validatable, :omniauthable, omniauth_providers: [ :wechat, :handyman_wechat ]
+  devise :database_authenticatable,
+    :registerable,
+    :recoverable,
+    :rememberable,
+    :trackable,
+    :validatable,
+    :omniauthable,
+    omniauth_providers: [ :wechat, :handyman_wechat ]
+
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'
   accepts_nested_attributes_for :primary_address
