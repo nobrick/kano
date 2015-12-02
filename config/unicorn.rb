@@ -1,6 +1,6 @@
 APP_ROOT =  File.expand_path("../..", __FILE__)
 worker_processes 2
-timeout 15
+timeout 29
 preload_app true
 working_directory APP_ROOT
 pid "#{APP_ROOT}/tmp/pids/unicorn.pid"
