@@ -16,6 +16,16 @@ before_fork do |server, worker|
 
   defined?(ActiveRecord::Base) and
     ActiveRecord::Base.connection.disconnect!
+
+  old_pid = "#{server.config[:pid]}.oldbin"
+  if File.exists?(old_pid) && server.pid != old_pid
+    puts 'Unicorn master starts to kill old unicorn process'
+    begin
+      Process.kill("QUIT", File.read(old_pid).to_i)
+      puts 'Old unicorn process is killed'
+    rescue Errno::ENOENT, Errno::ESRCH
+    end
+  end
 end
 
 after_fork do |server, worker|

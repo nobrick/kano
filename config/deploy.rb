@@ -40,7 +40,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app), in: :sequence, wait: 5 do
-      invoke 'unicorn:restart'
+      invoke 'unicorn:reload'
     end
   end
 
@@ -178,7 +178,6 @@ namespace :unicorn do
     on roles(:app) do
       info "[ -f #{pid_full_path} ]"
       if test("[ -f #{pid_full_path} ]")
-        # invoke 'unicorn:reload'
         invoke 'unicorn:stop'
         invoke 'unicorn:start'
       else
