@@ -38,7 +38,11 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id/charge
   def charge
-    render json: @order.pingpp_charge_json
+    if @order.valid_pingpp_charge? && !@order.payment_expired?
+      render json: @order.pingpp_charge_json
+    else
+      render json: nil
+    end
   end
 
   private

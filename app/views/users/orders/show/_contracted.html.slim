@@ -10,8 +10,9 @@
   .panel-body
     = form_for(@order, url: user_checkout_path, method: :post) do |f|
       .form-group
-        = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT,
-          step: 10, pattern: '\d*', class: 't-input', placeholder: '请在师傅完成维修后输入支付金额'
+        - total = @order.user_total ? '%.0f' % @order.user_total : nil
+        = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
+          step: 5, pattern: '\d*', class: 't-input', placeholder: '请在师傅完成维修后输入支付金额'
       .pay-buttons
         = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-normal pull-left' do
           span.fa-icon

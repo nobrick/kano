@@ -45,3 +45,4 @@ dump.rdb
 .rake_tasks
 todo.md
 node_modules
+.yardoc

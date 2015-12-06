@@ -11,11 +11,12 @@ RSpec.describe Payment, type: :model, async: true do
   context 'From Payment.new' do
     before do
       payment.order = order
-      payment.expires_at = 3.hours.since
+      payment.expires_at = expires_at
       order.user_total = 300
       order.sync_from_user_total
     end
     let(:payment) { Payment.new }
+    let(:expires_at) { 3.hours.since }
 
     it 'completes cash payment' do
       payment.payment_method = 'cash'
@@ -32,25 +33,39 @@ RSpec.describe Payment, type: :model, async: true do
     end
 
     context 'On pingpp_wx_pub payment' do
-      let(:paid_hash) { { 'order_no' => order_no, 'paid' => true } }
-      let(:unpaid_hash) { { 'order_no' => order_no, 'paid' => false } }
-      let(:order_no) { payment.order.id }
+      let(:paid_hash) do
+        {
+          'order_no' => payment.gateway_order_no,
+          'paid' => true,
+          'time_expire' => time_expire,
+          'metadata' => {
+            'user_id' => payment.user.id,
+            'handyman_id' => payment.handyman.id,
+            'order_id' => payment.order.id
+          }
+        }
+      end
+
+      let(:unpaid_hash) { paid_hash.merge('paid' => false) }
+      let(:time_expire) { 2.hours.since.to_i }
 
       before do
         payment.payment_method = 'pingpp_wx_pub'
         payment.checkout && payment.save!
       end
 
-      it '#checkout into :processing state' do
+      it 'checkouts into :processing state' do
         expect(payment.processing?).to eq true
         expect(payment.reload.aasm.current_state).to eq :processing
       end
 
-      it '#save_with_prepare! into :pending state with charge' do
-        allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
-        payment.save_with_prepare!
-        expect(payment.pingpp_charge_json).to be_present
-        expect(payment.reload.aasm.current_state).to eq :pending
+      describe '#save_with_prepare!' do
+        it 'transitions into :pending state with charge' do
+          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
+          payment.save_with_prepare!
+          expect(payment.pingpp_charge_json).to be_present
+          expect(payment.reload.aasm.current_state).to eq :pending
+        end
       end
 
       describe '#check_and_complete!' do
@@ -72,16 +87,40 @@ RSpec.describe Payment, type: :model, async: true do
           allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
           allow(Pingpp::Charge).to receive(:retrieve).and_return(unpaid_hash)
           payment.save_with_prepare!
-
-          # Call #retrieve_pingpp_charge instead of caching version every time.
-          payment.pingpp_retrieve_min_interval = -1
-
-          payment.check_and_complete!
+          payment.check_and_complete!(fetch_latest: true)
           expect(payment.reload.aasm.current_state).to eq :pending
 
           allow(Pingpp::Charge).to receive(:retrieve).and_return(paid_hash)
-          payment.check_and_complete!
+          payment.check_and_complete!(fetch_latest: true)
           expect(payment.reload.aasm.current_state).to eq :completed
+        end
+      end
+
+      describe '#expire' do
+        shared_examples_for 'expiration' do
+          before do
+            allow(Pingpp::Charge)
+              .to receive(:create).and_return(unpaid_hash)
+          end
+
+          it 'does not expire if not in pending state' do
+            expect(payment.expired?).to eq false
+          end
+
+          it 'expires in pending state' do
+            payment.save_with_prepare!
+            expect(payment.expired?).to eq true
+          end
+        end
+
+        context 'when current time is over time_expire on fetched object' do
+          let(:time_expire) { Time.now.to_i - 1 }
+          it_behaves_like 'expiration'
+        end
+
+        context 'when current time is over expires_at attribute' do
+          let(:expires_at) { Time.now - 1.second }
+          it_behaves_like 'expiration'
         end
       end
     end
@@ -121,30 +160,30 @@ RSpec.describe Payment, type: :model, async: true do
       it 'cannot checkout more than one valid(not void or failed) payment' do
         payment.checkout && payment.save!
 
-        message = 'Order valid payment already exists, set it void or failed first'
+        message = 'Invalid payment'
         expect { another_payment.checkout }
           .to raise_error(TransitionFailure, message)
       end
     end
 
-    describe 'Void event' do
+    describe 'Cancel event' do
       it 'cancels a payment' do
         payment.checkout && payment.save!
-        expect(payment.void && payment.save).to eq true
+        expect(payment.cancel && payment.save).to eq true
         expect(order.payments).to eq [ payment ]
         expect(order.valid_payment).to be_nil
       end
     end
 
-    describe 'fail event' do
-      it 'fails a pending payment' do
+    describe 'Flunk event' do
+      it 'fails a processing payment' do
         expect(pending_payment).to eq order.valid_payment
-        expect(pending_payment.fail && pending_payment.save).to eq true
+        expect(pending_payment.flunk && pending_payment.save).to eq true
         expect(order.valid_payment).to be_nil
       end
     end
 
-    describe 'complete event' do
+    describe 'Complete event' do
       it 'completes a pending (wechat-api) payment' do
         expect(pending_payment).to eq order.ongoing_payment
         expect(pending_payment.complete).to eq true

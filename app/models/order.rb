@@ -1,5 +1,6 @@
 class Order < ActiveRecord::Base
   include AASM
+  include Redis::Objects
   include IdRandomizable
 
   # TODO Update :completes_at when order finishes
@@ -11,18 +12,25 @@ class Order < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   has_many :payments
 
-  # Has one non-void payment at most
+  # Has one non-void payment at most.
   has_one :valid_payment,
     -> { where("state not in ('void', 'failed')") },
     class_name: 'Payment'
 
-  # Has one ongoing payment
+  # Has one ongoing payment.
   has_one :ongoing_payment,
     -> { where("state not in ('void', 'failed', 'completed')") },
     class_name: 'Payment'
 
   accepts_nested_attributes_for :transferee_order
   accepts_nested_attributes_for :address
+
+  # Reason code for last void or failed payment.
+  #
+  # +'expired'+ for payment expiration.
+  # +'canceled'+ for payment cancellation.
+  value :redis_last_payment_invalid_code
+
   before_validation :set_address
   after_touch :clear_association_cache
 
@@ -111,10 +119,13 @@ class Order < ActiveRecord::Base
     end
 
     event :pay do
-      # First payment transition
       transitions from: :contracted, to: :payment
-      # Transition again (ex. payment failed)
       transitions from: :payment, to: :payment
+    end
+
+    event :unpay do
+      transitions from: :payment, to: :contracted
+      transitions from: :contracted, to: :contracted
     end
 
     event :complete do
@@ -175,6 +186,23 @@ class Order < ActiveRecord::Base
 
   def pingpp_charge
     valid_payment.try(:pingpp_charge)
+  end
+
+  def valid_pingpp_charge?
+    return false if valid_payment.blank?
+    valid_payment.valid_pingpp_charge?
+  end
+
+  def payment_expired?
+    valid_payment.try(:expired?)
+  end
+
+  def build_payment(options = {})
+    payment = Payment.new
+    payment.order = self
+    payment.expires_at = options[:expires_at] || 2.hours.since
+    payment.payment_method = options[:payment_method]
+    payment
   end
 
   private
