@@ -1,3 +1,3 @@
 jQuery ->
-  $('#repayBtn').click ->
+  $('#btn_start_payment').click ->
     PingppPayment.create()

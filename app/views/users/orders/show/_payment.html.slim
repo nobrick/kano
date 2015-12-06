@@ -11,8 +11,10 @@
         ' 支付金额：
         b => number_to_currency @order.user_total, unit: '￥'
       - payment = @order.valid_payment
-      = link_to '发起支付', '#', class: 'btn btn-normal', id: 'repayBtn'
-      = link_to '支付成功？', user_checkout_path(@order), method: :put, class: 'btn btn-default pull-right', id: 'successBtn'
+      = link_to '发起支付', '#', class: 'btn btn-normal',
+        id: 'btn_start_payment'
+      = link_to '遇到问题？', user_checkout_path(@order), method: :put,
+        class: 'btn btn-default pull-right', id: 'btn_check_payment_problem'
     - else
       h3.text-center
         ' 请用微信完成支付

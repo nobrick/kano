@@ -25,20 +25,17 @@
       if charge?
         pingpp.createPayment(charge, PingppPayment.afterCreate, gon.wechat.signature, Global.debug)
       else
-        alert('支付信息尚未生成完毕，请您稍后重试')
+        $('#btn_check_payment_problem').click()
 
   afterCreate: (result, err) ->
     alertOnDebug "RESULT: #{result} MSG: #{err.msg} EXTRA: #{err.extra} GLOBAL:\n#{Global.getDebugInfo()}"
     switch result
-      when 'success' then $('#successBtn').click()
+      when 'success' then $('#btn_check_payment_problem').click()
       when 'fail' then alert("支付失败。原因：#{err.msg} #{err.extra}")
 
 @PingppCharge =
   fetch: (success) ->
-    if gon?.pingpp_charge?
-      success(gon.pingpp_charge)
-    else
-      @fetchRemote(success)
+    @fetchRemote(success)
 
   fetchRemote: (success) ->
     $.ajax

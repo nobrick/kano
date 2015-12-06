@@ -19,7 +19,12 @@ class Users::CheckoutsController < ApplicationController
   # PUT/PATCH /orders/:id/checkout
   def update
     @payment = @order.ongoing_payment
-    if @payment.try(:check_and_complete!)
+    case @payment.try(:check_and_transition!)
+    when :failed
+      redirect_to [ :user, @order ], notice: t('.payment_invalid')
+    when :expired
+      redirect_to [ :user, @order ], notice: t('.payment_expired')
+    when :completed
       redirect_to [ :user, @order ], notice: t('.payment_success')
     else
       redirect_to [ :user, @order ], alert: t('.no_payment_result')
@@ -64,10 +69,7 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def set_payment(payment_method)
-    @payment = Payment.new
-    @payment.order = @order
-    @payment.expires_at = 3.hours.since
-    @payment.payment_method = payment_method
+    @payment = @order.build_payment(payment_method: payment_method)
   end
 
   def order_params

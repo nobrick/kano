@@ -1,9 +1,6 @@
 class Payment::PrepareEventWorker
   include Sidekiq::Worker
-  sidekiq_options retry: 5, dead: false
-  sidekiq_retry_in do |count|
-    (rand(6) + 7) * count + 3
-  end
+  sidekiq_options retry: 0, dead: false
 
   def perform(payment_id)
     return unless payment_id
