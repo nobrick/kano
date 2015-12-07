@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'support/payment'
 
 RSpec.describe Payment, type: :model, async: true do
   let(:order) { create :contracted_order, :payment, user: wechat_user }
@@ -33,25 +34,15 @@ RSpec.describe Payment, type: :model, async: true do
     end
 
     context 'On pingpp_wx_pub payment' do
-      let(:paid_hash) do
-        {
-          'order_no' => payment.gateway_order_no,
-          'paid' => true,
-          'time_expire' => time_expire,
-          'metadata' => {
-            'user_id' => payment.user.id,
-            'handyman_id' => payment.handyman.id,
-            'order_id' => payment.order.id
-          }
-        }
-      end
-
-      let(:unpaid_hash) { paid_hash.merge('paid' => false) }
-      let(:time_expire) { 2.hours.since.to_i }
+      Charge = Pingpp::Charge
+      let(:unpaid_hash) { unpaid_hash_for(payment, expired: pingpp_charge_expired) }
+      let(:paid_hash) { paid_hash_for(payment) }
+      let(:pingpp_charge_expired) { false }
 
       before do
         payment.payment_method = 'pingpp_wx_pub'
         payment.checkout && payment.save!
+        allow(Charge).to receive(:create).and_return(unpaid_hash)
       end
 
       it 'checkouts into :processing state' do
@@ -61,7 +52,6 @@ RSpec.describe Payment, type: :model, async: true do
 
       describe '#save_with_prepare!' do
         it 'transitions into :pending state with charge' do
-          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
           payment.save_with_prepare!
           expect(payment.pingpp_charge_json).to be_present
           expect(payment.reload.aasm.current_state).to eq :pending
@@ -70,27 +60,32 @@ RSpec.describe Payment, type: :model, async: true do
 
       describe '#check_and_complete!' do
         it 'gets into :completed state if paid' do
-          allow(Pingpp::Charge).to receive(:create).and_return(paid_hash)
           payment.save_with_prepare!
-          payment.check_and_complete!
+          allow(Charge).to receive(:retrieve).and_return(paid_hash)
+          payment.check_and_complete!(fetch_latest: true)
           expect(payment.reload.aasm.current_state).to eq :completed
         end
 
+        it 'does not complete immediately because of caching when paid' do
+          payment.save_with_prepare!
+          allow(Charge).to receive(:retrieve).and_return(paid_hash)
+          payment.check_and_complete!
+          expect(payment.reload.aasm.current_state).to eq :pending
+        end
+
         it 'stays :pending state if not paid' do
-          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
           payment.save_with_prepare!
           payment.check_and_complete!
           expect(payment.reload.aasm.current_state).to eq :pending
         end
 
         it 'gets into :completed by retrieving new charge object' do
-          allow(Pingpp::Charge).to receive(:create).and_return(unpaid_hash)
-          allow(Pingpp::Charge).to receive(:retrieve).and_return(unpaid_hash)
+          allow(Charge).to receive(:retrieve).and_return(unpaid_hash)
           payment.save_with_prepare!
           payment.check_and_complete!(fetch_latest: true)
           expect(payment.reload.aasm.current_state).to eq :pending
 
-          allow(Pingpp::Charge).to receive(:retrieve).and_return(paid_hash)
+          allow(Charge).to receive(:retrieve).and_return(paid_hash)
           payment.check_and_complete!(fetch_latest: true)
           expect(payment.reload.aasm.current_state).to eq :completed
         end
@@ -98,11 +93,6 @@ RSpec.describe Payment, type: :model, async: true do
 
       describe '#expire' do
         shared_examples_for 'expiration' do
-          before do
-            allow(Pingpp::Charge)
-              .to receive(:create).and_return(unpaid_hash)
-          end
-
           it 'does not expire if not in pending state' do
             expect(payment.expired?).to eq false
           end
@@ -114,13 +104,152 @@ RSpec.describe Payment, type: :model, async: true do
         end
 
         context 'when current time is over time_expire on fetched object' do
-          let(:time_expire) { Time.now.to_i - 1 }
+          let(:pingpp_charge_expired) { true }
           it_behaves_like 'expiration'
         end
 
         context 'when current time is over expires_at attribute' do
-          let(:expires_at) { Time.now - 1.second }
+          let(:expires_at) { 1.second.ago }
           it_behaves_like 'expiration'
+        end
+      end
+
+      describe '#check_and_expire!' do
+        context 'When payment is not in pending state' do
+          let(:pingpp_charge_expired) { true }
+          let(:expires_at) { 1.second.ago }
+
+          it 'returns false' do
+            expect(payment.processing?).to eq true
+            expect(payment.check_and_expire!).to eq false
+          end
+        end
+
+        context 'When payment is pending but not expired' do
+          it 'returns false' do
+            prepare_payment!(payment)
+            expect(payment.pending?).to eq true
+            expect(payment.expired?).to eq false
+            expect(payment.check_and_expire!).to eq false
+          end
+        end
+
+        context 'When pending payment is pending and expired' do
+          before do
+            prepare_payment!(payment, expired: true)
+            allow(Charge).to receive(:retrieve).and_return(unpaid_hash)
+          end
+
+          it 'trys to #check_and_complete with :fetch_latest on' do
+            expect(payment.pending?).to eq true
+            expect(payment.expired?).to eq true
+            expect(payment).to receive(:check_and_complete!).with(fetch_latest: true)
+            payment.check_and_expire!
+          end
+
+          context 'When the lastest fetch is not paid' do
+            it 'expires the payment'  do
+              expect(payment.pending?).to eq true
+              payment.check_and_expire!
+              expect(payment.reload.void?).to eq true
+            end
+
+            it 'returns true' do
+              expect(payment.check_and_expire!).to eq true
+            end
+          end
+
+          context 'When the lastest fetch is paid' do
+            before do
+              allow(Charge).to receive(:retrieve).and_return(paid_hash)
+            end
+
+            it 'completes payment' do
+              payment.check_and_expire!
+              expect(payment.reload.completed?).to eq true
+            end
+
+            it 'returns false' do
+              expect(payment.check_and_expire!).to eq false
+            end
+          end
+        end
+      end
+
+      describe '#check_and_fail' do
+        let(:invalid_charge) { unpaid_hash.merge(order_no: 'INVALID') }
+
+        context 'When in a state other than processing and pending' do
+          before { complete_payment!(prepare_payment!(payment)) }
+
+          it 'returns false' do
+            expect(payment.completed?).to eq true
+            expect(payment.check_and_fail!).to eq false
+          end
+        end
+
+        shared_examples_for 'check and fail when charge is invalid' do
+          before { allow(Charge).to receive(:create).and_return(unpaid_hash) }
+
+          it 'retries to create new pingpp charge by default' do
+            expect(payment.valid_pingpp_charge?).to eq false
+            expect(Charge).to receive(:create)
+            expect(payment.check_and_fail!).to eq false
+          end
+
+          context 'After retry success' do
+            it 'sets valid charge' do
+              expect { payment.check_and_fail! }
+                .to change(payment, :valid_pingpp_charge?).to true
+            end
+
+            it 'remains / transitions to pending state' do
+              payment.check_and_fail!
+              expect(payment.pending?).to eq true
+            end
+
+            it 'returns false' do
+              expect(payment.check_and_fail!).to eq false
+            end
+          end
+
+          context 'After retry failure' do
+            before { allow(Charge).to receive(:create).and_return(invalid_charge) }
+
+            it 'fails the payment'  do
+              expect { payment.check_and_fail! }.to change(payment, :failed?).to true
+            end
+
+            it 'returns true' do
+              expect(payment.check_and_fail!).to eq true
+            end
+          end
+        end
+
+        context 'When processing' do
+          it 'charge is invalid in this state' do
+            expect(payment.processing?).to eq true
+            expect(payment.valid_pingpp_charge?).to eq false
+          end
+
+          it_behaves_like 'check and fail when charge is invalid'
+        end
+
+        context 'When pending' do
+          before { prepare_payment!(payment) }
+
+          context 'When charge is valid' do
+            it 'returns false' do
+              expect(payment.pending?).to eq true
+              expect(payment.check_and_fail!).to eq false
+            end
+          end
+
+          context 'When charge is invalid' do
+            before { payment.send(:set_pingpp_charge, invalid_charge) }
+
+            it_behaves_like 'check and fail when charge is invalid'
+          end
         end
       end
     end
