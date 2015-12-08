@@ -6,6 +6,7 @@
 //= require components
 //= require react_ujs
 //= require bootstrap
+//= require material-design-lite/material.min
 //= require jweixin-1.0.0
 //= require pingpp
 //= require app

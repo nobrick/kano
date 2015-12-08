@@ -1,6 +1,7 @@
 /*
  *= require font-awesome
  *= require_tree .
+ *= require material-design-lite/material.min
  *= require_self
  */
 
@@ -61,6 +62,11 @@ h3, .h3 {
   .panel-body {
     padding: 12px;
   }
+}
+
+// Fixs bootstrap confliction with mdl textfields.
+.mdl-textfield__label {
+  margin-bottom: 0px;
 }
 
 .btn-normal {
