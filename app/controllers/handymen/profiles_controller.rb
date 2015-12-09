@@ -1,4 +1,9 @@
 class Handymen::ProfilesController < ProfilesController
+  def show
+    @orders = Order.where(handyman: current_handyman)
+      .order(updated_at: :desc).limit(2)
+  end
+
   def update
     selected_codes = (params['taxon_codes'] || '').split(',')
     codes_to_create = selected_codes - @account.taxon_codes

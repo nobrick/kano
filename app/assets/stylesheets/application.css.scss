@@ -337,6 +337,23 @@ input[type=checkbox] {
   }
 }
 
+.handyman-profile-page {
+  .profile-card {
+    width: 86%;
+    margin: 0 auto 26px;
+    .mdl-card__title {
+      height: 86px;
+    }
+    p {
+      line-height: 18px;
+    }
+  }
+
+  #btn_more_contracts {
+    margin-left: 25px;
+  }
+}
+
 #receive_order_btn {
   @include h-center(100%, 100%);
 }

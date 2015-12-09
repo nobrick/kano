@@ -1,0 +1,30 @@
+- content_for :row
+  .handyman-profile-page
+    .profile-card.mdl-card.mdl-shadow--2dp
+      .mdl-card__title
+        h2.mdl-card__title-text = @account.full_or_nickname
+      .mdl-card__supporting-text
+        p
+          - orders_count = @account.orders.count
+          - if orders_count > 0
+            ' 您已经成功抢到
+            strong => @account.orders.count
+            ' 个订单！
+          - else
+            ' 您还没有抢到任何订单。
+        p
+          span.fa-icon
+            => fa_icon('archive')
+            strong 在线支付余额
+            =< number_to_currency @account.balance, unit: '￥'
+          br
+          span.fa-icon
+            => fa_icon('ticket')
+            strong 现金支付收入
+            =< number_to_currency @account.cash_total, unit: '￥'
+      .mdl-card__actions.mdl-card--border
+        = link_to '我的订单', handyman_contracts_path,
+          class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
+    = render 'handymen/order_contracts/index', orders: @orders
+    = link_to '查看更多订单', handyman_contracts_path, id: 'btn_more_contracts',
+      class: 'mdl-button mdl-js-button mdl-button--accent'

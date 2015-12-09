@@ -15,6 +15,10 @@ class Handyman < Account
     taxons.map(&:code)
   end
 
+  def taxon_names
+    taxons.map(&:name)
+  end
+
   def taxons_redux_state
     {
       'result' => {
@@ -23,6 +27,14 @@ class Handyman < Account
       },
       'entities' => Taxon.redux_entities
     }
+  end
+
+  def balance
+    latest_balance_record.try(:balance) || 0
+  end
+
+  def cash_total
+    latest_balance_record.try(:cash_total) || 0
   end
 
   private

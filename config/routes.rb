@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   concern :with_account_profile do
-    resource :profile, only: [ :edit, :update ] do
+    resource :profile, only: [ :show, :edit, :update ] do
       get :complete
     end
   end
