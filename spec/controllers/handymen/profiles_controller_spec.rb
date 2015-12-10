@@ -5,8 +5,16 @@ RSpec.describe Handymen::ProfilesController, type: :controller do
   let(:handyman) { create :handyman_with_taxons }
   let(:address_attrs) { { primary_address_attributes: attributes_for(:address) } }
 
+  describe 'GET #profile/show' do
+    it 'returns success and renders :show' do
+      get :show
+      expect(response).to have_http_status(:success)
+      expect(response).to render_template :show
+    end
+  end
+
   describe 'GET #profile/edit' do
-    it 'returns http success' do
+    it 'returns success and renders :edit' do
       get :edit
       expect(assigns(:account)).to be current_handyman
       expect(response).to have_http_status(:success)
@@ -15,7 +23,7 @@ RSpec.describe Handymen::ProfilesController, type: :controller do
   end
 
   describe 'GET #profile/complete' do
-    it 'returns http success' do
+    it 'returns success and renders :complete' do
       get :complete
       expect(assigns(:account)).to be current_handyman
       expect(response).to have_http_status(:success)

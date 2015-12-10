@@ -1,8 +1,13 @@
 class ProfilesController < ApplicationController
   # For filling up additional necessary account infomation after sign up.
+  before_action :authenticate_completed_handyman, only: [ :show, :edit ]
   before_action :set_account
   before_action :set_address, only: [ :edit, :complete ]
   before_action :set_view_action, only: [ :edit, :complete, :update ]
+
+  # GET /profile/show
+  def show
+  end
 
   # GET /profile/edit
   def edit

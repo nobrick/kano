@@ -1,8 +1,3 @@
 - content_for :row
   .order-index-page
-    - if @orders.blank?
-      h3.text-center 您还没有任何订单。
-    - else
-      ul.orders-list
-        = render partial: 'handymen/order_contracts/order',
-          collection: @orders, cache: true
+    = render 'index', orders: @orders
