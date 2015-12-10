@@ -47,5 +47,9 @@ module Kano
 
     # Add node modules into assets paths
     config.assets.paths << Rails.root.join('node_modules')
+
+    # Precompile material design icons
+    material_icons_paths = %w( eot woff2 woff ttf ).map { |f| "material-design-icons/iconfont/MaterialIcons-Regular.#{f}" }
+    Rails.application.config.assets.precompile += material_icons_paths
   end
 end

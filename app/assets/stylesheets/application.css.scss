@@ -1,15 +1,9 @@
-/*
- *= require font-awesome
- *= require_tree .
- *= require material-design-lite/material.min
- *= require_self
- */
-
 @import 'global';
 @import 'font-awesome';
 @import 'bootstrap';
+@import 'material-design-lite/material.min';
 @import 'bourbon';
-/*@import 'fonts';*/
+@import 'fonts';
 
 /* Elements style */
 body {
