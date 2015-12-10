@@ -1,4 +1,6 @@
 class Handymen::ProfilesController < ProfilesController
+  before_action :authenticate_completed_handyman, only: [ :show, :edit ]
+
   def show
     @orders = Order.where(handyman: current_handyman)
       .order(updated_at: :desc).limit(2)
