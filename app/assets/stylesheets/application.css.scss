@@ -272,22 +272,29 @@ input[type=checkbox] {
 }
 
 .order-new-page {
+  select.select-block {
+    display: block;
+    width: 78%;
+    margin: 0 auto 6px;
+  }
+  select.datetime-select {
+    width: 32%;
+    margin: 0 auto 6px;
+  }
   #order_arrives_at_4i {
   }
-
   #order_content {
     height: 85px;
   }
-
-  #order_content, .mdl-textfield, input.btn {
+  #order_content, .mdl-textfield, .btn-create-order {
     display: block;
     margin-left: auto;
     margin-right: auto;
     width: 100%;
   }
-
   .btn-create-order {
-    width: 72px;
+    letter-spacing: 3px;
+    margin-bottom: 7px;
   }
 }
 
@@ -366,25 +373,29 @@ input[type=checkbox] {
   }
 }
 
-.order-details-header-card, .order-details-attributes-card {
+.common-card {
   width: 94%;
   margin: 0px auto 16px;
   .mdl-card__supporting-text {
     width: 100%;
     padding-bottom: 16px;
   }
+  .mdl-textfield {
+    width: 100%;
+  }
+  .card-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.order-details-header-card, .order-details-attributes-card {
+  @extend .common-card;
   p {
     padding-bottom: 0px;
     margin-bottom: 0px;
   }
   h1, h2, h3, h4 {
     margin: 0px auto 0px;
-  }
-  .card-divider {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-  .mdl-textfield {
-    width: 100%;
   }
   .mdl-textfield__label {
     text-align: center;

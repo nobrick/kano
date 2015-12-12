@@ -1,8 +1,8 @@
 - content_for :row
   .order-new-page
     .col-md-6.col-md-offset-3
-      .panel.panel-default
-        .panel-body
+      .mdl-card.mdl-shadow--2dp.common-card
+        .mdl-card__supporting-text
           = render 'shared/error_messages', model: @order
           = form_for(@order, url: user_orders_path, class: 'form-horizontal') do |f|
             .field.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
@@ -11,16 +11,22 @@
             .field.form-group
               = f.label :arrives_at, class: 'i-md-label'
               br
-              = f.datetime_select :arrives_at, minute_step: 5, class: 'form-control'
+              = f.datetime_select :arrives_at,
+                { start_hour: 8, end_hour: 22, minute_step: 10,
+                start_year: Time.now.year, end_year: Time.now.year + 1, datetime_separator: "<br>"},
+                { class: 'datetime-select' }
             .field.form-group
               = f.label :taxon_code, class: 'i-md-label'
               br
-              = f.select :taxon_code, Taxon.taxons_for_grouped_select, include_blank: true
+              = f.select :taxon_code, Taxon.taxons_for_grouped_select,
+                { include_blank: true }, { class: 'select-block' }
             .form-group.city-group
-              select.city-select
+              = label_tag '所在市区', nil, class: 'i-md-label'
+              br
+              select.city-select.select-block
                 option value="" - 城市 -
                 = options_for_select(ChinaCity.list('430000'), @city_code)
-              select.city-select name="order[address_attributes][code]"
+              select.city-select.select-block name="order[address_attributes][code]"
                 option value="" - 地区 -
                 = options_for_select(ChinaCity.list(@city_code), @district_code)
             = f.fields_for :address do |fields|
@@ -28,4 +34,4 @@
                 = fields.text_field :content, class: 'mdl-textfield__input'
                 label.mdl-textfield__label for="order_address_attributes_content" 详细地址
             div
-              = f.submit '下单', class: 'btn btn-normal'
+              = f.submit '下单', class: 'mdl-button mdl-js-button mdl-button--accent btn-create-order'
