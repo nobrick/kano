@@ -1,16 +1,33 @@
-li.order-index-item
-  h2.item-title = link_to order.content_in_short, [ :user, order ]
-  span.state-desc class="#{order.state}-state" = order.state_description
-  - if order.contracted?
-    span
-      b #{order.handyman.name}
-      '  师傅
-  .order-attr-bar
-    span.fa-icon
-      = fa_icon('clock-o', class: 'attr-bar-icon')
-    - if (order.requested? || order.contracted?) && order.arrives_at > Time.now
-      b
-        span.arrives-at-attr #{time_ago_in_words order.arrives_at}后到达
-    - else
-      span.created-at-attr #{time_ago_in_words order.created_at}前
-    = render 'shared/orders/taxon_in_order_right', order: order
+.order-card.mdl-card.mdl-shadow--2dp
+  .mdl-card__title
+    h2.mdl-card__title-text = order.content_in_short(16)
+  .mdl-card__supporting-text
+    span.state-desc class="#{order.state}-state" = order.state_description
+    - if order.contracted?
+      span
+        b #{order.handyman.name}
+        '  师傅
+    .order-attr-bar
+      span.fa-icon
+        = fa_icon('clock-o', class: 'attr-bar-icon')
+      - if (order.requested? || order.contracted?) && order.arrives_at > Time.now
+        b
+          span.arrives-at-attr #{time_ago_in_words order.arrives_at}后到达
+      - else
+        span.created-at-attr #{time_ago_in_words order.created_at}前
+      = render 'shared/orders/taxon_in_order_right', order: order
+  .mdl-card__actions.mdl-card--border
+    = link_to '查看详情', [ :user, order ],
+      class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
+  .mdl-card__menu
+    = link_to [ :user, order ], class: 'mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect'
+      i.material-icons.order-state-icon
+        - case order.state
+        - when 'requested'
+          ' &#xE2C2;
+        - when 'contracted'
+          ' mood
+        - when 'payment'
+          ' payment
+        - when 'completed'
+          ' check

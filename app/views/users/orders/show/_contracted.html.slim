@@ -1,24 +1,23 @@
-.panel.panel-default
-  .panel-body
-    .text-center
-      h2
-        span.fa-icon
-          => fa_icon('user')
-        ' #{@order.handyman.name} 师傅
-      h3 = phone_link_for @order.handyman
-.panel.panel-default
-  .panel-body
+.order-details-header-card.mdl-card.mdl-shadow--2dp
+  .mdl-card__supporting-text
+    = render 'users/orders/show/shared/handyman_contact',
+      handyman: @order.handyman
+  .mdl-card__supporting-text.card-divider
     = form_for(@order, url: user_checkout_path, method: :post) do |f|
       .form-group
         - total = @order.user_total ? '%.0f' % @order.user_total : nil
-        = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
-          step: 5, pattern: '\d*', class: 't-input', placeholder: '请在师傅完成维修后输入支付金额'
+        .mdl-textfield.mdl-js-textfield
+          = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
+            step: 5, pattern: '\d*', type: 'text', class: 'mdl-textfield__input'
+          label.mdl-textfield__label for="order_user_total" 维修完成后点此输入支付金额
       .pay-buttons
-        = f.button :submit, name: 'p_method', value: 'cash', class: 'btn btn-normal pull-left' do
+        = f.button :submit, name: 'p_method', value: 'cash',
+          class: 'mdl-button mdl-js-button mdl-button--colored pull-left' do
           span.fa-icon
             => fa_icon('money')
           ' 现金支付
-        =< f.button :submit, name: 'p_method', value: 'wechat', class: 'btn btn-normal pull-right' do
+        =< f.button :submit, name: 'p_method', value: 'wechat',
+          class: 'mdl-button mdl-js-button mdl-button--accent pull-right' do
           span.fa-icon
             => fa_icon('wechat')
           ' 微信支付

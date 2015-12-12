@@ -3,7 +3,8 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
   helper_method :render_flash?, :enable_render_flash, :disable_render_flash,
-    :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?, :wechat_request?
+    :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?,
+    :wechat_request?, :debug_wechat?
   before_action :set_gon_data
 
   private

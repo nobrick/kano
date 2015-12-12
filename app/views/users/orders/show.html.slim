@@ -4,29 +4,33 @@
       - case @order.state
       - when 'requested', 'contracted', 'payment', 'completed'
         = render "users/orders/show/#{@order.state}", order: @order
-      .panel.panel-default
-        .panel-body
-          span.fa-icon
-            => fa_icon('envelope')
-          strong 维修内容
+      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__supporting-text
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('envelope')
+            ' 维修内容
           p = @order.content
-
-          span.fa-icon
-            => fa_icon('phone')
-          strong 联系方式
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('phone')
+            ' 联系方式
           p
             = current_user.name
             br
-            = phone_link_for current_user
+            = current_user.readable_phone_number
             br
             = @order.address.full_content
-
-          span.fa-icon
-            => fa_icon('clock-o')
-          strong 预约时间
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('clock-o')
+            ' 预约时间
           - if (@order.requested? || @order.contracted?) && @order.arrives_at < Time.now
             p
               = l @order.arrives_at
-              strong （时间已过，请您自行联系师傅预约）
+              br
+              ' 时间已过，请您自行联系师傅预约
           - else
             p = l @order.arrives_at

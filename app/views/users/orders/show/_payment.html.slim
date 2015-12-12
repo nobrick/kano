@@ -1,21 +1,22 @@
-.panel.panel-default
-  .panel-body
-    .text-center
-      h2
-        span.fa-icon
-          => fa_icon('user')
-        ' #{@order.handyman.name} 师傅
-      h3 = phone_link_for @order.handyman
-    - if wechat_request?
-      h3.text-center
+.order-details-header-card.mdl-card.mdl-shadow--2dp
+  - handyman_partial = 'users/orders/show/shared/handyman_contact'
+  - if wechat_request? || debug_wechat?
+    .mdl-card__supporting-text
+      = render handyman_partial, handyman: @order.handyman
+    .mdl-card__actions.mdl-card--border
+      h3.text-center.less-color
         ' 支付金额：
         b => number_to_currency @order.user_total, unit: '￥'
-      - payment = @order.valid_payment
-      = link_to '发起支付', '#', class: 'btn btn-normal',
+      = link_to '发起支付', '#',
+        class: 'mdl-button mdl-js-button mdl-button--accent',
         id: 'btn_start_payment'
       = link_to '遇到问题？', user_checkout_path(@order), method: :put,
-        class: 'btn btn-default pull-right', id: 'btn_check_payment_problem'
-    - else
-      h3.text-center
+        class: 'mdl-button mdl-js-button less-color pull-right',
+        id: 'btn_check_payment_problem'
+  - else
+    .mdl-card__supporting-text
+      = render handyman_partial, handyman: @order.handyman
+    .mdl-card__supporting-text.card-divider
+      h3.text-center.less-color
         ' 请用微信完成支付
         b = number_to_currency @order.user_total, unit: '￥'

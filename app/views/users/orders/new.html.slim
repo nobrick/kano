@@ -5,14 +5,15 @@
         .panel-body
           = render 'shared/error_messages', model: @order
           = form_for(@order, url: user_orders_path, class: 'form-horizontal') do |f|
+            .field.mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              = f.text_area :content, rows: 3, type: 'text', class: 'mdl-textfield__input'
+              label.mdl-textfield__label for="order_content" 维修内容
             .field.form-group
-              = f.text_area :content, placeholder: '维修内容', class: 'control-group t-input'
-            .field.form-group
-              = f.label :arrives_at
+              = f.label :arrives_at, class: 'i-md-label'
               br
               = f.datetime_select :arrives_at, minute_step: 5, class: 'form-control'
             .field.form-group
-              = f.label :taxon_code
+              = f.label :taxon_code, class: 'i-md-label'
               br
               = f.select :taxon_code, Taxon.taxons_for_grouped_select, include_blank: true
             .form-group.city-group
@@ -23,7 +24,8 @@
                 option value="" - 地区 -
                 = options_for_select(ChinaCity.list(@city_code), @district_code)
             = f.fields_for :address do |fields|
-              .form-group
-                = fields.text_field :content, placeholder: '详细地址', class: 'control-group t-input'
+              .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                = fields.text_field :content, class: 'mdl-textfield__input'
+                label.mdl-textfield__label for="order_address_attributes_content" 详细地址
             div
               = f.submit '下单', class: 'btn btn-normal'

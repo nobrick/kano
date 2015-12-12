@@ -6,10 +6,14 @@
 @import 'fonts';
 
 /* Elements style */
+@mixin normal-fontfamily {
+  font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+}
+
 body {
+  @include normal-fontfamily;
   padding-top: 65px;
   color: #555555;
-  font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
 }
 
 .gray-backgroud {
@@ -27,7 +31,6 @@ a {
 
 h1, .h1 {
   font-size: 30px;
-  margin: 0px 0px;
   @media (min-width: $screen-sm-min) {
     font-size: 36px;
   }
@@ -35,7 +38,6 @@ h1, .h1 {
 
 h2, .h2 {
   font-size: 20px;
-  margin: 0px 0px;
   @media (min-width: $screen-sm-min) {
     font-size: 26px;
   }
@@ -43,14 +45,21 @@ h2, .h2 {
 
 h3, .h3 {
   font-size: 16px;
-  margin: 0px 0px;
   @media (min-width: $screen-sm-min) {
     font-size: 22px;
   }
 }
 
+h4, .h4 {
+  font-size: 16px;
+  @media (min-width: $screen-sm-min) {
+    font-size: 18px;
+  }
+}
+
 .alert {
   border-radius: 0;
+  margin-bottom: 10px;
 }
 
 .panel {
@@ -66,6 +75,13 @@ h3, .h3 {
   margin-bottom: 0px;
 }
 
+.i-md-label {
+  color: #3f51b5;
+  font-size: 12px;
+  top: 4px;
+  visibility: visible;
+}
+
 .btn-normal {
   border-radius: 0;
   border: none;
@@ -74,10 +90,10 @@ h3, .h3 {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
   color: $alphaWhite;
   border: none;
-  font-size: 16px;
-  letter-spacing: 2px;
+  font-size: 14px;
+  letter-spacing: 1px;
   text-align: center;
-  &:hover, &:focus {
+  &:hover {
     color: $alphaWhite;
     background-color: #3dbcf5;
   }
@@ -263,7 +279,7 @@ input[type=checkbox] {
     height: 85px;
   }
 
-  #order_content, #order_address_attributes_content, input.btn {
+  #order_content, .mdl-textfield, input.btn {
     display: block;
     margin-left: auto;
     margin-right: auto;
@@ -279,16 +295,13 @@ input[type=checkbox] {
   list-style-type: none;
   padding: 0 40px 0;
   li {
-    &:first-of-type {
-      h2 {
-        margin-top: 15px;
-      }
+    h2 {
+      line-height: 1.4;
     }
     border-bottom: 1px dashed #d9d9d9;
     &:last-of-type {
       border-bottom: none;
     }
-    margin: 0 0 5px;
     padding-bottom: 10px;
     position: relative;
     width: 100%;
@@ -298,6 +311,7 @@ input[type=checkbox] {
 }
 
 .order-index-item {
+  margin-bottom: 11px;
   .item-title a {
     color: darken(#00c2eb, 11%);
   }
@@ -311,16 +325,90 @@ input[type=checkbox] {
     .created-at-attr {
       margin-right: 4px;
     }
+    margin-top: 6px;
   }
   .state-desc {
     @extend .less-color;
     margin-right: 8px;
   }
   .requested-state {
-    font-weight: bold;
   }
   .requested-state, .contracted-state, .payment-state {
     color: #ff6666;
+  }
+}
+
+.order-cards-list {
+  .order-card {
+    @extend .order-index-item;
+    width: 86%;
+    @media (min-width: $screen-sm-min) {
+      width: 66%;
+    }
+    margin: 0 auto 16px;
+    .mdl-card__supporting-text {
+      width: 100%;
+    }
+    .mdl-card__title {
+      color: rgba(0, 0, 0, 0.7);
+      height: 86px;
+      width: 80%;
+    }
+    .mdl-card__title-text {
+      font-size: 20px;
+    }
+    .order-state-icon {
+      color: rgba(0, 0, 0, 0.5);
+    }
+    p {
+      line-height: 18px;
+    }
+  }
+}
+
+.order-details-header-card, .order-details-attributes-card {
+  width: 94%;
+  margin: 0px auto 16px;
+  .mdl-card__supporting-text {
+    width: 100%;
+    padding-bottom: 16px;
+  }
+  p {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+  h1, h2, h3, h4 {
+    margin: 0px auto 0px;
+  }
+  .card-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  .mdl-textfield {
+    width: 100%;
+  }
+  .mdl-textfield__label {
+    text-align: center;
+  }
+}
+
+.order-details-header-card {
+  min-height: 80px;
+  .handyman-contact {
+    margin-top: 11px;
+    .handyman-tag {
+      @extend .less-color;
+      margin-left: 4px;
+    }
+    .phone-link {
+      font-size: 16px;
+    }
+  }
+}
+
+.order-details-attributes-card {
+  .card-attr-title {
+    color: #0688cc;
+    margin-bottom: 4px;
   }
 }
 

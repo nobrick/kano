@@ -3,5 +3,5 @@
     - if @orders.blank?
       h3.text-center 您还没有任何订单。
     - else
-      ul.orders-list
+      .order-cards-list
         = render partial: 'users/orders/order', collection: @orders, cache: true

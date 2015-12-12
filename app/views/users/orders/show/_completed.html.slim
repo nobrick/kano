@@ -1,11 +1,9 @@
-.panel.panel-default
-  .panel-body
+.order-details-header-card.mdl-card.mdl-shadow--2dp
+  .mdl-card__supporting-text
     .text-center
-      h2
-        span.fa-icon
-          => fa_icon('user')
-        ' #{@order.handyman.name} 师傅
-      h3 = phone_link_for @order.handyman
-      h3
-        ' 已支付
-        b =< number_to_currency @order.user_total, unit: '￥'
+      = render 'users/orders/show/shared/handyman_contact',
+        handyman: @order.handyman
+  .mdl-card__supporting-text.card-divider
+    h3.text-center.less-color
+      ' 已支付
+      b =< number_to_currency @order.user_total, unit: '￥'
