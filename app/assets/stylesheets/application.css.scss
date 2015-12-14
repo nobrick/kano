@@ -272,16 +272,39 @@ input[type=checkbox] {
 }
 
 .order-new-page {
+  select {
+    margin-bottom: 4px;
+  }
+  select.select-block, .datetime-select-zone {
+    max-width: 300px;
+  }
   select.select-block {
-    display: block;
     width: 78%;
-    margin: 0 auto 6px;
+    @media (min-width: 350px) {
+      width: 59%;
+    }
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
   }
-  select.datetime-select {
-    width: 32%;
-    margin: 0 auto 6px;
-  }
-  #order_arrives_at_4i {
+  .datetime-select-zone {
+    width: 100%;
+    @media (min-width: 350px) {
+      width: 76%;
+    }
+    margin: 0px auto;
+    .datetime-select.year, .datetime-select.month, .datetime-select.day {
+      width: 30%;
+    }
+    .datetime-select.hour, .datetime-select.minute {
+      width: 48%;
+    }
+    .datetime-select.minute, .datetime-select.day {
+      @extend .pull-right;
+    }
+    .datetime-select.month {
+      margin-left: calc(5% - 4px);
+    }
   }
   #order_content {
     height: 85px;

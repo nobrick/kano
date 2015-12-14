@@ -11,10 +11,13 @@
             .field.form-group
               = f.label :arrives_at, class: 'i-md-label'
               br
-              = f.datetime_select :arrives_at,
-                { start_hour: 8, end_hour: 22, minute_step: 10,
-                start_year: Time.now.year, end_year: Time.now.year + 1, datetime_separator: "<br>"},
-                { class: 'datetime-select' }
+              .datetime-select-zone
+                = f.datetime_select :arrives_at,
+                  { start_hour: 8, end_hour: 22, minute_step: 10,
+                  start_year: Time.now.year, end_year: Time.now.year + 1,
+                  time_separator: '', datetime_separator: "<br>",
+                  with_css_classes: true},
+                  { class: 'datetime-select' }
             .field.form-group
               = f.label :taxon_code, class: 'i-md-label'
               br
