@@ -441,31 +441,35 @@ class Payment < ActiveRecord::Base
   end
 
   def params_for_pingpp_charge
+    subject = "#{order.taxon_name} - #{order.content_in_short(12)}"
+    body = "#{user.full_or_nickname} - #{handyman.full_or_nickname}" +
+           " - #{order.content_in_short(30)} - N#{gateway_order_no}"
     {
-      order_no:  gateway_order_no,
-      app:       { id: Rails.application.secrets.pingpp_appid },
-      channel:   'wx_pub',
-      amount:    (payment_total * 100).to_i,
-      client_ip: user.current_sign_in_ip || user.last_sign_in_ip || '0.0.0.0',
-      currency:  'cny',
-      subject:   order.content_in_short(30),
-      body:      "#{user.name} - #{handyman.name} - #{order.taxon_name} - " +
-                 "N#{gateway_order_no} - #{order.content_in_short(64)}",
-      description: order.content_in_short(200),
+      order_no:    gateway_order_no,
+      app:         { id: Rails.application.secrets.pingpp_appid },
+      channel:     'wx_pub',
+      amount:      (payment_total * 100).to_i,
+      client_ip:   user.current_sign_in_ip || user.last_sign_in_ip || '0.0.0.0',
+      currency:    'cny',
+      subject:     subject.first(30),
+      body:        body.first(100),
+      description: order.content_in_short(100),
       extra: {
         open_id: user.uid,
       },
       metadata: {
-        payment_id: id,
-        order_id: order.id,
-        user_id: user.id,
-        handyman_id: handyman.id,
-        user_name: user.name,
-        handyman_name: handyman.name,
-        user_uid: user.uid,
-        handyman_uid: handyman.uid,
-        user_phone: user.phone,
-        handyman_phone: handyman.phone
+        payment_id:     id,
+        order_id:       order.id,
+        user_id:        user.id,
+        handyman_id:    handyman.id,
+        user_uid:       user.uid,
+        handyman_uid:   handyman.uid,
+        user_phone:     user.phone,
+        handyman_phone: handyman.phone,
+        handyman_data: {
+          balance:    handyman.balance,
+          cash_total: handyman.cash_total
+        }.to_json
       }
     }
   end

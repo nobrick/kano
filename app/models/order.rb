@@ -172,9 +172,10 @@ class Order < ActiveRecord::Base
     true
   end
 
-  def content_in_short(max = 32)
-    if content.length > max
-      "#{content[0..max]}..."
+  def content_in_short(max_length = 25)
+    return '' if max_length < 4
+    if content.length > max_length
+      "#{content[0..(max_length - 4)]}..."
     else
       content
     end
