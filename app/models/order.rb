@@ -6,8 +6,6 @@ class Order < ActiveRecord::Base
   # TODO Update :completes_at when order finishes
   belongs_to :user
   belongs_to :handyman
-  belongs_to :transferee_order, class_name: 'Order'
-  belongs_to :transferor, class_name: 'Account'
   belongs_to :canceler, class_name: 'Account'
   has_one :address, as: :addressable, dependent: :destroy
   has_many :payments
@@ -22,7 +20,6 @@ class Order < ActiveRecord::Base
     -> { where("state not in ('void', 'failed', 'completed')") },
     class_name: 'Payment'
 
-  accepts_nested_attributes_for :transferee_order
   accepts_nested_attributes_for :address
 
   # Reason code for last void or failed payment.
@@ -46,9 +43,6 @@ class Order < ActiveRecord::Base
     message: '无效'
   }, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
-  validates :transfer_reason, presence: true, if: 'to? :transferred'
-  validates :transfer_type, inclusion: %w{ user handyman other }, if: 'to? :transferred'
-  validates :transferor, presence: true, if: 'to? :transferred'
 
   # Payment total attributes
   #
@@ -78,7 +72,7 @@ class Order < ActiveRecord::Base
     if: 'to? :payment'
   validate :check_payment_totals, if: 'to? :payment'
 
-  STATES = %w{ requested contracted payment completed rated reported transferred }
+  STATES = %w{ requested contracted payment completed rated reported }
   validates :state, inclusion: { in: STATES }
 
   aasm column: 'state', no_direct_assignment: true do
@@ -101,8 +95,6 @@ class Order < ActiveRecord::Base
     #
     # reported: The handyman service is reported by the user after the order is
     # contracted.
-    #
-    # transferred: The order has been transferred to another order.
 
     state :initial, initial: true
     STATES.each { |s| state s.to_sym }
@@ -117,6 +109,7 @@ class Order < ActiveRecord::Base
 
     event :close do
       transitions from: :requested, to: :closed
+      transitions from: :contracted, to: :closed
     end
 
     event :pay do

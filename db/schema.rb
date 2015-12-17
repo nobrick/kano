@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151122080907) do
+ActiveRecord::Schema.define(version: 20151217090103) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -101,11 +101,6 @@ ActiveRecord::Schema.define(version: 20151122080907) do
     t.decimal  "user_promo_total",                 precision: 12, scale: 2
     t.decimal  "handyman_bonus_total",             precision: 12, scale: 2
     t.decimal  "handyman_total",                   precision: 12, scale: 2
-    t.integer  "transferee_order_id"
-    t.string   "transfer_type",        limit: 30
-    t.string   "transfer_reason"
-    t.datetime "transferred_at"
-    t.integer  "transferor_id"
     t.string   "cancel_type",          limit: 30
     t.string   "cancel_reason"
     t.datetime "canceled_at"
@@ -137,10 +132,6 @@ ActiveRecord::Schema.define(version: 20151122080907) do
   add_index "orders", ["reported_at"], name: "index_orders_on_reported_at", using: :btree
   add_index "orders", ["state"], name: "index_orders_on_state", using: :btree
   add_index "orders", ["taxon_code"], name: "index_orders_on_taxon_code", using: :btree
-  add_index "orders", ["transfer_type"], name: "index_orders_on_transfer_type", using: :btree
-  add_index "orders", ["transferee_order_id"], name: "index_orders_on_transferee_order_id", using: :btree
-  add_index "orders", ["transferor_id"], name: "index_orders_on_transferor_id", using: :btree
-  add_index "orders", ["transferred_at"], name: "index_orders_on_transferred_at", using: :btree
   add_index "orders", ["user_id"], name: "index_orders_on_user_id", using: :btree
   add_index "orders", ["user_promo_total"], name: "index_orders_on_user_promo_total", using: :btree
   add_index "orders", ["user_total"], name: "index_orders_on_user_total", using: :btree
@@ -175,7 +166,6 @@ ActiveRecord::Schema.define(version: 20151122080907) do
   add_foreign_key "accounts", "addresses", column: "primary_address_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
-  add_foreign_key "orders", "accounts", column: "transferor_id"
   add_foreign_key "orders", "accounts", column: "user_id"
   add_foreign_key "payments", "orders"
   add_foreign_key "taxons", "accounts", column: "handyman_id"
