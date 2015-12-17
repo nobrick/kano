@@ -157,6 +157,12 @@ RSpec.describe Payment, type: :model, async: true do
             it 'returns true' do
               expect(payment.check_and_expire!).to eq true
             end
+
+            it 'reverts associated order to :contracted state' do
+              expect(payment.order.payment?).to eq true
+              expect(payment.check_and_expire!).to eq true
+              expect(payment.order.contracted?).to eq true
+            end
           end
 
           context 'When the lastest fetch is paid' do
@@ -171,6 +177,10 @@ RSpec.describe Payment, type: :model, async: true do
 
             it 'returns false' do
               expect(payment.check_and_expire!).to eq false
+            end
+
+            it 'remains associated order in :payment state' do
+              expect { payment.check_and_expire! }.not_to change(order, :payment?).from true
             end
           end
         end
@@ -211,6 +221,10 @@ RSpec.describe Payment, type: :model, async: true do
             it 'returns false' do
               expect(payment.check_and_fail!).to eq false
             end
+
+            it 'remains associated order in :payment state' do
+              expect { payment.check_and_fail! }.not_to change(order, :payment?).from true
+            end
           end
 
           context 'After retry failure' do
@@ -222,6 +236,12 @@ RSpec.describe Payment, type: :model, async: true do
 
             it 'returns true' do
               expect(payment.check_and_fail!).to eq true
+            end
+
+            it 'reverts associated order to :contracted state' do
+              expect(payment.order.payment?).to eq true
+              expect(payment.check_and_fail!).to eq true
+              expect(payment.order.contracted?).to eq true
             end
           end
         end
@@ -252,6 +272,63 @@ RSpec.describe Payment, type: :model, async: true do
           end
         end
       end
+
+
+      describe '#check_and_cancel' do
+        shared_examples_for 'check and cancel returning true' do
+          it 'returns true' do
+            expect(payment.check_and_cancel!).to eq true
+          end
+
+          it 'transitions payment to :void state' do
+            expect { payment.check_and_cancel! }
+              .to change(payment, :void?).to true
+          end
+
+          it 'reverts associated order to :contracted state' do
+            expect(payment.order.payment?).to eq true
+            expect(payment.check_and_cancel!).to eq true
+            expect(payment.order.contracted?).to eq true
+          end
+        end
+
+        context 'When processing' do
+          it 'is processing' do
+            expect(payment.processing?).to eq true
+          end
+
+          it_behaves_like 'check and cancel returning true'
+        end
+
+        context 'When pending' do
+          before { prepare_payment!(payment) }
+
+          it 'is pending' do
+            expect(payment.pending?).to eq true
+          end
+
+          context 'When user has not paid' do
+            before { allow(Charge).to receive(:retrieve).and_return(unpaid_hash) }
+
+            it_behaves_like 'check and cancel returning true'
+          end
+
+          context 'When user has paid' do
+            before { allow(Charge).to receive(:retrieve).and_return(paid_hash) }
+
+            it 'returns false' do
+              expect(payment.check_and_cancel!).to eq false
+            end
+
+            it 'completes payment and associated order' do
+              payment.check_and_cancel!
+              expect(payment.completed?).to eq true
+              expect(payment.order.completed?).to eq true
+            end
+          end
+        end
+      end
+
     end
   end
 

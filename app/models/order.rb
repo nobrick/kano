@@ -28,6 +28,7 @@ class Order < ActiveRecord::Base
   # Reason code for last void or failed payment.
   #
   # +'expired'+ for payment expiration.
+  # +'failed'+ for payment failure.
   # +'canceled'+ for payment cancellation.
   value :redis_last_payment_invalid_code
 

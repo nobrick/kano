@@ -126,7 +126,7 @@ class Payment < ActiveRecord::Base
       transitions from: :processing, to: :pending, after: :do_prepare
     end
 
-    event :cancel do
+    event :cancel, after: :do_cancel do
       transitions from: :processing, to: :void
       transitions from: :pending, to: :void
     end
@@ -208,6 +208,15 @@ class Payment < ActiveRecord::Base
     # been paid before the +expire+ event.
     return false if check_and_complete!(fetch_latest: true)
     expire && save!
+    true
+  end
+
+  # Cancels the payment and reverts order to +:contracted+ state unless user
+  # has already paid, in which the payment will be transitioned into :completed
+  # state instead by +check_and_complete!+.
+  def check_and_cancel!
+    return false if check_and_complete!(fetch_latest: true)
+    cancel && save!
     true
   end
 
@@ -354,6 +363,10 @@ class Payment < ActiveRecord::Base
 
   def do_flunk
     mark_as_invalid_payment('failed')
+  end
+
+  def do_cancel
+    mark_as_invalid_payment('canceled')
   end
 
   # Retrieves and caches gateway prepay order object for +prepare+ event.
