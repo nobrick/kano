@@ -143,10 +143,6 @@ class Order < ActiveRecord::Base
     event :report do
       transitions from: [ :contracted, :completed, :rated ], to: :reported
     end
-
-    event :transfer do
-      transitions from: :contracted, to: :transferred, after: :do_transfer
-    end
   end
 
   def taxon_name
@@ -210,28 +206,6 @@ class Order < ActiveRecord::Base
 
   def do_contract(*args)
     self.contracted_at = Time.now
-  end
-
-  # TODO Close order on Wechat pay API.
-  def do_transfer(*args)
-    transferee = Order.new(
-      user: user,
-      taxon_code: taxon_code,
-      content: content,
-      arrives_at: arrives_at,
-      address_attributes: {
-        content: address.content,
-        code: address.code
-      }
-    )
-
-    transferee.request
-    self.transferee_order = transferee
-    self.transferred_at = Time.now
-    # TODO Test #void persistence
-    if ongoing_payment && !(ongoing_payment.void)
-      raise 'Cannot close ongoing payment right not'
-    end
   end
 
   def to?(state)

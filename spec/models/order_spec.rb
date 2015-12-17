@@ -25,18 +25,6 @@ RSpec.describe Order, type: :model do
     expect(order_requested.user).to be_persisted
   end
 
-  describe 'taxons' do
-    let(:order) { build :order, taxon_code: 'electronic/socket' }
-
-    it '#taxon_name' do
-      expect(order.taxon_name).to eq '插座维修'
-    end
-
-    it '#category_name' do
-      expect(order.category_name).to eq '电'
-    end
-  end
-
   describe 'arrives_at field' do
     it 'fails if invalid' do
       order.assign_attributes(arrives_at: 1.minutes.from_now)
@@ -104,93 +92,6 @@ RSpec.describe Order, type: :model do
       it 'fails to contract for invalid params' do
         expect(order_requested.contract).to eq true
         expect { order_requested.save! }.to raise_error ActiveRecord::RecordInvalid
-      end
-    end
-
-    describe 'transfer event' do
-      let(:invalid_sets) do
-        [
-          -> { order_contracted.transfer_reason = '' },
-          -> { order_contracted.transfer_type = 'INVALID' },
-          -> { order_contracted.transferor = nil }
-        ]
-      end
-
-      context 'when succeeds' do
-        it 'transfers to an order' do
-          order_contracted.assign_attributes(transfer_attrs)
-          expect(order_contracted.transfer && order_contracted.save).to eq true
-        end
-
-        it 'persists attributes correctly' do
-          order_transferred.reload
-          expect(order_transferred.transferred?).to eq true
-          transfer_attrs.each do |key, value|
-            expect(order_transferred.send key).to eq value
-          end
-          expect(order_transferred.transferred_at).to be_present
-        end
-
-        it 'creates an new order when transfer suceeds' do
-          order_contracted.assign_attributes(transfer_attrs)
-          expect(order_contracted).to be_persisted
-          expect(order_contracted.transferee_order).to be_nil
-          expect { order_contracted.transfer }.not_to change(Order, :count)
-          expect(order_contracted.transferee_order).to be_valid
-          expect { order_contracted.save! }.to change(Order, :count).by 1
-          expect(order_contracted.transferee_order).to be_persisted
-        end
-
-        it 'transfers with all necessary attrs copied to new order' do
-          order_contracted.assign_attributes(transfer_attrs)
-          order_contracted.transfer && order_contracted.save!
-          attrs_transferred = [ :user, :taxon_code, :content, :arrives_at ]
-          attrs_transferred.each do |sym|
-            expect(order_contracted.transferee_order.send sym)
-              .to eq order_contracted.send sym
-          end
-          expect(order_contracted.transferee_order.requested?).to eq true
-        end
-
-        it 'creates new address' do
-          order_contracted.assign_attributes(transfer_attrs)
-          order_contracted.transfer
-          expect { order_contracted.save! }.to change { Address.count }.by 1
-          %w{ district_with_prefix content code }.each do |method|
-            expect(order_contracted.transferee_order.address.send method)
-              .to eq order_contracted.address.send(method)
-          end
-        end
-      end
-
-      context 'when fails' do
-        it 'will not create new order for invalid params' do
-          invalid_sets.each do |set|
-            order_contracted.reload.assign_attributes(transfer_attrs)
-            set.call
-            expect(order_contracted.transfer).to eq true
-            expect { order_contracted.save }.not_to change { Order.count }
-            expect(order_contracted.transferee_order).to be_valid
-            expect(order_contracted.transferee_order).not_to be_persisted
-          end
-        end
-
-        it 'resets transferee_order and transferred_at' do
-          expect(order_contracted.transfer).to eq true
-          expect(order_contracted.save).to eq false
-          order_contracted.reload
-          expect(order_contracted.transferee_order).to be_nil
-          expect(order_contracted.transferred_at).to be_nil
-        end
-
-        it 'fails to transfer for invalid params' do
-          invalid_sets.each do |set|
-            order_contracted.reload.assign_attributes(transfer_attrs)
-            set.call
-            expect(order_contracted.transfer).to eq true
-            expect(order_contracted.save).to eq false
-          end
-        end
       end
     end
   end
