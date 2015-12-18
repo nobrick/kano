@@ -7,11 +7,13 @@
 
 /* Elements style */
 @mixin normal-fontfamily {
-  font-family: Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
+  font-family: "PingHei", "STHeitiSC-Light", Helvetica, Tahoma, Arial, STXihei, "华文细黑", "Microsoft YaHei", "微软雅黑", SimSun, "宋体", Heiti, "黑体", sans-serif;
 }
 
 body {
-  @include normal-fontfamily;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "liga", "kern";
+  text-rendering: optimizelegibility;
   padding-top: 65px;
   color: #555555;
 }
@@ -27,6 +29,14 @@ a {
     color: black;
     text-decoration: none;
   }
+}
+
+body, .mdl-button {
+  @include normal-fontfamily;
+}
+
+h1, h2, h3, h4, .h1, .h2, .h3, .h4 {
+  @include normal-fontfamily;
 }
 
 h1, .h1 {
@@ -155,14 +165,13 @@ input[type=checkbox] {
 
 #brand_navbar {
   background-color: #36383A;
-  /*box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);*/
   .logo_brand {
     color: lighten(#3dbcf5, 10%);
     line-height: 21px;
 
-    /*font-family: "orbitron-medium";*/
     &:hover {
-      color: lighten(#3dbcf5, 35%);
+      color: lighten(#3dbcf5, 20%);
+      transition: color 1s;
     }
   }
   a {
