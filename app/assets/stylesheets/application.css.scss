@@ -446,6 +446,16 @@ input[type=checkbox] {
       font-size: 16px;
     }
   }
+  .menu-in-less-height {
+    .mdl-menu__container {
+      top: -4px !important;
+      right: 31px !important;
+    }
+    button {
+      margin-right: -7px;
+      margin-top: -7px;
+    }
+  }
 }
 
 .order-details-attributes-card {

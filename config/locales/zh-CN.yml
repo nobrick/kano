@@ -36,6 +36,8 @@ zh-CN:
     users/orders:
       request_failure: '请求失败'
       order_success: '下单成功'
+      cancel_order_success: '取消订单成功'
+      cancel_order_failure: '取消订单失败'
     users/checkouts:
       total_incorrect: '请您输入正确的金额'
       payment_success: '支付成功'
@@ -60,6 +62,7 @@ zh-CN:
     rated: '已评价'
     reported: '已投诉'
     transferred: '已转单'
+    canceled: '已取消'
   activerecord:
     models:
       account: '账户'

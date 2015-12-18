@@ -56,4 +56,25 @@ RSpec.describe Users::OrdersController, type: :controller do
       end
     end
   end
+
+  describe '#cancel' do
+    let(:requested_order) { create :requested_order, user: user }
+    let(:contracted_order) { create :contracted_order, user: user }
+    let(:others_order) { create :requested_order, user: create(:user) }
+
+    it 'cancels requested order' do
+      put :cancel, id: requested_order.id
+      expect(requested_order.reload.canceled?).to eq true
+    end
+
+    it 'cancels contracted order' do
+      put :cancel, id: contracted_order.id
+      expect(contracted_order.reload.canceled?).to eq true
+    end
+
+    it 'fails to cancel orders that does not belongs to the user' do
+      put :cancel, id: others_order.id
+      expect(others_order.reload.canceled?).to eq false
+    end
+  end
 end

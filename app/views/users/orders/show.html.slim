@@ -2,7 +2,7 @@
   .order-show-page
     .col-md-6.col-md-offset-3
       - case @order.state
-      - when 'requested', 'contracted', 'payment', 'completed'
+      - when 'requested', 'contracted', 'payment', 'completed', 'canceled'
         = render "users/orders/show/#{@order.state}", order: @order
       .order-details-attributes-card.mdl-card.mdl-shadow--2dp
         .mdl-card__supporting-text

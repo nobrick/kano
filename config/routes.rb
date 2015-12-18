@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         member do
           resource :checkout, only: [ :create, :update ]
           get :charge
+          put :cancel
         end
       end
       concerns :with_account_profile

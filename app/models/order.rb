@@ -44,7 +44,6 @@ class Order < ActiveRecord::Base
   }, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
   validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
-  validates :cancel_reason, inclusion: { in: %w{ canceled } }, if: 'to? :canceled'
   validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
 
   # Payment total attributes

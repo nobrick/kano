@@ -2,3 +2,10 @@
   .mdl-card__supporting-text
     .text-center
       h2 师傅接单中，请稍等
+  .mdl-card__menu.menu-in-less-height
+    button#order-header-menu.mdl-button.mdl-js-button.mdl-button--icon
+      i.material-icons.less-color more_vert
+    ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for="order-header-menu"
+      = link_to cancel_user_order_path(@order), method: :put, data: { confirm: '您确定要取消订单吗？' } do
+        li.mdl-menu__item
+          div.text-center 取消订单
