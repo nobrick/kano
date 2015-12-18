@@ -1,6 +1,6 @@
 class Users::OrdersController < ApplicationController
   before_action :authenticate_completed_user
-  before_action :set_order, only: [ :show, :charge ]
+  before_action :set_order, only: [ :show, :charge, :cancel ]
   before_action :gray_background, only: [ :new, :show, :index ]
 
   # GET /orders
@@ -10,8 +10,7 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id
   def show
-    redirect_to user_orders_url, notice: t('.request_failure') unless @order
-
+    fallback_redirect and return unless @order
     if wechat_request? || debug_wechat?
       url = request.original_url
       gon.push(auth_client(url))
@@ -33,6 +32,17 @@ class Users::OrdersController < ApplicationController
       gray_background
       set_address
       render :new
+    end
+  end
+
+  # PUT /orders/:id/cancel
+  def cancel
+    fallback_redirect and return unless @order
+    @order.canceler = current_user
+    if @order.cancel && @order.save
+      redirect_to [ :user, @order ], notice: t('.cancel_order_success')
+    else
+      redirect_to [ :user, @order ], notice: t('.cancel_order_failure')
     end
   end
 
@@ -76,6 +86,10 @@ class Users::OrdersController < ApplicationController
 
     @city_code = address.try(:city_code) || '430100'
     @district_code = address.try(:code)
+  end
+
+  def fallback_redirect
+    redirect_to user_orders_url, notice: t('.request_failure')
   end
 
   def order_params
