@@ -8,17 +8,6 @@ RSpec.describe Order, type: :model do
   let(:order) { Order.new(order_attrs).tap { |o| o.user = user } }
   let(:order_requested) { create :requested_order }
   let(:order_contracted) { create :contracted_order }
-  let(:order_transferred) do
-    order_contracted.tap { |o| o.attributes = transfer_attrs; o.transfer && o.save! }
-  end
-
-  let(:transfer_attrs) do 
-    {
-      transfer_reason: 'some reason',
-      transfer_type: 'handyman',
-      transferor: handyman
-    }
-  end
 
   it 'creates an order' do
     expect(order_requested).to be_persisted
@@ -96,41 +85,34 @@ RSpec.describe Order, type: :model do
     end
 
     describe 'cancel event' do
-      context 'Failure' do
-        it 'raises exception' do
-          order_requested.canceler = user
-          order_requested.cancel
-          expect { order_requested.save! }
-            .to raise_error ActiveRecord::RecordInvalid
-        end
+      let(:cancel_attributes) do
+        {
+          canceler: user,
+          cancel_reason: 'some reasons'
+        }
       end
 
-      context 'Success' do
-        let(:cancel_attributes) do
-          {
-            canceler: user,
-            cancel_reason: 'canceled'
-          }
-        end
+      it 'raises exception if canceler is blank' do
+        expect { order_requested.cancel }.to raise_error RuntimeError
+      end
 
-        it 'cancels requested order' do
-          order_requested.assign_attributes(cancel_attributes)
-          order_requested.cancel && order_requested.save!
-          expect(order_requested.reload.canceled?).to eq true
-        end
+      it 'cancels requested order' do
+        order_requested.assign_attributes(cancel_attributes)
+        order_requested.cancel && order_requested.save!
+        expect(order_requested.reload.canceled?).to eq true
+      end
 
-        it 'cancels contracted order' do
-          order_contracted.assign_attributes(cancel_attributes)
-          order_contracted.cancel && order_contracted.save!
-          expect(order_contracted.reload.canceled?).to eq true
-        end
+      it 'cancels contracted order' do
+        order_contracted.assign_attributes(cancel_attributes)
+        order_contracted.cancel && order_contracted.save!
+        expect(order_contracted.reload.canceled?).to eq true
+      end
 
-        it 'generates canceled_at and canceler attributes' do
-          order_contracted.assign_attributes(cancel_attributes)
-          order_contracted.cancel && order_contracted.save!
-          expect(order_contracted.canceled_at).to be_present
-          expect(order_contracted.cancel_type).to eq 'User'
-        end
+      it 'generates canceled_at and canceler attributes' do
+        order_contracted.assign_attributes(cancel_attributes)
+        order_contracted.cancel && order_contracted.save!
+        expect(order_contracted.canceled_at).to be_present
+        expect(order_contracted.cancel_type).to eq 'User'
       end
     end
   end
