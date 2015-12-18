@@ -43,6 +43,9 @@ class Order < ActiveRecord::Base
     message: '无效'
   }, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
+  validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
+  validates :cancel_reason, inclusion: { in: %w{ canceled } }, if: 'to? :canceled'
+  validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
 
   # Payment total attributes
   #
@@ -72,7 +75,7 @@ class Order < ActiveRecord::Base
     if: 'to? :payment'
   validate :check_payment_totals, if: 'to? :payment'
 
-  STATES = %w{ requested contracted payment completed rated reported }
+  STATES = %w{ requested contracted payment completed canceled rated reported }
   validates :state, inclusion: { in: STATES }
 
   aasm column: 'state', no_direct_assignment: true do
@@ -82,7 +85,7 @@ class Order < ActiveRecord::Base
     # requested: The order has been requested by the user yet not been
     # contracted by a handyman.
     #
-    # closed: The order has been closed (ex. user revoked the request).
+    # canceled: The order has been canceled (ex. user revoked the request).
     #
     # contracted: The order has been contracted, but the user has not paid.
     #
@@ -107,9 +110,9 @@ class Order < ActiveRecord::Base
       transitions from: :requested, to: :contracted, after: :do_contract
     end
 
-    event :close do
-      transitions from: :requested, to: :closed
-      transitions from: :contracted, to: :closed
+    event :cancel, after: :do_cancel do
+      transitions from: :requested, to: :canceled
+      transitions from: :contracted, to: :canceled
     end
 
     event :pay do
@@ -200,6 +203,18 @@ class Order < ActiveRecord::Base
 
   def do_contract(*args)
     self.contracted_at = Time.now
+  end
+
+  def do_cancel
+    self.canceled_at = Time.now
+    raise 'Canceler cannot be nil' if canceler.nil?
+    self.cancel_type = if canceler.admin?
+                         'Admin'
+                       elsif canceler.is_a? Handyman
+                         'Handyman'
+                       else
+                         'User'
+                       end
   end
 
   def to?(state)

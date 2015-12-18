@@ -94,5 +94,44 @@ RSpec.describe Order, type: :model do
         expect { order_requested.save! }.to raise_error ActiveRecord::RecordInvalid
       end
     end
+
+    describe 'cancel event' do
+      context 'Failure' do
+        it 'raises exception' do
+          order_requested.canceler = user
+          order_requested.cancel
+          expect { order_requested.save! }
+            .to raise_error ActiveRecord::RecordInvalid
+        end
+      end
+
+      context 'Success' do
+        let(:cancel_attributes) do
+          {
+            canceler: user,
+            cancel_reason: 'canceled'
+          }
+        end
+
+        it 'cancels requested order' do
+          order_requested.assign_attributes(cancel_attributes)
+          order_requested.cancel && order_requested.save!
+          expect(order_requested.reload.canceled?).to eq true
+        end
+
+        it 'cancels contracted order' do
+          order_contracted.assign_attributes(cancel_attributes)
+          order_contracted.cancel && order_contracted.save!
+          expect(order_contracted.reload.canceled?).to eq true
+        end
+
+        it 'generates canceled_at and canceler attributes' do
+          order_contracted.assign_attributes(cancel_attributes)
+          order_contracted.cancel && order_contracted.save!
+          expect(order_contracted.canceled_at).to be_present
+          expect(order_contracted.cancel_type).to eq 'User'
+        end
+      end
+    end
   end
 end
