@@ -36,7 +36,7 @@ zh-CN:
     users/orders:
       request_failure: '请求失败'
       order_success: '下单成功'
-      cancel_order_success: '取消订单成功'
+      cancel_order_success: '订单已取消'
       cancel_order_failure: '取消订单失败'
     users/checkouts:
       total_incorrect: '请您输入正确的金额'

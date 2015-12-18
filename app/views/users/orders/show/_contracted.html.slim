@@ -23,7 +23,7 @@
           ' 微信支付
   .mdl-card__menu
     button#order-header-menu.mdl-button.mdl-js-button.mdl-button--icon
-      i.material-icons more_vert
+      i.material-icons.less-color more_vert
     ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for="order-header-menu"
       = link_to cancel_user_order_path(@order), method: :put, data: { confirm: '您确定要取消订单吗？' } do
         li.mdl-menu__item
