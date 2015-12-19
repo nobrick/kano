@@ -5,7 +5,8 @@ class Handymen::OrderContractsController < ApplicationController
 
   # GET /contracts
   def index
-    @orders = Order.where(handyman: current_handyman)
+    @orders = Order.includes(:user, :address)
+      .where(handyman: current_handyman)
       .order(updated_at: :desc)
   end
 
