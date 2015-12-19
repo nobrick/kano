@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151217090103) do
+ActiveRecord::Schema.define(version: 20151219043240) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,6 +85,7 @@ ActiveRecord::Schema.define(version: 20151217090103) do
   end
 
   add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
+  add_index "balance_records", ["created_at"], name: "index_balance_records_on_created_at", using: :btree
   add_index "balance_records", ["in_cash"], name: "index_balance_records_on_in_cash", using: :btree
   add_index "balance_records", ["owner_id", "owner_type"], name: "index_balance_records_on_owner", using: :btree
 
