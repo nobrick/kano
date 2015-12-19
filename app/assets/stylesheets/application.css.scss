@@ -392,6 +392,10 @@ input[type=checkbox] {
       color: rgba(0, 0, 0, 0.7);
       height: 86px;
       width: 80%;
+      h2 {
+        width: 100%;
+        display: block;
+      }
     }
     .mdl-card__title-text {
       font-size: 20px;
