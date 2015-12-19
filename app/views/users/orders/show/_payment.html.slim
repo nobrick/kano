@@ -1,8 +1,7 @@
 .order-details-header-card.mdl-card.mdl-shadow--2dp
-  - handyman_partial = 'users/orders/show/shared/handyman_contact'
-  - if wechat_request? || debug_wechat?
+  - if wechat_request_or_debug?
     .mdl-card__supporting-text
-      = render handyman_partial, handyman: @order.handyman
+      = render 'users/orders/show/shared/handyman_contact', handyman: @order.handyman
     .mdl-card__actions.mdl-card--border
       h3.text-center.less-color
         ' 支付金额：
@@ -15,7 +14,7 @@
         id: 'btn_check_payment_problem'
   - else
     .mdl-card__supporting-text
-      = render handyman_partial, handyman: @order.handyman
+      = render 'users/orders/show/shared/handyman_contact', handyman: @order.handyman
     .mdl-card__supporting-text.card-divider
       h3.text-center.less-color
         ' 请用微信完成支付

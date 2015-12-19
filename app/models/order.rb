@@ -198,6 +198,10 @@ class Order < ActiveRecord::Base
     payment
   end
 
+  def arrives_at_valid?(time = Time.now)
+    (requested? || contracted?) && arrives_at > time
+  end
+
   private
 
   def do_contract(*args)

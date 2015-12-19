@@ -1,6 +1,8 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require rails-timeago
+//= require timeago/jquery.timeago.zh-CN
 //= require china_city/jquery.china_city
 //= require turbolinks
 //= require components

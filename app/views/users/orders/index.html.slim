@@ -1,7 +1,14 @@
 - content_for :row
-  .order-index-page
-    - if @orders.blank?
-      h3.text-center 您还没有任何订单。
-    - else
-      .order-cards-list
-        = render partial: 'users/orders/order', collection: @orders, cache: true
+  - current_time = Time.now
+  - cache [ '1.2', @orders, @orders.map { |o| o.arrives_at_valid?(current_time) } ] do
+    .order-index-page
+      - if @orders.blank?
+        h3.text-center 您还没有任何订单。
+      - else
+        .order-cards-list
+          = render partial: 'users/orders/order', collection: @orders
+          .page-navigation
+            = link_to_previous_page @orders, '上一页',
+              class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+            = link_to_next_page @orders, '更早的订单',
+              class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect pull-right'

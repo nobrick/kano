@@ -5,7 +5,9 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders
   def index
-    @orders = current_user.orders.includes(:handyman).order(updated_at: :desc)
+    @orders = current_user.orders.includes(:handyman)
+      .order(updated_at: :desc)
+      .page(params[:page]).per(7)
   end
 
   # GET /orders/:id

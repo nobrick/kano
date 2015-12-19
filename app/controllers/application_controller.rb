@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   helper_method :render_flash?, :enable_render_flash, :disable_render_flash,
     :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?,
-    :wechat_request?, :debug_wechat?
+    :wechat_request?, :debug_wechat?, :wechat_request_or_debug?
   before_action :set_gon_data
 
   private
@@ -24,6 +24,10 @@ class ApplicationController < ActionController::Base
 
   def wechat_request?
     request.env['HTTP_USER_AGENT'].try(:include?, ' MicroMessenger/')
+  end
+
+  def wechat_request_or_debug?
+    wechat_request? || debug_wechat?
   end
 
   def account_signed_in?

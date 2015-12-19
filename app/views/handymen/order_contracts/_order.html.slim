@@ -22,4 +22,4 @@ li.order-index-item
         ' 需要预约
     - else
       span.arrives-at-attr #{time_ago_in_words order.created_at}前
-    = render 'shared/orders/taxon_in_order_right', order: order
+    = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name

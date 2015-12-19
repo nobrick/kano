@@ -302,6 +302,9 @@ GEM
       rails-deprecated_sanitizer (>= 1.0.1)
     rails-html-sanitizer (1.0.2)
       loofah (~> 2.0)
+    rails-timeago (2.13.0)
+      actionpack (>= 3.1)
+      activesupport (>= 3.1)
     railties (4.2.4)
       actionpack (= 4.2.4)
       activesupport (= 4.2.4)
@@ -462,6 +465,7 @@ DEPENDENCIES
   jbuilder (~> 2.0)
   jquery-rails
   jquery-turbolinks
+  kaminari
   launchy
   omniauth-wechat-oauth2
   pg
@@ -470,6 +474,7 @@ DEPENDENCIES
   pry-rails
   quiet_assets
   rails (= 4.2.4)
+  rails-timeago (~> 2.0)
   react-rails
   redis-objects
   rspec-rails (~> 3.3.0)
