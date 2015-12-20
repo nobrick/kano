@@ -18,7 +18,11 @@
             span.fa-icon
               => fa_icon('clock-o')
               ' 预约时间
-          p = l @order.arrives_at
+          p
+            = l @order.arrives_at
+            - if @order.arrives_at_expired?
+              br
+              ' 时间已过，请您自行联系用户预约
         .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon

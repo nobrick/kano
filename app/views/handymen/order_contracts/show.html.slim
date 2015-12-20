@@ -1,53 +1,64 @@
 - content_for :row
-  .order-show-page
+  .order-show-page.handyman-order-show-page
     .col-md-6.col-md-offset-3
-      .panel.panel-default
-        .panel-body
-          .text-center
-            h2
-              span.fa-icon
-                => fa_icon('user')
-                = @order.user.full_or_nickname
-            h3 = phone_link_for @order.user
-            - case @order.state
-            - when 'contracted'
-              h3 请您按预约时间上门维修
-            - when 'payment'
-              h3 等待用户付款
-            - when 'completed'
-              h3
-                ' 已支付
-                b =< number_to_currency @order.user_total, unit: '￥'
-      .panel.panel-default
-        .panel-body
-          - if @order.completed?
-            - record = @order.handyman.latest_balance_record
-            - if record.balance > 0
-              span.fa-icon
-                => fa_icon('archive')
-                strong 当前余额
-                p =< number_to_currency record.balance, unit: '￥'
-            - if record.cash_total > 0
-              span.fa-icon
-                => fa_icon('ticket')
-                strong 现金累计
-                p =< number_to_currency record.cash_total, unit: '￥'
-          span.fa-icon
-            => fa_icon('location-arrow')
-            strong 联系地址
-            p = @order.address.full_content
-
-          span.fa-icon
-            => fa_icon('clock-o')
-          strong 预约时间
-          p = l @order.arrives_at
-
-          span.fa-icon
-            => fa_icon('envelope')
-          strong 维修内容
+      .order-details-header-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__supporting-text.text-center
+          span.h2 = @order.user.full_or_nickname
+          h3 = phone_link_for @order.user,
+            class: 'mdl-button mdl-js-button mdl-button--accent phone-link'
+          - case @order.state
+          - when 'contracted'
+            h3 请您按预约时间上门维修
+          - when 'payment'
+            h3 等待用户付款
+          - when 'canceled'
+            h3 订单已取消
+          - when 'completed'
+            h3
+              ' 已支付
+              b =< number_to_currency @order.user_total, unit: '￥'
+      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+        - if @order.completed?
+          - record = @order.handyman.latest_balance_record
+          - if record.balance > 0
+            .mdl-card__supporting-text.card-divider
+              .card-attr-title
+                span.fa-icon
+                  => fa_icon('archive')
+                ' 当前余额
+              p =< number_to_currency record.balance, unit: '￥'
+          - if record.cash_total > 0
+            .mdl-card__supporting-text.card-divider
+              .card-attr-title
+                span.fa-icon
+                  => fa_icon('ticket')
+                ' 现金累计
+              p =< number_to_currency record.cash_total, unit: '￥'
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('location-arrow')
+            ' 联系地址
+          p = @order.address.full_content
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('clock-o')
+            ' 预约时间
+          p
+            = l @order.arrives_at
+            - if @order.arrives_at_expired?
+              br
+              ' 时间已过，请您自行联系用户预约
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('envelope')
+            ' 维修内容
           p = @order.content
-
-          span.fa-icon
-            => fa_icon('tag')
-          strong 维修项目
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('tag')
+            ' 维修项目
           p = @order.taxon_name

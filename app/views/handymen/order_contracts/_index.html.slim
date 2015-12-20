@@ -1,5 +1,5 @@
 - if orders.blank?
   h3.text-center 您还没有任何订单。
 - else
-  ul.orders-list
+  .order-cards-list.handyman-order-cards-list
     = render partial: 'handymen/order_contracts/order', collection: orders
