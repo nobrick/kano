@@ -361,8 +361,11 @@ input[type=checkbox] {
     .attr-bar-icon-right {
       margin-left: 5px;
     }
-    .created-at-attr {
+    .created-at-attr, .arrives-at-attr {
       margin-right: 4px;
+    }
+    .arrives-at-attr {
+      font-weight: bold;
     }
     margin-top: 6px;
   }
@@ -378,13 +381,15 @@ input[type=checkbox] {
 }
 
 .order-cards-list {
-  .order-card {
-    @extend .order-index-item;
+  .order-card, .page-navigation {
     width: 86%;
     @media (min-width: $screen-sm-min) {
       width: 66%;
     }
     margin: 0 auto 16px;
+  }
+  .order-card {
+    @extend .order-index-item;
     .mdl-card__supporting-text {
       width: 100%;
     }

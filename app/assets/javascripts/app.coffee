@@ -49,6 +49,7 @@
       alertOnDebug("Request failed: #{textStatus}")
 
 jQuery ->
+  jQuery.timeago.settings.allowFuture = true
   if gon.wechat?.appid
     wx.config
       debug: Global.debug

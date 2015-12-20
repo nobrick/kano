@@ -8,7 +8,9 @@ class Handymen::OrdersController < ApplicationController
   # GET /orders
   def index
     codes = current_handyman.taxon_codes
-    @orders = Order.where(state: 'requested', taxon_code: codes).order(created_at: :desc)
+    @orders = Order.includes(:user, :address)
+      .where(state: 'requested', taxon_code: codes)
+      .order(created_at: :desc)
   end
 
   # GET /orders/:id

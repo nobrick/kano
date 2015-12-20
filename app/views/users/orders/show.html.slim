@@ -1,36 +1,37 @@
 - content_for :row
-  .order-show-page
-    .col-md-6.col-md-offset-3
-      - case @order.state
-      - when 'requested', 'contracted', 'payment', 'completed', 'canceled'
-        = render "users/orders/show/#{@order.state}", order: @order
-      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
-        .mdl-card__supporting-text
-          .card-attr-title
-            span.fa-icon
-              => fa_icon('envelope')
-            ' 维修内容
-          p = @order.content
-        .mdl-card__supporting-text.card-divider
-          .card-attr-title
-            span.fa-icon
-              => fa_icon('phone')
-            ' 联系方式
-          p
-            = current_user.name
-            br
-            = current_user.readable_phone_number
-            br
-            = @order.address.full_content
-        .mdl-card__supporting-text.card-divider
-          .card-attr-title
-            span.fa-icon
-              => fa_icon('clock-o')
-            ' 预约时间
-          - if (@order.requested? || @order.contracted?) && @order.arrives_at < Time.now
+  - on_wechat = wechat_request_or_debug?
+  - arrives_at_valid = @order.arrives_at_valid?
+  - cache [ '1.0', @order, arrives_at_valid, on_wechat ] do
+    .order-show-page
+      .col-md-6.col-md-offset-3
+        - case @order.state
+        - when 'requested', 'contracted', 'payment', 'completed', 'canceled'
+          = render "users/orders/show/#{@order.state}", order: @order
+        .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+          .mdl-card__supporting-text
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('envelope')
+              ' 维修内容
+            p = @order.content
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('phone')
+              ' 联系方式
+            p
+              = current_user.name
+              br
+              = current_user.readable_phone_number
+              br
+              = @order.address.full_content
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('clock-o')
+              ' 预约时间
             p
               = l @order.arrives_at
-              br
-              ' 时间已过，请您自行联系师傅预约
-          - else
-            p = l @order.arrives_at
+              - unless arrives_at_valid
+                br
+                ' 时间已过，请您自行联系师傅预约
