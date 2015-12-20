@@ -1,7 +1,7 @@
 - content_for :row
   - on_wechat = wechat_request_or_debug?
-  - arrives_at_valid = @order.arrives_at_valid?
-  - cache [ '1.0', @order, arrives_at_valid, on_wechat ] do
+  - arrives_at_expired = @order.arrives_at_expired?
+  - cache [ '1.1', @order, arrives_at_expired, on_wechat ] do
     .order-show-page
       .col-md-6.col-md-offset-3
         - case @order.state
@@ -32,6 +32,6 @@
               ' 预约时间
             p
               = l @order.arrives_at
-              - unless arrives_at_valid
+              - if arrives_at_expired
                 br
                 ' 时间已过，请您自行联系师傅预约

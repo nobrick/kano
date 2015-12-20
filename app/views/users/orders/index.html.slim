@@ -1,6 +1,6 @@
 - content_for :row
-  - current_time = Time.now
-  - cache [ '1.2', @orders, @orders.map { |o| o.arrives_at_valid?(current_time) } ] do
+  - time = Time.now
+  - cache [ '1.3', @orders, @orders.map { |o| o.arrives_at_valid?(time) } ] do
     .order-index-page
       - if @orders.blank?
         h3.text-center 您还没有任何订单。

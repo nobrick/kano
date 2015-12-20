@@ -199,7 +199,11 @@ class Order < ActiveRecord::Base
   end
 
   def arrives_at_valid?(time = Time.now)
-    (requested? || contracted?) && arrives_at > time
+    (requested? || contracted?) && arrives_at >= time
+  end
+
+  def arrives_at_expired?(time = Time.now)
+    (requested? || contracted?) && arrives_at < time
   end
 
   private
