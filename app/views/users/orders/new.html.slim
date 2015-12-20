@@ -37,4 +37,7 @@
                 = fields.text_field :content, class: 'mdl-textfield__input'
                 label.mdl-textfield__label for="order_address_attributes_content" 详细地址
             div
-              = f.submit '下单', class: 'mdl-button mdl-js-button mdl-button--accent btn-create-order'
+              = button_to nil, class: 'mdl-button mdl-js-button mdl-button--accent btn-create-order' do
+                span.fa-icon.icon-in-button
+                  = fa_icon('check-circle')
+                ' 预约维修

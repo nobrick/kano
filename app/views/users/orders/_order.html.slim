@@ -10,7 +10,9 @@
     .order-attr-bar
       span.fa-icon
         = fa_icon('clock-o', class: 'attr-bar-icon')
-      - if order.arrives_at_valid?
+      - if order.requested?
+        span 等待师傅中
+      - elsif order.arrives_at_valid?
         span.arrives-at-attr
           = timeago_tag order.arrives_at, lang: 'zh-CN', limit: nil
           ' 到达

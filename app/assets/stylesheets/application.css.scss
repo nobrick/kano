@@ -109,6 +109,10 @@ h4, .h4 {
   }
 }
 
+.icon-in-button {
+  margin-right: 4px;
+}
+
 input[type=checkbox] {
   margin-right: 5px;
 }
@@ -373,9 +377,7 @@ input[type=checkbox] {
     @extend .less-color;
     margin-right: 8px;
   }
-  .requested-state {
-  }
-  .requested-state, .contracted-state, .payment-state {
+  .contracted-state, .payment-state {
     color: #ff6666;
   }
 }
