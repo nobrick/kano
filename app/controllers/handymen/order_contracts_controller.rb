@@ -1,13 +1,14 @@
 # For handyman managing his own received orders
 class Handymen::OrderContractsController < ApplicationController
   before_action :authenticate_completed_handyman
-  before_action :gray_background, only: [ :show ]
+  before_action :gray_background, only: [ :show, :index ]
 
   # GET /contracts
   def index
     @orders = Order.includes(:user, :address)
       .where(handyman: current_handyman)
       .order(updated_at: :desc)
+      .page(params[:page]).per(7)
   end
 
   # GET /contracts/:id

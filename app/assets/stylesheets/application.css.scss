@@ -486,20 +486,35 @@ input[type=checkbox] {
   }
 }
 
+.handyman-order-cards-list {
+  .mdl-card__title > h2.mdl-card__title-text {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+}
+
+.handyman-order-show-page {
+  .order-details-header-card {
+    padding-top: 8px;
+  }
+  #contract-order-btn {
+    margin-bottom: 9px;
+  }
+}
+
 .handyman-profile-page {
   .profile-card {
     width: 86%;
-    margin: 0 auto 26px;
+    @media (min-width: $screen-sm-min) {
+      width: 66%;
+    }
+    margin: 0 auto 16px;
     .mdl-card__title {
       height: 86px;
     }
     p {
       line-height: 18px;
     }
-  }
-
-  #btn_more_contracts {
-    margin-left: 25px;
   }
 }
 

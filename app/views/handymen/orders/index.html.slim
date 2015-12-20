@@ -3,5 +3,10 @@
     - if @orders.blank?
       h3.text-center 很遗憾，暂时没有新的订单了。
     - else
-      ul.orders-list
+      .order-cards-list.handyman-order-cards-list
         = render partial: 'handymen/orders/order', collection: @orders
+        .page-navigation
+          = link_to_previous_page @orders, '上一页',
+            class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+          = link_to_next_page @orders, '下一页',
+            class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect pull-right'
