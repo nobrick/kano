@@ -486,6 +486,22 @@ input[type=checkbox] {
   }
 }
 
+.handyman-order-index-page {
+  .mdl-card__title > h2.mdl-card__title-text {
+    font-size: 16px;
+    line-height: 1.2;
+  }
+}
+
+.handyman-order-show-page {
+  .order-details-header-card {
+    padding-top: 8px;
+  }
+  #contract-order-btn {
+    margin-bottom: 9px;
+  }
+}
+
 .handyman-profile-page {
   .profile-card {
     width: 86%;

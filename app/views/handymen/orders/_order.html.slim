@@ -1,20 +1,23 @@
-li.order-index-item
-  h2.item-title = link_to order.content_in_short, [ :handyman, order ]
-  span.fa-icon
-    => fa_icon('user', class: 'attr-bar-icon')
-  span
-    b = order.user.full_or_nickname
-  br
-  span.fa-icon
-    => fa_icon('location-arrow', class: 'attr-bar-icon')
-  span = order.address.full_content
-  .order-attr-bar
-    span.fa-icon
-      = fa_icon('clock-o', class: 'attr-bar-icon')
-    - if order.arrives_at > Time.now
-      span.arrives-at-attr
-        b #{time_ago_in_words order.arrives_at}
-        '  后到达
-    - else
-      ' 需要预约
-    = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name
+.order-card.mdl-card.mdl-shadow--2dp
+  .mdl-card__title
+    h2.mdl-card__title-text = order.content_in_short(32)
+  .mdl-card__supporting-text
+    span
+      b = order.user.full_or_nickname
+    .order-attr-bar
+      span.fa-icon
+        = fa_icon('location-arrow', class: 'attr-bar-icon')
+      span = order.address.full_content
+    .order-attr-bar
+      span.fa-icon
+        = fa_icon('clock-o', class: 'attr-bar-icon')
+      - if order.arrives_at_valid?
+        span.arrives-at-attr
+          = timeago_tag order.arrives_at, lang: 'zh-CN', limit: nil
+          ' 到达
+      - else
+        ' 需要预约
+      = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name
+  .mdl-card__actions.mdl-card--border
+    = link_to '查看详情', [ :handyman, order ],
+      class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'

@@ -1,7 +1,7 @@
 - content_for :row
-  .order-index-page
+  .order-index-page.handyman-order-index-page
     - if @orders.blank?
       h3.text-center 很遗憾，暂时没有新的订单了。
     - else
-      ul.orders-list
+      .order-cards-list
         = render partial: 'handymen/orders/order', collection: @orders

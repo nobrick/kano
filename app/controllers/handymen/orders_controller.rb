@@ -3,7 +3,7 @@ class Handymen::OrdersController < ApplicationController
   before_action :authenticate_completed_handyman
   before_action :set_order, only: [ :show, :update ]
   before_action :check_order_permission, only: [ :show, :update ]
-  before_action :gray_background, only: [ :show ]
+  before_action :gray_background, only: [ :show, :index ]
 
   # GET /orders
   def index
