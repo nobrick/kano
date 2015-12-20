@@ -8,6 +8,7 @@ class Handymen::OrderContractsController < ApplicationController
     @orders = Order.includes(:user, :address)
       .where(handyman: current_handyman)
       .order(updated_at: :desc)
+      .page(params[:page]).per(7)
   end
 
   # GET /contracts/:id

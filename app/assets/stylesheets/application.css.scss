@@ -505,17 +505,16 @@ input[type=checkbox] {
 .handyman-profile-page {
   .profile-card {
     width: 86%;
-    margin: 0 auto 26px;
+    @media (min-width: $screen-sm-min) {
+      width: 66%;
+    }
+    margin: 0 auto 16px;
     .mdl-card__title {
       height: 86px;
     }
     p {
       line-height: 18px;
     }
-  }
-
-  #btn_more_contracts {
-    margin-left: 25px;
   }
 }
 
