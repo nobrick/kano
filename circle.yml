@@ -7,3 +7,6 @@ checkout:
     - cp config/secrets.yml{.example,}
     - cp config/redis.yml{.example,}
     - cp config/wechat.yml{.example,}
+test:
+  override:
+    - bundle exec rake spec
