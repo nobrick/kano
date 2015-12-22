@@ -1,5 +1,7 @@
-# Contribution
-## Installation
+# Kano
+[![Circle CI](https://circleci.com/gh/nobrick/kano.svg?style=svg&circle-token=524e74c362b8210de373f211ff35129cfaaf7a7a)](https://circleci.com/gh/nobrick/kano)
+## Contribution
+### Installation
 Install and configure the following services:
 - PostgreSQL
 - Redis
