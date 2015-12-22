@@ -1,0 +1,12 @@
+machine:
+  ruby:
+    version: 2.2.3
+checkout:
+  post:
+    - cp config/database.yml{.example,}
+    - cp config/secrets.yml{.example,}
+    - cp config/redis.yml{.example,}
+    - cp config/wechat.yml{.example,}
+test:
+  override:
+    - bundle exec rake spec
