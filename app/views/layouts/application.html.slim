@@ -24,8 +24,6 @@ html
         - if display_nav_button?
           #navbar-collapse.collapse.navbar-collapse
             ul.nav.navbar-nav.navbar-right
-              /li = link_to 'Item1', '#'
-              /li = link_to 'Handyman', '#'
               li.devider
                 - if handyman_signed_in?
                   li = link_to '开始抢单', handyman_orders_path

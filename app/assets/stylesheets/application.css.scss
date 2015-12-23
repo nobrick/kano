@@ -80,9 +80,13 @@ h4, .h4 {
   }
 }
 
-// Fixs bootstrap confliction with mdl textfields.
+// Fixes bootstrap confliction with mdl textfields.
 .mdl-textfield__label {
   margin-bottom: 0px;
+}
+
+.mdl-button.mdl-button--colored {
+  color: #337AB7;
 }
 
 .i-md-label {
@@ -168,7 +172,7 @@ input[type=checkbox] {
 }
 
 #brand_navbar {
-  background-color: #36383A;
+  background-color: rgba(54, 54, 54, 0.93);
   .logo_brand {
     color: lighten(#3dbcf5, 10%);
     line-height: 21px;
