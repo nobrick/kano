@@ -1,20 +1,3 @@
-GIT
-  remote: git://github.com/thoughtbot/administrate.git
-  revision: 7403023524d824456533f7a00fd86df5a19d6e46
-  specs:
-    administrate (0.1.1)
-      autoprefixer-rails (~> 6.0)
-      datetime_picker_rails (~> 0.0.5)
-      inline_svg (~> 0.6)
-      jquery-rails (~> 4.0)
-      kaminari (~> 0.16)
-      momentjs-rails (~> 2.8)
-      neat (~> 1.1)
-      normalize-rails (~> 3.0)
-      rails (~> 4.2)
-      sass-rails (~> 5.0)
-      selectize-rails (~> 0.6)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -132,8 +115,6 @@ GEM
     colorize (0.7.7)
     connection_pool (2.2.0)
     database_cleaner (1.5.1)
-    datetime_picker_rails (0.0.5)
-      momentjs-rails (>= 2.8.1)
     debug_inspector (0.0.2)
     devise (3.4.1)
       bcrypt (~> 3.0)
@@ -184,10 +165,6 @@ GEM
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
-    inline_svg (0.6.1)
-      activesupport (>= 4.0.4)
-      loofah (>= 2.0)
-      nokogiri (~> 1.6)
     jasmine (2.3.1)
       jasmine-core (~> 2.3)
       phantomjs
@@ -224,14 +201,9 @@ GEM
     mime-types (2.6.2)
     mini_portile (0.6.2)
     minitest (5.8.3)
-    momentjs-rails (2.10.6)
-      railties (>= 3.1)
     multi_json (1.11.2)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
-    neat (1.7.2)
-      bourbon (>= 4.0)
-      sass (>= 3.3)
     nenv (0.2.0)
     net-scp (1.2.1)
       net-ssh (>= 2.6.5)
@@ -239,7 +211,6 @@ GEM
     netrc (0.10.3)
     nokogiri (1.6.6.3)
       mini_portile (~> 0.6.0)
-    normalize-rails (3.0.3)
     notiffany (0.0.8)
       nenv (~> 0.1)
       shellany (~> 0.0)
@@ -367,7 +338,6 @@ GEM
     sdoc (0.4.1)
       json (~> 1.7, >= 1.7.7)
       rdoc (~> 4.0)
-    selectize-rails (0.12.1)
     shellany (0.0.1)
     sidekiq (3.5.3)
       celluloid (~> 0.17.2)
@@ -441,7 +411,6 @@ PLATFORMS
 
 DEPENDENCIES
   aasm (~> 4.2.0)
-  administrate!
   better_errors
   binding_of_caller
   bootstrap-sass (~> 3.3.3)
@@ -491,6 +460,3 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   unicorn
   wechat (~> 0.6.1)
-
-BUNDLED WITH
-   1.10.6

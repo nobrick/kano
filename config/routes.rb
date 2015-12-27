@@ -33,11 +33,6 @@ Rails.application.routes.draw do
 
   authenticated :user, -> (u) { u.admin? } do
     namespace :admin, path: '/alpha' do
-      DashboardManifest::DASHBOARDS.each do |dashboard_resource|
-        resources dashboard_resource
-      end
-
-      root controller: DashboardManifest::ROOT_DASHBOARD, action: :index
     end
 
     mount Sidekiq::Web => '/sidekiq'
