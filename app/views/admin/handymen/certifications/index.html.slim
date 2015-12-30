@@ -1,0 +1,64 @@
+.container
+  = render partial: 'tabs', locals: { tabs: tabs_info }
+
+  .row
+    = form_tag("/", class: "col-md-3 col-md-offset-9")
+      = text_field_tag 'search', nil, placeholder: 'Search'
+      = button_tag '搜索'
+
+  .row
+    .filter.col-md-2.col-md-offset-1
+      = button_tag '全部'
+      = button_tag '已通过'
+      = button_tag '未通过'
+
+  .row
+    table.table-bordered.table-hover.col-md-12
+      thead
+        tr
+          th
+            = check_box_tag "sd"
+            span
+              | 全选
+          th
+            | 师傅 ID
+          th
+            | 师傅名字
+          th
+            | 技能名称
+          th
+            | 申请时间
+          th
+            | 认证状态
+          th
+
+          th
+      tbody
+        - @taxons.each do |taxon|
+          tr
+            td
+              = check_box_tag "s"
+            td
+              | #{taxon.handyman.id}
+            td
+              | #{taxon.handyman.name}
+            td
+              | #{taxon.name}
+            td
+              | #{taxon.created_at}
+            td
+              | #{taxon.status}
+            td
+              a[href="#"]
+                | 显示详细信息
+            td
+              button.btn
+                | 通过
+              button.btn
+                | 不通过
+  .row
+    = button_tag "一键通过", class: "col-md-1 col-md-offset-11"
+
+
+
+

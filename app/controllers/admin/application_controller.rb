@@ -1,10 +1,6 @@
-# All Administrate controllers inherit from this `Admin::ApplicationController`,
-# making it the ideal place to put authentication logic or other
-# before_filters.
-#
-# If you want to add pagination or other controller-level concerns,
-# you're free to overwrite the RESTful controller actions.
-class Admin::ApplicationController < Administrate::ApplicationController
+class Admin::ApplicationController < ActionController::Base
+  layout "admin"
+
   before_filter :authenticate_admin
 
   def authenticate_admin
@@ -12,9 +8,15 @@ class Admin::ApplicationController < Administrate::ApplicationController
     true
   end
 
-  # Override this value to specify the number of elements to display at a time
-  # on index pages. Defaults to 20.
-  # def records_per_page
-  #   params[:per_page] || 20
-  # end
+  helper_method :nav_links
+
+  def nav_links
+    [
+      {text: "师傅信息管理", path: "/alpha"},
+      {text: "用户信息管理", path: "/"},
+      {text: "订单信息管理", path: "/"},
+      {text: "财会信息管理", path: "/"}
+    ]
+  end
+
 end

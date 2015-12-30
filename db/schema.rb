@@ -166,10 +166,16 @@ ActiveRecord::Schema.define(version: 20151222120655) do
   add_index "taxon_items", ["city", "code"], name: "index_taxon_items_on_city_and_code", unique: true, using: :btree
 
   create_table "taxons", force: :cascade do |t|
-    t.integer  "handyman_id",             null: false
-    t.string   "code",        limit: 128, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "handyman_id",                                            null: false
+    t.string   "code",              limit: 128,                          null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "certified_status",              default: "under_review"
+    t.datetime "cert_requested_at"
+    t.datetime "certified_at"
+    t.integer  "certified_by"
+    t.string   "reason_code"
+    t.string   "reason_message"
   end
 
   add_index "taxons", ["handyman_id", "code"], name: "index_taxons_on_handyman_id_and_code", unique: true, using: :btree

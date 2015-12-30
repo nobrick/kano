@@ -27,12 +27,17 @@ Rails.application.routes.draw do
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
+
       concerns :with_account_profile
     end
   end
 
   authenticated :user, -> (u) { u.admin? } do
     namespace :admin, path: '/alpha' do
+      root 'dashbord#index', as: :root
+      namespace :handymen, as: :handyman do
+        resources :certifications, only: [:new, :update, :index, :show]
+      end
     end
 
     mount Sidekiq::Web => '/sidekiq'

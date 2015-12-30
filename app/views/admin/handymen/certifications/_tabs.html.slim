@@ -1,0 +1,13 @@
+.row
+  ul.nav.nav-tabs
+    - tabs.each do |tab|
+      - if current_page?(tab[:path])
+        li.active
+          a[href="#{tab[:path]}"]
+            | #{tab[:text]}
+      - else
+        li
+          a[href="#{tab[:path]}"]
+            | #{tab[:text]}
+
+
