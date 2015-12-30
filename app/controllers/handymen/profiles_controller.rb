@@ -1,5 +1,6 @@
 class Handymen::ProfilesController < ProfilesController
   before_action :authenticate_completed_handyman, only: [ :show, :edit ]
+  before_action :gray_background, only: [ :show ]
 
   def show
     @orders = Order.includes(:user, :address)
