@@ -74,4 +74,17 @@ class Taxon < ActiveRecord::Base
   def category_name
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
+
+  def status
+    case certified_status
+    when "under_review"
+      "正在审核中"
+    when "fail"
+      "审核未通过"
+    when "success"
+      "审核通过"
+    end
+
+
+  end
 end
