@@ -1,3 +1,26 @@
+.modal.fade id="certifyFailModal"
+  .modal-dialog role="document"
+    .modal-content
+      .modal-header
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"
+            |&times;
+        h4.modal-title
+          | 详细信息
+      = form_for :taxon, method: :put, html: { class: "certifyFail" } do |f|
+        .modal-body
+          = f.hidden_field :certified_status, value: "fail"
+          .row
+            = f.label :reason_code, "失败类型"
+            = f.select :reason_code, options_for_select([["资料不全", "missing_info"], ["资料过期", "out_of_date"]])
+          .row
+            = f.label :reason_message, "附加信息"
+            = f.text_area :reason_message
+        .modal-footer
+          = submit_tag "确认"
+          button type="button" data-dismiss="modal"
+            | Close
+
 .container
   = render partial: 'tabs', locals: { tabs: tabs_info }
 
@@ -49,13 +72,16 @@
             td
               | #{taxon.status}
             td
-              a[href="#"]
+              a href="#{admin_handyman_certification_path(taxon)}"
                 | 显示详细信息
             td
-              button.btn
-                | 通过
-              button.btn
+              = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
+                = t.hidden_field :certified_status, value: "success"
+                = t.submit "通过", class: "btn"
+              button  type="button" data-toggle="modal" data-target="#certifyFailModal" data-failcode="#{taxon.reason_code}" data-failmsg="#{taxon.reason_message}" data-url="#{admin_handyman_certification_path(taxon)}" data-fuck="fuck"
                 | 不通过
+
+
   .row
     = button_tag "一键通过", class: "col-md-1 col-md-offset-11"
 

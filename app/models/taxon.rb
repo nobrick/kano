@@ -75,6 +75,7 @@ class Taxon < ActiveRecord::Base
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
 
+  # TODO 将 code 代码不要写死到代码中
   def status
     case certified_status
     when "under_review"
@@ -84,7 +85,18 @@ class Taxon < ActiveRecord::Base
     when "success"
       "审核通过"
     end
-
-
   end
+
+  def self.status_correct?(tmp_status)
+    %w(under_review fail success).include?(tmp_status)
+  end
+
+  def self.reason_code_correct?(tmp_code)
+    %w(missing_info out_of_date).include?(tmp_code)
+  end
+
+  def self.certify_fail_status?(tmp_status)
+    tmp_status == "fail"
+  end
+
 end
