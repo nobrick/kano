@@ -50,3 +50,4 @@ doc
 
 # Ignore vim swap file
 *.swp
+*.swo
