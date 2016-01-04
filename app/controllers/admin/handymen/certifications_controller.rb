@@ -1,8 +1,12 @@
 class Admin::Handymen::CertificationsController < Admin::ApplicationController
   before_action :ensuren_current_params, only: :update
 
+  # params
+  #   page: page num
+  #   search:
+
   def index
-    @taxons = Taxon.all.order(:created_at)
+    @taxons = Taxon.order(:cert_requested_at).page(params[:page])
   end
 
   # params

@@ -36,7 +36,7 @@
       = button_tag '未通过'
 
   .row
-    table.table-bordered.table-hover.col-md-12
+    table.table-bordered.table-hover.col-md-12.table--more-info
       thead
         tr
           th
@@ -54,11 +54,9 @@
           th
             | 认证状态
           th
-
-          th
       tbody
         - @taxons.each do |taxon|
-          tr
+          tr data-url="#{admin_handyman_certification_path(taxon)}"
             td
               = check_box_tag "s"
             td
@@ -72,9 +70,6 @@
             td
               | #{taxon.status}
             td
-              a href="#{admin_handyman_certification_path(taxon)}"
-                | 显示详细信息
-            td
               = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
                 = t.hidden_field :certified_status, value: "success"
                 = t.submit "通过", class: "btn"
@@ -84,6 +79,11 @@
 
   .row
     = button_tag "一键通过", class: "col-md-1 col-md-offset-11"
+
+
+  .row
+    = paginate @taxons
+
 
 
 

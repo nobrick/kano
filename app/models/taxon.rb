@@ -87,6 +87,20 @@ class Taxon < ActiveRecord::Base
     end
   end
 
+  def name_of_certified_by
+    account = Account.find certified_by
+    account.name
+  end
+
+  def fail_reason_type
+    hash = {
+      "missing_info" => "资料不全",
+      "out_of_date" => "资料过期"
+    }
+
+    hash[reason_code]
+  end
+
   def self.status_correct?(tmp_status)
     %w(under_review fail success).include?(tmp_status)
   end

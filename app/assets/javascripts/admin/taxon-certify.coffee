@@ -11,3 +11,10 @@ $ ->
       modal.find('textarea').val(failMsg)
       modal.find('select').val(failCode)
 
+$ ->
+  $('table')
+    .on 'click', 'tbody tr', (event) ->
+      window.location = $(event.target).closest("tr").data("url")
+
+
+
