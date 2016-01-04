@@ -1,0 +1,45 @@
+.container
+  .row
+    table.table-bordered.table-hover.col-md-12
+      thead
+        tr
+          th
+            | 师傅 ID
+          th
+            | 师傅名字
+          th
+            | 技能名称
+          th
+            | 申请时间
+          th
+            | 认证状态
+          th
+            | 认证时间
+          th
+            | 认证人
+          th
+            | 失败类型
+          th
+            | 附加信息
+      tbody
+        tr
+          td
+            | #{@taxon.handyman.id}
+          td
+            | #{@taxon.handyman.name}
+          td
+            | #{@taxon.name}
+          td
+            | #{@taxon.cert_requested_at}
+          td
+            | #{@taxon.status}
+          td
+            | #{@taxon.certified_at}
+          td
+            - if !@taxon.certified_by.blank?
+              | #{@taxon.name_of_certified_by}
+          td
+            | #{@taxon.fail_reason_type}
+          td
+            | #{@taxon.reason_message}
+
