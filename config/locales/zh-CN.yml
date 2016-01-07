@@ -70,7 +70,9 @@ zh-CN:
       handyman: '管家'
       order: '订单'
       address: '地址'
-      taxons: '服务类别'
+      taxon: '服务类别'
+      taxon_item: '维修项目'
+      payment: '支付信息'
     attributes:
       account:
         username: '用户名'

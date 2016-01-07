@@ -35,7 +35,8 @@ class Taxon < ActiveRecord::Base
     I18n.t("taxons.items.#{category}.#{taxon}", default: category_or_taxon)
   end
 
-  def self.category_name(category)
+  def self.category_name(category_or_taxon)
+    category = category_or_taxon.split('/').first
     I18n.t("taxons.categories.#{category}", default: category)
   end
 

@@ -22,6 +22,7 @@ class Users::OrdersController < ApplicationController
   # GET /orders/new
   def new
     @order = current_user.orders.build(arrives_at: 3.hours.since)
+    set_pricing
     set_address
   end
 
@@ -32,6 +33,7 @@ class Users::OrdersController < ApplicationController
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       gray_background
+      set_pricing
       set_address
       render :new
     end
@@ -88,6 +90,10 @@ class Users::OrdersController < ApplicationController
 
     @city_code = address.try(:city_code) || '430100'
     @district_code = address.try(:code)
+  end
+
+  def set_pricing
+    @prices_json = TaxonItem.prices_json
   end
 
   def fallback_redirect
