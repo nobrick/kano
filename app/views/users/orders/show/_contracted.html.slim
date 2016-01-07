@@ -8,7 +8,7 @@
         - total = @order.user_total ? '%.0f' % @order.user_total : nil
         .mdl-textfield.mdl-js-textfield
           = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
-            step: 5, pattern: '\d*', type: 'text', class: 'mdl-textfield__input'
+            step: 1, pattern: '\d*', type: 'text', class: 'mdl-textfield__input'
           label.mdl-textfield__label for="order_user_total" 维修完成后点此输入支付金额
       .pay-buttons
         = f.button :submit, name: 'p_method', value: 'cash',

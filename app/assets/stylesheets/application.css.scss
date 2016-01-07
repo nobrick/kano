@@ -295,7 +295,7 @@ input[type=checkbox] {
   select.select-block, .datetime-select-zone {
     max-width: 300px;
   }
-  select.select-block, table {
+  select.select-block, .price-desc-field table {
     width: 78%;
     @media (min-width: 350px) {
       width: 59%;
@@ -306,12 +306,16 @@ input[type=checkbox] {
   select.select-block {
     display: block;
   }
-  table {
-    margin-bottom: 16px;
-  }
-  p.price-desc-label {
-    font-size: 12px;
-    line-height: 17px;
+  .price-desc-field {
+    padding-bottom: 7px;
+    table {
+      margin-bottom: 16px;
+    }
+    p.price-desc-label {
+      font-size: 12px;
+      line-height: 17px;
+      margin-bottom: 7px;
+    }
   }
   .datetime-select-zone {
     width: 100%;

@@ -13,7 +13,7 @@
               br
               .datetime-select-zone
                 = f.datetime_select :arrives_at,
-                  { start_hour: 8, end_hour: 22, minute_step: 10,
+                  { start_hour: 8, end_hour: 23, minute_step: 10,
                   start_year: Time.now.year, end_year: Time.now.year + 1,
                   time_separator: '', datetime_separator: "<br>",
                   with_css_classes: true},
@@ -54,6 +54,7 @@
                     b
                       span.total-price
               p.price-desc-label * 以上价格仅供参考，实际维修价格请与管家面议后确定。
+              p.price-desc-label.hidden#night-desc-label * 根据您的预约时段，基础维修费中包含了一定的夜间维修费。
             div
               = button_to nil, class: 'mdl-button mdl-js-button mdl-button--accent btn-create-order' do
                 span.fa-icon.icon-in-button
