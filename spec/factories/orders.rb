@@ -19,6 +19,9 @@ FactoryGirl.define do
     end
 
     before(:create) do |order, evaluator|
+      TaxonItem.create(city: order.address.city_code,
+                       code: order.taxon_code,
+                       price: 10)
       case evaluator.state
       when 'requested'
         order.request && order.save!
