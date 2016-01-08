@@ -17,12 +17,13 @@ class Users::OrdersController < ApplicationController
       url = request.original_url
       gon.push(auth_client(url))
     end
+    set_pricing_for_contracted
   end
 
   # GET /orders/new
   def new
     @order = current_user.orders.build(arrives_at: 3.hours.since)
-    set_pricing
+    set_pricing_for_new
     set_address
   end
 
@@ -33,7 +34,7 @@ class Users::OrdersController < ApplicationController
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       gray_background
-      set_pricing
+      set_pricing_for_new
       set_address
       render :new
     end
@@ -92,8 +93,17 @@ class Users::OrdersController < ApplicationController
     @district_code = address.try(:code)
   end
 
-  def set_pricing
+  def set_pricing_for_new
     @prices_json = TaxonItem.prices_json
+  end
+
+  def set_pricing_for_contracted
+    if @order.contracted?
+      city_pricing = TaxonItem.prices[@order.address.city_code]
+      @traffic_price = city_pricing['_traffic']
+      @taxon_price = city_pricing[@order.taxon_code]
+      @hour_arrives_at = @order.arrives_at.hour
+    end
   end
 
   def fallback_redirect
