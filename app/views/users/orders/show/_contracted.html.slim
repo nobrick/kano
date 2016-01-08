@@ -4,12 +4,12 @@
       handyman: @order.handyman
   .mdl-card__supporting-text.card-divider
     = form_for(@order, url: user_checkout_path, method: :post) do |f|
-      .form-group
-        - total = @order.user_total ? '%.0f' % @order.user_total : nil
-        .mdl-textfield.mdl-js-textfield
-          = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
-            step: 5, pattern: '\d*', type: 'text', class: 'mdl-textfield__input'
-          label.mdl-textfield__label for="order_user_total" 维修完成后点此输入支付金额
+      = label_tag '支付', nil, class: 'i-md-label'
+      - total = @order.user_total ? '%.0f' % @order.user_total : nil
+      .mdl-textfield.mdl-js-textfield.user-total-textfield
+        = f.number_field :user_total, min: 0, max: Order::MAX_PAYMENT_AMOUNT, value: total,
+          step: 1, pattern: '\d*', type: 'text', class: 'mdl-textfield__input'
+        label.mdl-textfield__label for="order_user_total" 维修完成后点此输入金额
       .pay-buttons
         = f.button :submit, name: 'p_method', value: 'cash',
           class: 'mdl-button mdl-js-button mdl-button--colored pull-left' do
@@ -28,3 +28,6 @@
       = link_to cancel_user_order_path(@order), method: :put, data: { confirm: '您确定要取消订单吗？' } do
         li.mdl-menu__item
           div.text-center 取消订单
+  .mdl-card__supporting-text.card-divider
+    .field.form-group.price-desc-field data-traffic-price=@pricing[:traffic_price] data-taxon-price=@pricing[:taxon_price] data-hour-arrives-at=@pricing[:hour_arrives_at]
+      = render 'users/orders/pricing'

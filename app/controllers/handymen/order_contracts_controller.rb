@@ -15,6 +15,7 @@ class Handymen::OrderContractsController < ApplicationController
   def show
     @order = Order.find(params[:id])
     check_order_permission
+    @pricing = @order.pricing
   end
 
   private

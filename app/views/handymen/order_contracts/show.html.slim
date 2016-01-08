@@ -62,3 +62,7 @@
               => fa_icon('tag')
             ' 维修项目
           p = @order.taxon_name
+      - if (@order.contracted? || @order.payment?) && @pricing
+        .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+          .mdl-card__supporting-text
+            = render 'handymen/shared/pricing', pricing: @pricing

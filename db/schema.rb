@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151219043240) do
+ActiveRecord::Schema.define(version: 20151222120655) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,6 +153,17 @@ ActiveRecord::Schema.define(version: 20151219043240) do
   add_index "payments", ["payment_method"], name: "index_payments_on_payment_method", using: :btree
   add_index "payments", ["payment_profile_type", "payment_profile_id"], name: "index_payments_on_payment_profile_type_and_payment_profile_id", using: :btree
   add_index "payments", ["state"], name: "index_payments_on_state", using: :btree
+
+  create_table "taxon_items", force: :cascade do |t|
+    t.string   "code",       limit: 128,                          null: false
+    t.decimal  "price",                  precision: 12, scale: 2, null: false
+    t.string   "city",       limit: 20
+    t.string   "brief"
+    t.datetime "created_at",                                      null: false
+    t.datetime "updated_at",                                      null: false
+  end
+
+  add_index "taxon_items", ["city", "code"], name: "index_taxon_items_on_city_and_code", unique: true, using: :btree
 
   create_table "taxons", force: :cascade do |t|
     t.integer  "handyman_id",             null: false

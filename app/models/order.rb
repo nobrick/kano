@@ -35,13 +35,14 @@ class Order < ActiveRecord::Base
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
   validates :user, presence: true
-  validates :taxon_code, presence: true, inclusion: { in: Taxon.taxon_codes }
+  validates :taxon_code, inclusion: { in: Taxon.taxon_codes, message: '不能为空' }
   validates :state, presence: true
   validates :address, presence: true, associated: true
   validates :arrives_at, inclusion: {
     in: (10.minute.from_now)..(30.days.from_now),
     message: '无效'
   }, if: 'to? :requested'
+  validate :service_must_be_available, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
   validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
   validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
@@ -206,6 +207,32 @@ class Order < ActiveRecord::Base
     (requested? || contracted?) && arrives_at < time
   end
 
+  def pricing(options = {})
+    city_pricing = TaxonItem.prices[address.city_code]
+    return nil if city_pricing.blank? || city_pricing[taxon_code].blank?
+    info = {
+      traffic_price: city_pricing['_traffic'],
+      taxon_price: city_pricing[taxon_code],
+      hour_arrives_at: arrives_at.hour
+    }
+    if options.fetch(:calculate, true)
+      times = case arrives_at.hour
+              when 8...20 then 1
+              when 20...22 then 1.2
+              else 1.5
+              end
+      service_price = info[:taxon_price] * times
+      info.merge!({
+        times: times,
+        night_mode: times > 1,
+        service_price: service_price,
+        total_price: info[:traffic_price] + service_price
+      })
+    end
+
+    info
+  end
+
   private
 
   def do_contract(*args)
@@ -238,6 +265,16 @@ class Order < ActiveRecord::Base
       errors.add(:user_total, 'should be sum of payment_total and user_promo_total')
     elsif  handyman_total != user_total + handyman_bonus_total
       errors.add(:handyman_total, 'should be sum of user_total and handyman_bonus_total')
+    end
+  end
+
+  def service_must_be_available
+    return unless address || taxon_code
+    city_pricing = TaxonItem.prices[address.city_code]
+    if city_pricing.blank?
+      errors.add(:base, '暂不支持您所在的城市')
+    elsif TaxonItem.prices[taxon_code]
+      errors.add(:base, '您所在的城市暂未开通该服务')
     end
   end
 end

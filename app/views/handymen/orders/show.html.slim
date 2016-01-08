@@ -41,3 +41,6 @@
           span.fa-icon
             => fa_icon('check-circle')
           ' 接单
+      .order-details-header-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__supporting-text
+          = render 'handymen/shared/pricing', pricing: @pricing

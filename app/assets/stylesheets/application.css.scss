@@ -296,13 +296,7 @@ input[type=checkbox] {
     max-width: 300px;
   }
   select.select-block {
-    width: 78%;
-    @media (min-width: 350px) {
-      width: 59%;
-    }
     display: block;
-    margin-left: auto;
-    margin-right: auto;
   }
   .datetime-select-zone {
     width: 100%;
@@ -334,6 +328,26 @@ input[type=checkbox] {
   }
   .btn-create-order {
     letter-spacing: 3px;
+    margin-bottom: 7px;
+  }
+}
+
+.order-new-page select.select-block, .price-desc-field table {
+  width: 78%;
+  @media (min-width: 350px) {
+    width: 59%;
+  }
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.price-desc-field {
+  table {
+    margin-bottom: 16px;
+  }
+  p.price-desc-label {
+    font-size: 12px;
+    line-height: 17px;
     margin-bottom: 7px;
   }
 }
@@ -487,6 +501,11 @@ input[type=checkbox] {
 
   input#order_user_total, .pay-buttons {
     @include h-center(250px, 250px);
+  }
+
+  .user-total-textfield {
+    margin-top: -14px;
+    margin-bottom: -7px;
   }
 }
 

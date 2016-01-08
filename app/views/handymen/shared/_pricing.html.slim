@@ -1,0 +1,23 @@
+.price-desc-field
+  = label_tag '参考收费', nil, class: 'i-md-label'
+  table.table
+    tr
+      td 上门服务费
+      td
+        span.traffic-price = pricing[:traffic_price].to_i
+    tr
+      td 基础维修费
+      td
+        span.service-price = pricing[:service_price].to_i
+    tr.active
+      td
+        b 总计
+      td
+        b
+          span.total-price = pricing[:total_price].to_i
+  - if pricing[:night_mode]
+    p.price-desc-label.night-desc-label
+      ' * 根据用户的预约时段，基础维修费中包含了一定的夜间维修费。
+  p.price-desc-label
+    ' * 以上价格仅供参考，实际维修价格请与用户面议后确定。
+
