@@ -178,6 +178,7 @@ ActiveRecord::Schema.define(version: 20151222120655) do
     t.string   "reason_message"
   end
 
+  add_index "taxons", ["certified_by"], name: "index_taxons_on_certified_by", using: :btree
   add_index "taxons", ["handyman_id", "code"], name: "index_taxons_on_handyman_id_and_code", unique: true, using: :btree
   add_index "taxons", ["handyman_id"], name: "index_taxons_on_handyman_id", using: :btree
 

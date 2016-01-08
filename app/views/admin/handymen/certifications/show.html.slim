@@ -32,12 +32,12 @@
           td
             | #{@taxon.cert_requested_at}
           td
-            | #{@taxon.status}
+            | #{t @taxon.certified_status, scope: 'taxons.certified_status'}
           td
             | #{@taxon.certified_at}
           td
             - if !@taxon.certified_by.blank?
-              | #{@taxon.name_of_certified_by}
+              | #{@taxon.certified_byer.name}
           td
             | #{@taxon.fail_reason_type}
           td

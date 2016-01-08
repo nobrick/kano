@@ -3,10 +3,15 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   # params
   #   page: page num
-  #   search:
+  #   certified_status:  certify state
 
   def index
-    @taxons = Taxon.order(:cert_requested_at).page(params[:page])
+    tmp_taxons = Taxon.order(:cert_requested_at)
+
+    if Taxon.certified_status.include?(params[:certified_status])
+      tmp_taxons = tmp_taxons.where(certified_status: params[:certified_status])
+    end
+    @taxons = tmp_taxons.page(params[:page])
   end
 
   # params
@@ -20,21 +25,16 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     certified_info = {
       certified_by: current_user.id,
       certified_at: Time.now,
-    }
+    }.merge(certify_params)
 
-    if Taxon.certify_fail_status?(certify_params[:certified_status])
-      certified_info.merge!(certify_params)
+    # TODO  use helper to implement t method
+    if taxon.update(certified_info)
+      puts "fuck here"
+      redirect_to admin_handyman_certifications_path, notice: I18n.t('controllers.admin.handymen/certification.update_success')
     else
-      certified_info.merge!(
-        certified_status: certify_params[:certified_status],
-        reason_code: nil,
-        reason_message: nil,
-      )
+      puts certified_info.to_s
+      redirect_to admin_handyman_certifications_path, notice: I18n.t('controllers.admin.handymen/certification.update_fail', reasons: taxon.errors.full_messages.join('；'))
     end
-
-    taxon.update(certified_info)
-
-    redirect_to admin_handyman_certifications_path
   end
 
   # params
@@ -43,6 +43,8 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     @taxon = Taxon.find params[:id]
   end
 
+
+  # TODO wtf
   helper_method :tabs_info
 
   def tabs_info
@@ -60,19 +62,11 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   private
 
-  #TODO 怎么更好的返回 400
   def ensuren_current_params
     status = certify_params[:certified_status]
-    reason_code = certify_params[:reason_code]
-
-    if !Taxon.status_correct?(status)
-      head :bad_request
-      return
-    end
-
-    if !reason_code.blank? && !Taxon.reason_code_correct?(reason_code)
-      head :bad_request
-      return
+    if Taxon.certify_fail_status?(status)
+      params[:taxon][:reason_code] = nil
+      params[:taxon][:reason_message] = nil
     end
   end
 

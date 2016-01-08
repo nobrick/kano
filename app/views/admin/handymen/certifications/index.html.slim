@@ -31,9 +31,10 @@
 
   .row
     .filter.col-md-2.col-md-offset-1
-      = button_tag '全部'
-      = button_tag '已通过'
-      = button_tag '未通过'
+      = link_to '全部', admin_handyman_certifications_path
+      = link_to '已通过', admin_handyman_certifications_path(certified_status: "success")
+      = link_to '未通过', admin_handyman_certifications_path(certified_status: "fail")
+      = link_to '正在审核', admin_handyman_certifications_path(certified_status: "under_review")
 
   .row
     table.table-bordered.table-hover.col-md-12.table--more-info
@@ -68,7 +69,7 @@
             td
               | #{taxon.created_at}
             td
-              | #{taxon.status}
+              | #{t taxon.certified_status, scope: 'taxons.certified_status'}
             td
               = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
                 = t.hidden_field :certified_status, value: "success"
