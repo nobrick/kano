@@ -16,6 +16,7 @@ class Handymen::OrdersController < ApplicationController
 
   # GET /orders/:id
   def show
+    @pricing = @order.pricing
   end
 
   # POST /orders

@@ -29,5 +29,5 @@
         li.mdl-menu__item
           div.text-center 取消订单
   .mdl-card__supporting-text.card-divider
-    .field.form-group.price-desc-field data-traffic-price=@traffic_price data-taxon-price=@taxon_price data-hour-arrives-at=@hour_arrives_at
+    .field.form-group.price-desc-field data-traffic-price=@pricing[:traffic_price] data-taxon-price=@pricing[:taxon_price] data-hour-arrives-at=@pricing[:hour_arrives_at]
       = render 'users/orders/pricing'

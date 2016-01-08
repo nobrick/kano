@@ -98,12 +98,7 @@ class Users::OrdersController < ApplicationController
   end
 
   def set_pricing_for_contracted
-    if @order.contracted?
-      city_pricing = TaxonItem.prices[@order.address.city_code]
-      @traffic_price = city_pricing['_traffic']
-      @taxon_price = city_pricing[@order.taxon_code]
-      @hour_arrives_at = @order.arrives_at.hour
-    end
+    @pricing = @order.pricing(calculate: false) if @order.contracted?
   end
 
   def fallback_redirect
