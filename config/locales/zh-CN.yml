@@ -24,6 +24,15 @@ zh-CN:
         whitewash: '粉刷及内部修缮'
         lock: '门锁问题'
         other: '其它定制服务'
+    certified_status:
+      under_review: '正在审核中'
+      fail: '审核未通过'
+      success: '审核通过'
+    reason_code:
+      missing_info: '资料不全'
+      out_of_date: '资料过期'
+
+
   controllers:
     root:
       should_complete_profile: '继续操作前请您完善个人资料'
@@ -54,6 +63,10 @@ zh-CN:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
+    admin:
+      handymen/certification:
+        update_success: '审核成功'
+        update_fail: '审核失败: %{reasons}'
   order:
     requested: '未接单'
     contracted: '已接单'

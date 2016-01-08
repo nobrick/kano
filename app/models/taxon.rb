@@ -1,5 +1,6 @@
 class Taxon < ActiveRecord::Base
   belongs_to :handyman
+  belongs_to :certified_byer, -> { where(admin: true) }, foreign_key: "certified_by", class_name: "Account"
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
@@ -18,7 +19,20 @@ class Taxon < ActiveRecord::Base
     @@taxon_codes ||= taxons_config['items']
       .map { |c, l| l.map { |t| "#{c}/#{t}" } }.flatten
   end
+
+  def self.certified_status
+    @@taxon_certified_status ||= taxons_config['certified_status']
+      .map { |k, v| v }
+  end
+
+  def self.reason_codes
+    @@taxon_reason_code ||= taxons_config['reason_code']
+  end
+
+  # TODO use the other model to implement taxon_codes taxons_config certified_status method
   validates_inclusion_of :code, in: self.taxon_codes
+  validates_inclusion_of :certified_status, in: self.certified_status
+  validates_inclusion_of :reason_code, in: self.reason_codes
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -75,42 +89,8 @@ class Taxon < ActiveRecord::Base
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
 
-  # TODO 将 code 代码不要写死到代码中
-  def status
-    case certified_status
-    when "under_review"
-      "正在审核中"
-    when "fail"
-      "审核未通过"
-    when "success"
-      "审核通过"
-    end
-  end
-
-  def name_of_certified_by
-    account = Account.find certified_by
-    account.name
-  end
-
-  def fail_reason_type
-    hash = {
-      "missing_info" => "资料不全",
-      "out_of_date" => "资料过期"
-    }
-
-    hash[reason_code]
-  end
-
-  def self.status_correct?(tmp_status)
-    %w(under_review fail success).include?(tmp_status)
-  end
-
-  def self.reason_code_correct?(tmp_code)
-    %w(missing_info out_of_date).include?(tmp_code)
-  end
-
   def self.certify_fail_status?(tmp_status)
-    tmp_status == "fail"
+    tmp_status == taxons_config['certified_status']['fail']
   end
 
 end

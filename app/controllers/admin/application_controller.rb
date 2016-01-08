@@ -12,7 +12,7 @@ class Admin::ApplicationController < ActionController::Base
 
   def nav_links
     [
-      {text: "师傅信息管理", path: "/alpha"},
+      {text: "师傅信息管理", path: "/admin/handymen"},
       {text: "用户信息管理", path: "/"},
       {text: "订单信息管理", path: "/"},
       {text: "财会信息管理", path: "/"}

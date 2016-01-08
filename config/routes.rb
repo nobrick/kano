@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   end
 
   authenticated :user, -> (u) { u.admin? } do
-    namespace :admin, path: '/alpha' do
+    namespace :admin, path: '/admin' do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
         resources :certifications, only: [:new, :update, :index, :show]
