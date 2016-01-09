@@ -18,4 +18,8 @@ class TaxonItem < ActiveRecord::Base
   def self.prices_json(reset = false)
     @@prices_json ||= prices(reset).to_json
   end
+
+  def self.reset_prices
+    prices(true)
+  end
 end

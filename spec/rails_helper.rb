@@ -6,6 +6,7 @@ abort('Running in PRODUCTION mode!') if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
 require 'capybara/rspec'
+require_relative 'support/taxon_item'
 
 # Add additional requires below this line. Rails is not loaded until this point!
 
@@ -52,6 +53,7 @@ RSpec.configure do |config|
     async = example.metadata[:js] || example.metadata[:async]
     DatabaseCleaner.strategy = async ? :deletion : :transaction
     DatabaseCleaner.start
+    set_taxon_items
   end
 
   config.after(:each) do
