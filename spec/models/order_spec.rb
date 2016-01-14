@@ -58,7 +58,7 @@ RSpec.describe Order, type: :model do
   end
 
   describe 'state machine' do
-    describe 'request event' do
+    describe 'Request event' do
       it 'creates and requests order by user' do
         expect(order_requested).to be_persisted
         expect(order_requested.requested?).to eq true
@@ -66,7 +66,7 @@ RSpec.describe Order, type: :model do
       end
     end
 
-    describe 'contract event' do
+    describe 'Contract event' do
       it 'contracts a handyman' do
         order_requested.handyman = handyman
         order_requested.content = 'new content'
@@ -84,7 +84,7 @@ RSpec.describe Order, type: :model do
       end
     end
 
-    describe 'cancel event' do
+    describe 'Cancel event' do
       let(:cancel_attributes) do
         {
           canceler: user,
@@ -114,6 +114,89 @@ RSpec.describe Order, type: :model do
         expect(order_contracted.canceled_at).to be_present
         expect(order_contracted.cancel_type).to eq 'User'
       end
+    end
+
+    describe 'Pay event' do
+      let(:order) { create :contracted_order }
+
+      describe 'user_total validations' do
+        context 'With wechat payment' do
+          shared_examples_for 'invalid payment' do
+            let(:payment) { order.build_payment(payment_method: 'pingpp_wx_pub') }
+            before { order.sync_from_user_total }
+
+            it 'is invalid after #checkout and #save' do
+              expect(order.valid?).to eq true
+              expect(payment.checkout).to eq true
+              expect(payment.save).to eq false
+              expect(order.errors.messages.has_key? :user_total)
+            end
+
+            it 'will not create balance record' do
+              expect { payment.checkout; payment.save }
+                .not_to change(BalanceRecord, :count)
+            end
+          end
+
+          it 'is valid for order within price range' do
+            order.user_total = order.pricing[:total_price]
+            expect(order.sync_from_user_total).to eq true
+            payment = order.build_payment(payment_method: 'pingpp_wx_pub')
+            payment.checkout
+            payment.save!
+            expect(order.payment?).to eq true
+          end
+
+          context 'When user_total exceding max limit' do
+            before { order.user_total = 1e4 }
+            it_behaves_like 'invalid payment'
+          end
+
+          context 'When user_total below min limit' do
+            before { order.user_total = 5 }
+            it_behaves_like 'invalid payment'
+          end
+        end
+
+        context 'With cash payment' do
+          shared_examples_for 'invalid payment' do
+            let(:payment) { order.build_payment(payment_method: 'cash') }
+            before { order.sync_from_user_total }
+
+            it 'is invalid after #complete and #save' do
+              expect(order.valid?).to eq true
+              expect(payment.complete).to eq true
+              expect(payment.save).to eq false
+              expect(order.errors.messages.has_key? :user_total)
+            end
+
+            it 'will not create balance record' do
+              expect { payment.complete; payment.save }
+                .not_to change(BalanceRecord, :count)
+            end
+          end
+
+          it 'is valid for order within price range' do
+            order.user_total = order.pricing[:total_price]
+            expect(order.sync_from_user_total).to eq true
+            payment = order.build_payment(payment_method: 'cash')
+            payment.complete
+            payment.save!
+            expect(order.completed?).to eq true
+          end
+
+          context 'When user_total exceding max limit' do
+            before { order.user_total = 1e4 }
+            it_behaves_like 'invalid payment'
+          end
+
+          context 'When user_total below min limit' do
+            before { order.user_total = 5 }
+            it_behaves_like 'invalid payment'
+          end
+        end
+      end
+
     end
   end
 end

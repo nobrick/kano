@@ -38,7 +38,7 @@ class Users::CheckoutsController < ApplicationController
     if @payment.complete && @payment.save
       redirect_to [ :user, @order ], notice: t('.payment_success')
     else
-      redirect_to [ :user, @order ], alert: t('.payment_failure')
+      redirect_to [ :user, @order ], alert: failure_message
     end
   end
 
@@ -52,8 +52,14 @@ class Users::CheckoutsController < ApplicationController
     if @payment.checkout && @payment.save
       redirect_to [ :user, @order ]
     else
-      redirect_to [ :user, @order ], alert: t('.param_invalid')
+      redirect_to [ :user, @order ], alert: failure_message
     end
+  end
+
+  def failure_message
+    message = @order.errors.full_messages.join('；')
+    message = t('.unknown_failure') if message.blank?
+    "#{t('.payment_failure')}：#{message}"
   end
 
   def set_order

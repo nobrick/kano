@@ -46,7 +46,7 @@ zh-CN:
       payment_expired: '抱歉，支付已过期，请重新选择支付方式'
       payment_invalid: '抱歉，支付已失效，请重新选择支付方式'
       should_pay_in_wechat_client: '请在微信客户端中完成支付'
-      param_invalid: '参数错误'
+      unknown_failure: '未知错误'
       request_failure: '请求失败'
     handymen/order_contracts:
       order_not_exist: '订单不存在'

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :order do
     transient do
       state 'requested'
-      amount { rand(5..50) * 10.0 }
+      amount { 85 + rand(1..50) * 10.0 }
     end
     user
     address

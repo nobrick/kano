@@ -2,8 +2,8 @@ class BalanceRecord < ActiveRecord::Base
   belongs_to :owner, polymorphic: true #, touch: true
   belongs_to :adjustment_event, polymorphic: true
   alias_attribute :event, :adjustment_event
-  validates! :owner, presence: true, associated: true
-  validates! :adjustment_event, presence: true, associated: true
+  validates :owner, presence: true, associated: true
+  validates :adjustment_event, presence: true, associated: true
   validate :check_adjustment_event
   BALANCE_ATTRIBUTES = [
     :balance,

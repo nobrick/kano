@@ -68,12 +68,17 @@ class Order < ActiveRecord::Base
     :handyman_bonus_total,
     :handyman_total
   ]
+
+  # Max limit for :user_total attribute
   MAX_PAYMENT_AMOUNT = 1000
-  validates_presence_of PAYMENT_TOTAL_ATTRIBUTES, if: 'to? :payment'
-  validates_numericality_of PAYMENT_TOTAL_ATTRIBUTES,
-    numericality: { greater_than_or_equal_to: 0, less_than: MAX_PAYMENT_AMOUNT },
-    if: 'to? :payment'
-  validate :check_payment_totals, if: 'to? :payment'
+
+  with_options if: 'to? [ :payment, :completed ]' do |v|
+    v.validates_presence_of *PAYMENT_TOTAL_ATTRIBUTES
+    v.validates_numericality_of :user_total, less_than: MAX_PAYMENT_AMOUNT
+    v.validates_numericality_of :user_total,
+      greater_than_or_equal_to: -> (o) { o.pricing[:total_price] }
+    v.validate :check_payment_totals
+  end
 
   STATES = %w{ requested contracted payment completed canceled rated reported }
   validates :state, inclusion: { in: STATES }
@@ -251,8 +256,12 @@ class Order < ActiveRecord::Base
                        end
   end
 
-  def to?(state)
-    aasm.to_state == state
+  def to?(states_or_state)
+    if states_or_state.is_a? Symbol
+      aasm.to_state == states_or_state
+    else
+      states_or_state.any? { |s| aasm.to_state == s }
+    end
   end
 
   def set_address
@@ -263,7 +272,7 @@ class Order < ActiveRecord::Base
     return if PAYMENT_TOTAL_ATTRIBUTES.any? { |m| send(m).nil? }
     if user_total != payment_total + user_promo_total
       errors.add(:user_total, 'should be sum of payment_total and user_promo_total')
-    elsif  handyman_total != user_total + handyman_bonus_total
+    elsif handyman_total != user_total + handyman_bonus_total
       errors.add(:handyman_total, 'should be sum of user_total and handyman_bonus_total')
     end
   end
