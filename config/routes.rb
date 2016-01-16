@@ -36,7 +36,16 @@ Rails.application.routes.draw do
     namespace :admin, path: '/admin' do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
-        resources :certifications, only: [:new, :update, :index, :show]
+        resources :certifications, only: [:update, :index, :show]
+        # TODO add handymen info path
+      end
+      namespace :users, as: :user do
+        # TODO add user path here
+
+      end
+      namespace :orders, as: :order do
+        # TODO add order path here
+
       end
     end
 

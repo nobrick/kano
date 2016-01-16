@@ -7,85 +7,70 @@
             |&times;
         h4.modal-title
           | 详细信息
-      = form_for :taxon, method: :put, html: { class: "certifyFail" } do |f|
+      = form_for :taxon, method: :put, html: { class: "certifyFail form-horizontal" } do |f|
         .modal-body
-          = f.hidden_field :certified_status, value: "fail"
-          .row
-            = f.label :reason_code, "失败类型"
-            = f.select :reason_code, options_for_select([["资料不全", "missing_info"], ["资料过期", "out_of_date"]])
-          .row
-            = f.label :reason_message, "附加信息"
-            = f.text_area :reason_message
+          = f.hidden_field :certified_status, value: "#{Taxon.certified_status_code('fail')}"
+          .form-group
+            = f.label :reason_code, attr_name('reason_code'), class: "control-label col-sm-2"
+            .col-sm-4
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [t("taxons.reason_code.#{c}"), c ]}, {}, {class: "form-control"}
+          .form-group
+            = f.label :reason_message, attr_name('reason_message'), class: "control-label col-sm-2"
+            .col-sm-9
+              = f.text_area :reason_message, class: "form-control", rows: 8
         .modal-footer
-          = submit_tag "确认"
-          button type="button" data-dismiss="modal"
-            | Close
+          = submit_tag "确认", { class: "btn btn-success" }
+          button type="button" data-dismiss="modal" class="btn btn-danger"
+            | 关闭
 
 .container
   = render partial: 'tabs', locals: { tabs: tabs_info }
 
-  .row
-    = form_tag("/", class: "col-md-3 col-md-offset-9")
-      = text_field_tag 'search', nil, placeholder: 'Search'
-      = button_tag '搜索'
+  = form_tag("/", class: "tabs__search row")
+    = text_field_tag 'search', nil, placeholder: 'Search'
+    = button_tag '搜索', class: 'btn btn-default'
 
-  .row
-    .filter.col-md-2.col-md-offset-1
-      = link_to '全部', admin_handyman_certifications_path
-      = link_to '已通过', admin_handyman_certifications_path(certified_status: "success")
-      = link_to '未通过', admin_handyman_certifications_path(certified_status: "fail")
-      = link_to '正在审核', admin_handyman_certifications_path(certified_status: "under_review")
+  .tabs__content
+    .row
+      .table__filter
+        = link_to '全部', admin_handyman_certifications_path, class: 'btn btn-sm btn-primary'
+        - certified_status_filter.each do |status|
+          = link_to t("taxons.certified_status.#{status}"), admin_handyman_certifications_path(certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
 
-  .row
-    table.table-bordered.table-hover.col-md-12.table--more-info
-      thead
-        tr
-          th
-            = check_box_tag "sd"
-            span
-              | 全选
-          th
-            | 师傅 ID
-          th
-            | 师傅名字
-          th
-            | 技能名称
-          th
-            | 申请时间
-          th
-            | 认证状态
-          th
-      tbody
-        - @taxons.each do |taxon|
-          tr data-url="#{admin_handyman_certification_path(taxon)}"
-            td
-              = check_box_tag "s"
-            td
-              | #{taxon.handyman.id}
-            td
-              | #{taxon.handyman.name}
-            td
-              | #{taxon.name}
-            td
-              | #{taxon.created_at}
-            td
-              | #{t taxon.certified_status, scope: 'taxons.certified_status'}
-            td
-              = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
-                = t.hidden_field :certified_status, value: "success"
-                = t.submit "通过", class: "btn"
-              button  type="button" data-toggle="modal" data-target="#certifyFailModal" data-failcode="#{taxon.reason_code}" data-failmsg="#{taxon.reason_message}" data-url="#{admin_handyman_certification_path(taxon)}" data-fuck="fuck"
-                | 不通过
+    .row
+      = render partial: 'shared/table', locals: {resources: @taxons, dashboard: dashboard}
+
+    //.row
+      table.table.table-bordered.table-hover.col-md-12.table--more-info
+        thead.table__header
+          tr
+            th
+            - index_attrs.each_key do |h|
+              th
+                - if h != nil
+                  | #{table_title h, resource_class }
+            th
+
+        tbody.table__content
+          - @taxons.each do |taxon|
+            tr data-url="#{admin_handyman_certification_path(taxon)}"
+              td
+                = check_box_tag "s"
+              - index_attrs.each_pair do |h, type|
+                td
+                  | #{item_data(taxon, h, type)}
+
+              td
+                = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
+                  = t.hidden_field :certified_status, value: "success"
+                  = t.submit "通过", class: "btn btn-sm btn-success"
+
+                = button_tag '不通过', class: 'btn btn-sm btn-danger', type: 'button', data: {toggle: 'modal', target: '#certifyFailModal', failcode: "#{taxon.reason_code || Taxon.reason_codes.first }", failmsg: "#{taxon.reason_message}", url: "#{admin_handyman_certification_path(taxon)}"}
 
 
-  .row
-    = button_tag "一键通过", class: "col-md-1 col-md-offset-11"
+    .row
+      = button_tag "一键通过", class: "btn btn-success"
 
 
-  .row
-    = paginate @taxons
-
-
-
-
-
+    .row.paginator
+      = paginate @taxons

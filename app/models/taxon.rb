@@ -25,6 +25,10 @@ class Taxon < ActiveRecord::Base
       .map { |k, v| v }
   end
 
+  def self.certified_status_code(tmp_status)
+    taxons_config['certified_status'][tmp_status]
+  end
+
   def self.reason_codes
     @@taxon_reason_code ||= taxons_config['reason_code']
   end
@@ -32,7 +36,7 @@ class Taxon < ActiveRecord::Base
   # TODO use the other model to implement taxon_codes taxons_config certified_status method
   validates_inclusion_of :code, in: self.taxon_codes
   validates_inclusion_of :certified_status, in: self.certified_status
-  validates_inclusion_of :reason_code, in: self.reason_codes
+  validates_inclusion_of :reason_code, in: self.reason_codes, allow_blank: true
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)

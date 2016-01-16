@@ -1,0 +1,29 @@
+.table {
+  width: 100%;
+}
+
+.table__header {
+  background-color: gray;
+  padding: 10px 0;
+}
+
+.table__header th {
+  text-align: center;
+}
+
+.table__content td {
+  text-align: center;
+}
+
+.table__filter {
+  padding-bottom: 5px;
+}
+
+.table__filter a {
+  margin-right: 5px;
+}
+
+.table__content form {
+  display: inline-block;
+  margin-right: 5px;
+}
