@@ -1,5 +1,6 @@
 $ ->
-  $('#certifyFailModal')
+  pageIdentifier = "#admin-handymen-certifications-index "
+  $(pageIdentifier + '#certifyFailModal')
     .on 'show.bs.modal', (event) ->
       button = $(event.relatedTarget)
       failCode = button.data('failcode')
@@ -12,9 +13,15 @@ $ ->
       modal.find('select').val(failCode)
 
 $ ->
-  $('table')
+  pageIdentifier = "#admin-handymen-certifications-index "
+  $(pageIdentifier + 'table')
     .on 'click', 'tbody tr', (event) ->
-      window.location = $(event.target).closest("tr").data("url")
+      target = $(event.target)
+      td = $(event.target).closest("td")
+      tr = $(event.target).closest("tr")
+      lastTd = tr.find('td:last-child')
+      if !td.is(lastTd)
+        window.location = tr.data("url")
 
 
 

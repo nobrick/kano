@@ -6,12 +6,12 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   certified_status:  certify state
 
   def index
-    tmp_taxons = Taxon.order(:cert_requested_at)
+    tmp_taxons = Taxon.includes(:handyman).order(cert_requested_at: :desc)
 
     if Taxon.certified_status.include?(params[:certified_status])
       tmp_taxons = tmp_taxons.where(certified_status: params[:certified_status])
     end
-    @taxons = tmp_taxons.page(params[:page])
+    @taxons = tmp_taxons.page(params[:page]).per(10)
   end
 
   # params
@@ -29,11 +29,9 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
     # TODO  use helper to implement t method
     if taxon.update(certified_info)
-      puts "fuck here"
-      redirect_to admin_handyman_certifications_path, notice: I18n.t('controllers.admin.handymen/certification.update_success')
+      redirect_to admin_handyman_certifications_path, flash: { success: I18n.t('controllers.admin.handymen/certification.update_success')}
     else
-      puts certified_info.to_s
-      redirect_to admin_handyman_certifications_path, notice: I18n.t('controllers.admin.handymen/certification.update_fail', reasons: taxon.errors.full_messages.join('；'))
+      redirect_to admin_handyman_certifications_path, alert: I18n.t('controllers.admin.handymen/certification.update_fail', reasons: taxon.errors.full_messages.join('；'))
     end
   end
 
@@ -44,8 +42,26 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   end
 
 
-  # TODO wtf
-  helper_method :tabs_info
+  helper_method :dashboard
+
+  def dashboard
+    @dashboard ||= ::CertifyDashboard.new
+  end
+
+  # TODO wtf 怎么把 tabs_info 和 certified_status 这些显示元素去掉?
+  helper_method :tabs_info, :certified_status_filter
+  helper_method :attr_name
+
+
+
+  def certified_status_filter
+    Taxon.certified_status
+  end
+
+  # TODO 提供统一的 I18n 方法
+  def attr_name(attr)
+    Taxon.human_attribute_name(attr)
+  end
 
   def tabs_info
     [
