@@ -16,15 +16,3 @@ $ ->
       modal.find('.js-certifyFail-name').html(handyman)
       modal.find('.js-certifyFail-taxon').html(taxon)
 
-$ ->
-  pageIdentifier = "#admin-handymen-certifications-index "
-  $(pageIdentifier + 'table')
-    .on 'click', 'tbody tr', (event) ->
-      target = $(event.target)
-      tr = $(event.target).closest("tr")
-      nolinks = tr.find('.js-nolink')
-      if !(target.is(nolinks[0]) || target.is(nolinks[1]) || target.is(nolinks[2]))
-        window.location = tr.data("url")
-
-
-
