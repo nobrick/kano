@@ -26,22 +26,22 @@ class Admin::ApplicationController < ActionController::Base
       {
         text: "handymen_admin",
         path: admin_handyman_certifications_path,
-        scope: '/admin/handymen'
+        scope: '/alpha/handymen'
       },
       {
         text: "users_admin",
         path: '/',
-        scope: '/admin/users'
+        scope: '/alpha/users'
       },
       {
         text: "orders_admin",
         path: "/",
-        scope: '/admin/orders'
+        scope: '/alpha/orders'
       },
       {
         text: "balance_admin",
         path: "/",
-        scope: '/admin/balance'
+        scope: '/alpha/balance'
       }
     ]
   end
