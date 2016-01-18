@@ -30,11 +30,13 @@
           td
             | #{@taxon.name}
           td
-            | #{l @taxon.cert_requested_at, format: :long}
+            - if !@taxon.cert_requested_at.blank?
+              | #{l @taxon.cert_requested_at, format: :long}
           td
             | #{t @taxon.certified_status, scope: 'taxons.certified_status'}
           td
-            | #{l @taxon.certified_at, format: :long}
+            - if !@taxon.certified_at.blank?
+              | #{l @taxon.certified_at, format: :long}
           td
             - if !@taxon.certified_by.blank?
               | #{@taxon.certified_byer.name}

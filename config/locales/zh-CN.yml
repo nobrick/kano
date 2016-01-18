@@ -74,10 +74,9 @@ zh-CN:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
-    admin:
-      handymen/certification:
-        update_success: '审核成功'
-        update_fail: '审核失败: %{reasons}'
+    admin/handymen/certifications:
+      update_success: '审核成功'
+      update_fail: '审核失败: %{reasons}'
   order:
     requested: '未接单'
     contracted: '已接单'
