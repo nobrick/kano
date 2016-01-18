@@ -1,4 +1,4 @@
-.modal.fade id="certifyFailModal"
+.modal.fade id="js-certifyFailModal"
   .modal-dialog role="document"
     .modal-content
       .modal-header
@@ -7,15 +7,21 @@
             |&times;
         h4.modal-title
           | 详细信息
-      = form_for :taxon, method: :put, html: { class: "certifyFail form-horizontal" } do |f|
+      = form_for :taxon, method: :put, html: { class: "js-certifyFail form-horizontal" } do |f|
         .modal-body
+          .form-group
+            = label_tag i18n_t("name", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-name
+          .form-group
+            = label_tag i18n_t("name", "M", { model: "taxon" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-taxon
           = f.hidden_field :certified_status, value: "#{Taxon.certified_status_code('fail')}"
           .form-group
-            = f.label :reason_code, attr_name('reason_code'), class: "control-label col-sm-2"
+            = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-4
-              = f.select :reason_code, Taxon.reason_codes.map {|c| [t("taxons.reason_code.#{c}"), c ]}, {}, {class: "form-control"}
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {}, {class: "form-control"}
           .form-group
-            = f.label :reason_message, attr_name('reason_message'), class: "control-label col-sm-2"
+            = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-9
               = f.text_area :reason_message, class: "form-control", rows: 8
         .modal-footer
@@ -35,42 +41,13 @@
       .table__filter
         = link_to '全部', admin_handyman_certifications_path, class: 'btn btn-sm btn-primary'
         - certified_status_filter.each do |status|
-          = link_to t("taxons.certified_status.#{status}"), admin_handyman_certifications_path(certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
+          = link_to i18n_t(status, "D", { model: "taxon", attr: "certified_status" }), admin_handyman_certifications_path(certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
 
     .row
       = render partial: 'shared/table', locals: {resources: @taxons, dashboard: dashboard}
 
-    //.row
-      table.table.table-bordered.table-hover.col-md-12.table--more-info
-        thead.table__header
-          tr
-            th
-            - index_attrs.each_key do |h|
-              th
-                - if h != nil
-                  | #{table_title h, resource_class }
-            th
-
-        tbody.table__content
-          - @taxons.each do |taxon|
-            tr data-url="#{admin_handyman_certification_path(taxon)}"
-              td
-                = check_box_tag "s"
-              - index_attrs.each_pair do |h, type|
-                td
-                  | #{item_data(taxon, h, type)}
-
-              td
-                = form_for :taxon, method: :put, url: admin_handyman_certification_path(taxon) do |t|
-                  = t.hidden_field :certified_status, value: "success"
-                  = t.submit "通过", class: "btn btn-sm btn-success"
-
-                = button_tag '不通过', class: 'btn btn-sm btn-danger', type: 'button', data: {toggle: 'modal', target: '#certifyFailModal', failcode: "#{taxon.reason_code || Taxon.reason_codes.first }", failmsg: "#{taxon.reason_message}", url: "#{admin_handyman_certification_path(taxon)}"}
-
-
     .row
       = button_tag "一键通过", class: "btn btn-success"
-
 
     .row.paginator
       = paginate @taxons

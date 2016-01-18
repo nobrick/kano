@@ -8,8 +8,7 @@ class Admin::ApplicationController < ActionController::Base
     true
   end
 
-  helper_method :nav_links, :in_scope?, :page_identifier
-
+  helper_method :nav_links, :in_scope?, :page_identifier, :i18n_t
 
   def in_scope?(parent_path)
     request.path =~ /^#{parent_path}/
@@ -47,4 +46,17 @@ class Admin::ApplicationController < ActionController::Base
     ]
   end
 
+  def i18n_t(key, type, options = {})
+    case type
+    when "C"
+      I18n.t("controllers.#{controller_path}.#{key}", options)
+    when "M"
+      model = options.delete(:model)
+      I18n.t("activerecord.attributes.#{model}.#{key}", options)
+    when "D"
+      model = options.delete(:model)
+      attri = options.delete(:attr)
+      I18n.t("#{model}.#{attri}.#{key}")
+    end
+  end
 end

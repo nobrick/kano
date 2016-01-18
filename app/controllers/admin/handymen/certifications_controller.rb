@@ -29,9 +29,9 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
     # TODO  use helper to implement t method
     if taxon.update(certified_info)
-      redirect_to admin_handyman_certifications_path, flash: { success: I18n.t('controllers.admin.handymen/certification.update_success')}
+      redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
     else
-      redirect_to admin_handyman_certifications_path, alert: I18n.t('controllers.admin.handymen/certification.update_fail', reasons: taxon.errors.full_messages.join('；'))
+      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_fail', 'C')
     end
   end
 
@@ -50,17 +50,9 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   # TODO wtf 怎么把 tabs_info 和 certified_status 这些显示元素去掉?
   helper_method :tabs_info, :certified_status_filter
-  helper_method :attr_name
-
-
 
   def certified_status_filter
     Taxon.certified_status
-  end
-
-  # TODO 提供统一的 I18n 方法
-  def attr_name(attr)
-    Taxon.human_attribute_name(attr)
   end
 
   def tabs_info
@@ -80,7 +72,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   def ensuren_current_params
     status = certify_params[:certified_status]
-    if Taxon.certify_fail_status?(status)
+    if !Taxon.certify_fail_status?(status)
       params[:taxon][:reason_code] = nil
       params[:taxon][:reason_message] = nil
     end

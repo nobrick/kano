@@ -97,4 +97,8 @@ class Taxon < ActiveRecord::Base
     tmp_status == taxons_config['certified_status']['fail']
   end
 
+  def self.certify_success_status?(tmp_status)
+    tmp_status == taxons_config['certified_status']['success']
+  end
+
 end
