@@ -1,13 +1,6 @@
-- if Taxon.certify_success_status?(resource.certified_status)
-  form
-    = button_tag  "通过", class: "btn btn-sm btn-success", disabled: "disabled"
-- else
-  = form_for :taxon, method: :put, url: admin_handyman_certification_path(resource) do |t|
+= form_for :taxon, method: :put, url: admin_handyman_certification_path(resource) do |t|
     = t.hidden_field :certified_status, value: "success"
     = t.submit "通过", class: "btn btn-sm btn-success js-table-nolink"
 
-- if Taxon.certify_fail_status?(resource.certified_status)
-  = button_tag '不通过', class: 'btn btn-sm btn-danger', disabled: "disabled"
-- else
-  = button_tag '不通过', class: 'btn btn-sm btn-danger js-table-nolink', type: 'button', data: {toggle: 'modal', target: '#js-certifyFailModal', failcode: "#{resource.reason_code || Taxon.reason_codes.first }", failmsg: "#{resource.reason_message}", url: "#{admin_handyman_certification_path(resource)}", handyman: "#{resource.handyman.name} (ID: #{resource.handyman.id})", taxon: "#{resource.name}" }
+= button_tag '不通过', class: 'btn btn-sm btn-danger js-table-nolink', type: 'button', data: {toggle: 'modal', target: '#js-certifyFailModal', failcode: "#{resource.reason_code || Taxon.reason_codes.first }", failmsg: "#{resource.reason_message}", url: "#{admin_handyman_certification_path(resource)}", handyman: "#{resource.handyman.name} (ID: #{resource.handyman.id})", taxon: "#{resource.name}" }
 

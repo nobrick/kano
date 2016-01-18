@@ -1,6 +1,6 @@
 class Taxon < ActiveRecord::Base
   belongs_to :handyman
-  belongs_to :certified_byer, -> { where(admin: true) }, foreign_key: "certified_by", class_name: "Account"
+  belongs_to :certified_by, -> { where(admin: true) }, foreign_key: "certified_by", class_name: "Account"
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
@@ -93,8 +93,8 @@ class Taxon < ActiveRecord::Base
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
 
-  def self.certify_fail_status?(tmp_status)
-    tmp_status == taxons_config['certified_status']['fail']
+  def self.certify_failure_status?(tmp_status)
+    tmp_status == taxons_config['certified_status']['failure']
   end
 
   def self.certify_success_status?(tmp_status)

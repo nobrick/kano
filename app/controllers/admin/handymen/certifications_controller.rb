@@ -23,7 +23,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     taxon = Taxon.find params[:id]
 
     certified_info = {
-      certified_by: current_user.id,
+      certified_by: current_user,
       certified_at: Time.now,
     }.merge(certify_params)
 
@@ -31,7 +31,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     if taxon.update(certified_info)
       redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
     else
-      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_fail', 'C')
+      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C')
     end
   end
 
@@ -72,7 +72,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   def ensuren_current_params
     status = certify_params[:certified_status]
-    if !Taxon.certify_fail_status?(status)
+    if !Taxon.certify_failure_status?(status)
       params[:taxon][:reason_code] = nil
       params[:taxon][:reason_message] = nil
     end

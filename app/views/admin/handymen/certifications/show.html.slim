@@ -39,7 +39,7 @@
               | #{l @taxon.certified_at, format: :long}
           td
             - if !@taxon.certified_by.blank?
-              | #{@taxon.certified_byer.name}
+              | #{@taxon.certified_by.name}
           td
             | #{t(@taxon.reason_code, scope: [:taxons, :reason_code], default: "")}
           td

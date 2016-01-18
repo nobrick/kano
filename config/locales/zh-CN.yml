@@ -27,7 +27,7 @@ zh-CN:
   taxon:
     certified_status:
       under_review: '正在审核中'
-      fail: '审核未通过'
+      failure: '审核未通过'
       success: '审核通过'
     reason_code:
       missing_info: '资料不全'
@@ -76,7 +76,7 @@ zh-CN:
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
     admin/handymen/certifications:
       update_success: '审核成功'
-      update_fail: '审核失败: %{reasons}'
+      update_failure: '审核失败: %{reasons}'
   order:
     requested: '未接单'
     contracted: '已接单'
