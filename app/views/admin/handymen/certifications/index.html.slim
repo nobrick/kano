@@ -15,7 +15,7 @@
           .form-group
             = label_tag i18n_t("name", "M", { model: "taxon" }), nil, class: "col-sm-2 control-label"
             p.form-control-static.col-sm-9.js-certifyFail-taxon
-          = f.hidden_field :certified_status, value: "#{Taxon.certified_status_code('fail')}"
+          = f.hidden_field :certified_status, value: "#{Taxon.certified_status_code('failure')}"
           .form-group
             = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-4
