@@ -31,7 +31,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     if taxon.update(certified_info)
       redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
     else
-      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C')
+      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C', reasons: taxon.errors.full_messages)
     end
   end
 

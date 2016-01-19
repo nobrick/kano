@@ -22,7 +22,7 @@ taxons:
       - other
   certified_status:
     success: success
-    fail: fail
+    failure: failure
     under_review: under_review
   reason_code:
     - missing_info
