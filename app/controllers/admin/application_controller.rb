@@ -29,7 +29,7 @@ class Admin::ApplicationController < ActionController::Base
       },
       {
         text: "users_admin",
-        path: '/',
+        path: admin_user_accounts_path,
         scope: '/alpha/users'
       },
       {

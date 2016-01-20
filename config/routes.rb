@@ -41,6 +41,7 @@ Rails.application.routes.draw do
         resources :accounts, only: [:index, :update, :show]
       end
       namespace :users, as: :user do
+        resources :accounts, only: [:index, :update, :show]
       end
       namespace :orders, as: :order do
       end
