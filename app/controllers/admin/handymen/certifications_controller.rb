@@ -87,7 +87,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       },
       {
         text: "师傅信息管理",
-        path: "#"
+        path: admin_handyman_accounts_path
       }
     ]
   end

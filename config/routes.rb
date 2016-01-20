@@ -38,6 +38,7 @@ Rails.application.routes.draw do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
         resources :certifications, only: [ :update, :index, :show, :new, :create ]
+        resources :accounts, only: [:index, :update, :show]
       end
       namespace :users, as: :user do
       end

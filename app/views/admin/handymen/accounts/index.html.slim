@@ -1,0 +1,12 @@
+.container
+  = render partial: 'shared/tabs', locals: { tabs: tabs_info }
+  = form_tag("/", class: "tabs__search row")
+    = text_field_tag 'search', nil, placeholder: 'Search'
+    = button_tag '搜索', class: 'btn btn-default'
+
+  .tabs__content
+    .row
+      = render partial: 'shared/table', locals: {resources: @handymen, dashboard: dashboard}
+
+    .row.paginator
+      = paginate @handymen
