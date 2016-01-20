@@ -6,4 +6,5 @@ $ ->
       isSame = (i, ele) ->
         target.is(ele)
       if tr.find('.js-table-nolink').filter(isSame).length == 0
-        window.location = tr.data("url")
+        if (tr.data("url") != undefined) && (tr.data("url") != "")
+          window.location = tr.data("url")
