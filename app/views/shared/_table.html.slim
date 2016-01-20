@@ -10,7 +10,7 @@ table.table.table-bordered.table-hover.col-md-12.table--more-info.js-table
             | #{t}
   tbody.table__content
     - resources.each do |r|
-      tr data-url="#{self.send(dashboard.resource_path, r)}"
+      tr data-url="#{dashboard.resource_path.nil? ? "" : self.send(dashboard.resource_path, r)}"
         - dashboard.row_datas(r).each do |data|
           - if dashboard.expand_column?(data)
             td
