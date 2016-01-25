@@ -3,22 +3,30 @@ class Order < ActiveRecord::Base
   include Redis::Objects
   include IdRandomizable
 
-  # TODO Update :completes_at when order finishes
   belongs_to :user
   belongs_to :handyman
   belongs_to :canceler, class_name: 'Account'
   has_one :address, as: :addressable, dependent: :destroy
   has_many :payments
 
-  # Has one non-void payment at most.
-  has_one :valid_payment,
-    -> { where("state not in ('void', 'failed')") },
-    class_name: 'Payment'
+  with_options class_name: 'Payment' do |v|
+    v.has_one :valid_payment,
+      -> { where("state not in ('void', 'failed')") }
 
-  # Has one ongoing payment.
-  has_one :ongoing_payment,
-    -> { where("state not in ('void', 'failed', 'completed')") },
-    class_name: 'Payment'
+    v.has_one :ongoing_payment,
+      -> { where("state not in ('void', 'failed', 'completed')") }
+
+    v.has_one :completed_payment, -> { where(state: 'completed') }
+  end
+
+  scope :completed_in_month,
+    -> { where('completed_at > ?', Time.now.beginning_of_month) }
+
+  scope :paid_in_cash,
+    -> { joins(:payments).merge(Payment.completed.in_cash) }
+
+  scope :paid_by_pingpp,
+    -> { joins(:payments).merge(Payment.completed.by_pingpp) }
 
   accepts_nested_attributes_for :address
 
@@ -81,6 +89,7 @@ class Order < ActiveRecord::Base
   end
 
   STATES = %w{ requested contracted payment completed canceled rated reported }
+  FINISHED_STATES = %w{ completed rated }
   validates :state, inclusion: { in: STATES }
 
   aasm column: 'state', no_direct_assignment: true do
@@ -131,11 +140,12 @@ class Order < ActiveRecord::Base
     end
 
     event :complete do
-      transitions from: :payment, to: :completed
+      transitions from: :payment, to: :completed, after: :do_complete
     end
 
     event :complete_in_cash do
-      transitions from: :contracted, to: :completed
+      transitions from: :contracted, to: :completed,
+        after: :do_complete_in_cash
     end
 
     event :rate do
@@ -159,12 +169,20 @@ class Order < ActiveRecord::Base
     I18n.translate "order.#{state}"
   end
 
-  def sync_from_user_total
-    self.user_promo_total ||= 0
-    self.handyman_bonus_total ||= 0
+  def sync_from_user_total(options = {})
+    t_total = options[:user_total]
+    self.user_total = t_total if t_total
+    t_bonus_total = options[:handyman_bonus_total]
+    self.handyman_bonus_total = t_bonus_total if t_bonus_total
+
+    reset_bonus = options.fetch(:reset_bonus, false)
+    self.user_promo_total = 0 if user_promo_total.nil? || reset_bonus
+    self.handyman_bonus_total = 0 if handyman_bonus_total.nil? || reset_bonus
+
     return false if user_total.nil? || user_total < 0
     t_payment_total = user_total - user_promo_total
     return false if t_payment_total < 0
+
     self.payment_total = t_payment_total
     self.handyman_total = user_total + handyman_bonus_total
     true
@@ -254,6 +272,17 @@ class Order < ActiveRecord::Base
                        else
                          'User'
                        end
+  end
+
+  def do_complete_in_cash
+    condition = handyman_bonus_total == 0 && user_promo_total == 0
+    raise 'bonus must be zero for cash payment' unless condition
+    do_complete(true)
+    true
+  end
+
+  def do_complete(in_cash = false)
+    self.completed_at = Time.now
   end
 
   def to?(states_or_state)

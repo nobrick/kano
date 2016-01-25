@@ -14,18 +14,19 @@ RSpec.describe Payment, type: :model, async: true do
       payment.order = order
       payment.expires_at = expires_at
       order.user_total = 300
-      order.sync_from_user_total
     end
     let(:payment) { Payment.new }
     let(:expires_at) { 3.hours.since }
 
     it 'completes cash payment' do
+      order.sync_from_user_total(reset_bonus: true)
       payment.payment_method = 'cash'
       expect(payment.complete).to eq true
       payment.save!
     end
 
     it 'completes wechat api payment' do
+      order.sync_from_user_total
       payment.payment_method = 'wechat'
       expect(payment.checkout && payment.save).to eq true
       expect(payment.prepare && payment.save).to eq true
@@ -40,6 +41,7 @@ RSpec.describe Payment, type: :model, async: true do
       let(:pingpp_charge_expired) { false }
 
       before do
+        order.sync_from_user_total
         payment.payment_method = 'pingpp_wx_pub'
         payment.checkout && payment.save!
         allow(Charge).to receive(:create).and_return(unpaid_hash)
@@ -402,17 +404,40 @@ RSpec.describe Payment, type: :model, async: true do
         expect(order.valid_payment).to eq pending_payment
       end
 
-      it 'completes a cash payment' do
-        expect(cash_payment.initial?).to eq true
-        expect(cash_payment.complete).to eq true
+      context 'With cash payment' do
+        let(:cash_payment) { build :cash_payment, order: order }
+        let(:order) do
+          create :contracted_order, :payment,
+            user: wechat_user, bonus_amount: bonus_amount
+        end
 
-        expect(order.ongoing_payment).to eq nil
-        expect(order.valid_payment).to eq nil
-        expect(order.completed?).to eq true
-        cash_payment.save!
-        expect(order.ongoing_payment).to eq nil
-        expect(order.valid_payment).to eq cash_payment
+        context 'When order.handyman_bonus_total > 0' do
+          let(:bonus_amount) { 10.0 }
+
+          it 'fails validation' do
+            expect(order.handyman_bonus_total).to eq 10.0
+            expect { cash_payment.complete }.to raise_error RuntimeError
+          end
+        end
+
+        context 'When order.handyman_bonus_total > 0' do
+          let(:bonus_amount) { 0 }
+
+          it 'completes a cash payment' do
+            expect(cash_payment.initial?).to eq true
+            expect(order.handyman_bonus_total).to eq 0.0
+            expect(cash_payment.complete).to eq true
+
+            expect(order.ongoing_payment).to eq nil
+            expect(order.valid_payment).to eq nil
+            expect(order.completed?).to eq true
+            cash_payment.save!
+            expect(order.ongoing_payment).to eq nil
+            expect(order.valid_payment).to eq cash_payment
+          end
+        end
       end
+
     end
   end
 end
