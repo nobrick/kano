@@ -16,6 +16,7 @@ class Handymen::OrderContractsController < ApplicationController
     @order = Order.find(params[:id])
     check_order_permission
     @pricing = @order.pricing
+    Order::HandymanBonusAgent.set_handyman_bonus(@order)
   end
 
   private

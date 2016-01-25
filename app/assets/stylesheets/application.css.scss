@@ -346,9 +346,18 @@ input[type=checkbox] {
     margin-bottom: 16px;
   }
   p.price-desc-label {
-    font-size: 12px;
-    line-height: 17px;
-    margin-bottom: 7px;
+    @extend p.small-text;
+  }
+}
+
+.bonus-desc-field {
+  p.bonus-desc-label {
+    @extend p.small-text;
+    span {
+      margin-left: 4px;
+      margin-right: 4px;
+      color: #ff4081;
+    }
   }
 }
 
@@ -455,6 +464,11 @@ input[type=checkbox] {
     padding-bottom: 0px;
     margin-bottom: 0px;
   }
+  p.small-text {
+    font-size: 12px;
+    line-height: 17px;
+    margin-bottom: 7px;
+  }
   h1, h2, h3, h4 {
     margin: 0px auto 0px;
   }
@@ -519,6 +533,9 @@ input[type=checkbox] {
 .handyman-order-show-page {
   .order-details-header-card {
     padding-top: 8px;
+  }
+  .bonus-card-field {
+    padding-top: 0;
   }
   #contract-order-btn {
     margin-bottom: 9px;

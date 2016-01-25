@@ -17,6 +17,8 @@ class Handymen::OrdersController < ApplicationController
   # GET /orders/:id
   def show
     @pricing = @order.pricing
+    @order.handyman = current_handyman
+    Order::HandymanBonusAgent.set_handyman_bonus(@order)
   end
 
   # POST /orders

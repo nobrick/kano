@@ -44,3 +44,5 @@
       .order-details-header-card.mdl-card.mdl-shadow--2dp
         .mdl-card__supporting-text
           = render 'handymen/shared/pricing', pricing: @pricing
+        .mdl-card__supporting-text.bonus-card-field
+          = render 'handymen/shared/bonus', bonus: @order.handyman_bonus_total.to_i
