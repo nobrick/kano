@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151222120655) do
+ActiveRecord::Schema.define(version: 20160117074722) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,9 @@ ActiveRecord::Schema.define(version: 20151222120655) do
     t.boolean  "in_cash",                                        default: false
     t.datetime "created_at",                                                     null: false
     t.datetime "updated_at",                                                     null: false
+    t.decimal  "base_adjustment",       precision: 12, scale: 2,                 null: false
+    t.decimal  "base_balance",          precision: 12, scale: 2,                 null: false
+    t.decimal  "previous_base_balance", precision: 12, scale: 2,                 null: false
   end
 
   add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
@@ -166,12 +169,19 @@ ActiveRecord::Schema.define(version: 20151222120655) do
   add_index "taxon_items", ["city", "code"], name: "index_taxon_items_on_city_and_code", unique: true, using: :btree
 
   create_table "taxons", force: :cascade do |t|
-    t.integer  "handyman_id",             null: false
-    t.string   "code",        limit: 128, null: false
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "handyman_id",                                            null: false
+    t.string   "code",              limit: 128,                          null: false
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+    t.string   "certified_status",              default: "under_review"
+    t.datetime "cert_requested_at"
+    t.datetime "certified_at"
+    t.integer  "certified_by"
+    t.string   "reason_code"
+    t.string   "reason_message"
   end
 
+  add_index "taxons", ["certified_by"], name: "index_taxons_on_certified_by", using: :btree
   add_index "taxons", ["handyman_id", "code"], name: "index_taxons_on_handyman_id_and_code", unique: true, using: :btree
   add_index "taxons", ["handyman_id"], name: "index_taxons_on_handyman_id", using: :btree
 
