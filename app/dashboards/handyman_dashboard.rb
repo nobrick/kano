@@ -1,9 +1,6 @@
 class HandymanDashboard < AccountDashboard
   RESOURCE_CLASS = "Handyman"
 
-  ATTRIBUTE_TYPES = AccountDashboard::ATTRIBUTE_TYPES.merge({
+  COLLECTION_ATTRIBUTES = AccountDashboard::COLLECTION_ATTRIBUTES.merge({
   })
-
-
-  PATH_HELPER = nil
 end

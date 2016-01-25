@@ -1,11 +1,10 @@
 class Admin::Managers::AccountsController < Admin::AccountsController
 
+  helper_method :dashboard
 
   def index
     @managers = Account.where(admin: true).page(params[:page]).per(10)
   end
-
-  helper_method :dashboard
 
   def dashboard
     @dashboard = ::ManagerDashboard.new

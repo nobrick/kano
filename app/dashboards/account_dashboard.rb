@@ -1,6 +1,6 @@
 class AccountDashboard < BaseDashboard
 
-  ATTRIBUTE_TYPES = {
+  COLLECTION_ATTRIBUTES = {
     "id" => :string,
     "name" => :string,
     "created_at" => :time,

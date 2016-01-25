@@ -1,12 +1,12 @@
 class Admin::Handymen::AccountsController < Admin::AccountsController
 
+  helper_method :dashboard, :tabs_info
+
   # params
   #   page: page num
   def index
     @handymen = Handyman.page(params[:page]).per(10)
   end
-
-  helper_method :dashboard, :tabs_info
 
   def dashboard
     @dashboard ||= HandymanDashboard.new

@@ -1,8 +1,6 @@
 class UserDashboard < AccountDashboard
   RESOURCE_CLASS = "User"
 
-  ATTRIBUTE_TYPES = AccountDashboard::ATTRIBUTE_TYPES.merge({
+  COLLECTION_ATTRIBUTES = AccountDashboard::COLLECTION_ATTRIBUTES.merge({
   })
-
-  PATH_HELPER = nil
 end
