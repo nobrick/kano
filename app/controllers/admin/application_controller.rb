@@ -34,7 +34,7 @@ class Admin::ApplicationController < ActionController::Base
       },
       {
         text: "orders_admin",
-        path: "/",
+        path: admin_order_index_path,
         scope: '/alpha/orders'
       },
       {

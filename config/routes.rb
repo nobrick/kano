@@ -43,8 +43,14 @@ Rails.application.routes.draw do
       namespace :users, as: :user do
         resources :accounts, only: [:index, :update, :show]
       end
-      namespace :orders, as: :order do
+      namespace :managers, as: :manager do
+        resources :accounts, only: [:index, :update, :show]
       end
+
+
+      resources :orders, as: :order, only: [:index, :update, :show]
+
+
     end
 
     mount Sidekiq::Web => '/sidekiq'
