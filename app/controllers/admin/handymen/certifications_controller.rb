@@ -1,15 +1,17 @@
 class Admin::Handymen::CertificationsController < Admin::ApplicationController
+  helper_method :tabs_info, :dashboard
 
   # params
   #   page: page num
   #   certified_status:  certify state
   def index
-    tmp_taxons = Taxon.includes(:handyman).order(cert_requested_at: :desc)
+    @taxons = Taxon.includes(:handyman).order(cert_requested_at: :desc)
 
     if Taxon.certified_status.include?(params[:certified_status])
-      tmp_taxons = tmp_taxons.where(certified_status: params[:certified_status])
+      @taxons = @taxons.where(certified_status: params[:certified_status])
     end
-    @taxons = tmp_taxons.page(params[:page]).per(10)
+
+    @taxons = @taxons.page(params[:page]).per(10)
   end
 
   # params
@@ -20,9 +22,9 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   def update
     taxon = Taxon.find params[:id]
 
-    certified_info = certified_info(*certify_params)
+    certified_attrs = certified_info(*certify_params.values)
 
-    if taxon.update(certified_info)
+    if taxon.update(certified_attrs)
       redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
     else
       redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C', reasons: taxon.errors.full_messages)
@@ -51,16 +53,15 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     begin
       handyman = Handyman.find params[:taxon][:handyman_id]
 
-      taxon_certify_info = certified_info(*certify_params)
+      certified_attrs = certified_info(*certify_params.values)
 
       selected_codes = (params['taxon_codes'] || '').split(',')
       codes_to_create = selected_codes - handyman.taxon_codes
       if codes_to_create.blank?
-        redirect_to new_admin_handyman_certification_path, alert: "技能都已经拥有"
+        redirect_to new_admin_handyman_certification_path, alert: "没有选择技能或欲创建的技能已经存在"
         return
       end
-
-      handyman.taxons.create!(codes_to_create.map { |e| { code: e }.merge(taxon_certify_info)})
+      handyman.taxons.create!(codes_to_create.map { |e| { code: e }.merge(certified_attrs) })
 
       redirect_to new_admin_handyman_certification_path, notice: "创建成功"
     rescue ActiveRecord::RecordNotFound
@@ -70,7 +71,28 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     end
   end
 
-  helper_method :dashboard
+  def dashboard
+    @dashboard ||= ::CertifyDashboard.new
+  end
+
+  def tabs_info
+    [
+      {
+        text: "技能认证管理",
+        path: admin_handyman_certifications_path
+      },
+      {
+        text: "师傅信息管理",
+        path: "#"
+      }
+    ]
+  end
+
+  private
+
+  def certify_params
+    params.require(:taxon).permit(:certified_status, :reason_code, :reason_message)
+  end
 
   def certified_info(status, reason_code, reason_message)
     taxon_certify_info = {
@@ -90,33 +112,5 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     end
 
     taxon_certify_info
-  end
-
-  def dashboard
-    @dashboard ||= ::CertifyDashboard.new
-  end
-
-  helper_method :tabs_info
-
-  def tabs_info
-    [
-      {
-        text: "技能认证管理",
-        path: admin_handyman_certifications_path
-      },
-      {
-        text: "师傅信息管理",
-        path: "#"
-      }
-    ]
-  end
-
-  private
-
-  def certify_params
-    status = params[:taxon][:certified_status]
-    code = params[:taxon][:reason_code]
-    message = params[:taxon][:reason_message]
-    [status, code, message]
   end
 end

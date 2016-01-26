@@ -3,12 +3,12 @@ class Admin::ApplicationController < ActionController::Base
 
   before_filter :authenticate_admin
 
+  helper_method :nav_links, :in_scope?, :page_identifier, :i18n_t
+
   def authenticate_admin
     redirect_to root_url, alert: 'PERMISSION DENIED' unless current_user.try :admin?
     true
   end
-
-  helper_method :nav_links, :in_scope?, :page_identifier, :i18n_t
 
   def in_scope?(parent_path)
     request.path =~ /^#{parent_path}/
@@ -20,7 +20,6 @@ class Admin::ApplicationController < ActionController::Base
     "#{controller}-#{action}"
   end
 
-  # TODO 想想有没有其他好的显示办法
   def nav_links
     [
       {

@@ -1,0 +1,39 @@
+- if dashboard.new_resource_path
+  .row.dashboard__new-item
+    = link_to "新建", send(dashboard.new_resource_path), class: "btn btn-success btn-lg "
+
+.row.dashboard__filters
+  .dashboard__left-filter.col-md-4
+    - if dashboard.have_filters?
+      = link_to '全部', send(dashboard.filter_basepath), class: 'btn btn-sm btn-primary'
+      - dashboard.filter_status.each do |status|
+        = link_to i18n_t(status, "D", { model: dashboard.resource_class.downcase, attr: dashboard.filter_attribute }), send(dashboard.filter_basepath, certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
+
+  = form_tag("/", class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group")
+    = text_field_tag 'search', nil, placeholder: 'Search', class: "form-control"
+    .input-group-btn
+      = button_tag '搜索', class: 'btn btn-default'
+
+.row
+  table.table.table-bordered.table-hover.col-md-12.table--more-info.js-table
+    thead.table__header
+      tr
+        - dashboard.table_headers.each do |t|
+          th
+            - if dashboard.expand_column?(t)
+              = render partial: t.expand_header_partial
+            - else
+              | #{t}
+    tbody.table__content
+      - resources.each do |r|
+        tr data-url="#{dashboard.resource_path.nil? ? "" : send(dashboard.resource_path, r)}"
+          - dashboard.row_datas(r).each do |data|
+            td
+              - if dashboard.expand_column?(data)
+                = render partial: data.expand_data_partial, locals: {resource: r}
+              - else
+                | #{data}
+
+.row.paginator
+  = paginate resources
+

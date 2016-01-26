@@ -1,4 +1,4 @@
-class Expand
+class ExpandColumn
   attr_reader :expand_data_partial, :expand_header_partial
   def initialize(original_name, expand_path)
     @name = original_name.split('.').last
@@ -9,37 +9,44 @@ class Expand
 end
 
 class BaseDashboard
+
+  COLLECTION_ATTRIBUTES = {}
+  COLLECTION_FILTER = {}
+  EXPAND_PARTIAL_PATH = nil
+  SHOW_PATH_HELPER = nil
+  NEW_PATH_HELPER = nil
+
   def resource_class
     self.class::RESOURCE_CLASS
   end
 
   def have_filters?
-    self.class.const_defined?(:FILTER)
+    !self.class::COLLECTION_FILTER.empty?
   end
 
   def filter_attribute
-    self.class::FILTER["attr"]
+    self.class::COLLECTION_FILTER["attr"]
   end
 
   def filter_status
-    self.class::FILTER["status"]
+    self.class::COLLECTION_FILTER["status"]
   end
 
-  def filter_baseurl
-    self.class::FILTER["baseurl"]
+  def filter_basepath
+    self.class::COLLECTION_FILTER["baseurl"]
   end
 
-  def expand_column?(t)
-    t.instance_of?(Expand)
+  def expand_column?(c)
+    c.instance_of?(ExpandColumn)
   end
 
   def table_headers
     return @titles if @titles
     @titles = []
-    self.class::ATTRIBUTE_TYPES.each_pair do |attr, type|
+    self.class::COLLECTION_ATTRIBUTES.each_pair do |attr, type|
       case type
       when nil
-        @titles << Expand.new(attr, self.class::TEMPLATE_PATH)
+        @titles << ExpandColumn.new(attr, self.class::EXPAND_PARTIAL_PATH)
       else
         @titles << header_translate(attr)
       end
@@ -48,12 +55,16 @@ class BaseDashboard
   end
 
   def resource_path
-    self.class::PATH_HELPER
+    self.class::SHOW_PATH_HELPER
+  end
+
+  def new_resource_path
+    self.class::NEW_PATH_HELPER
   end
 
   def row_datas(resource)
     datas = []
-    self.class::ATTRIBUTE_TYPES.each_pair do |attr, type|
+    self.class::COLLECTION_ATTRIBUTES.each_pair do |attr, type|
       methods = attr.split('.')
       if type != nil
         original_data = resource_attr_data(resource, methods)
@@ -75,7 +86,7 @@ class BaseDashboard
           datas << I18n.l(original_data, format: :long)
         end
       else
-        datas << Expand.new(attr, self.class::TEMPLATE_PATH)
+        datas << ExpandColumn.new(attr, self.class::EXPAND_PARTIAL_PATH)
       end
     end
     datas
