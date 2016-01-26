@@ -101,4 +101,7 @@ class Taxon < ActiveRecord::Base
     tmp_status == taxons_config['certified_status']['success']
   end
 
+  def self.certify_under_review_status?(tmp_status)
+    tmp_status == taxons_config['certified_status']['under_review']
+  end
 end

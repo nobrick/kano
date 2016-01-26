@@ -115,7 +115,15 @@ zh-CN:
       handyman:
         id: '师傅 ID'
         name: '姓名'
+        created_at: '注册时间'
+        email: '邮箱'
+      user:
+        id: '用户 ID'
+        name: '用户姓名'
+        created_at: '注册时间'
+        email: '邮箱'
       order:
+        created_at: '订单时间'
         user: '用户'
         handyman: '管家'
         address: '地址'

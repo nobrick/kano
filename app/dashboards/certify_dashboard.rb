@@ -1,7 +1,6 @@
 class CertifyDashboard < BaseDashboard
   RESOURCE_CLASS = "Taxon"
 
-
   # Hash
   #   key: used to get data and by I18n to traslate (_self_expand 是保留字节, 表示用户扩展的列)
   #   value: 表示数据类型，主要用户数据展现的时候
@@ -17,6 +16,12 @@ class CertifyDashboard < BaseDashboard
     "cert_requested_at" => :time,
     "certified_status" => :i18n ,
     "_self_expand.certify_buttons" => nil
+  }
+
+  FILTER = {
+    "attr" => "certified_status",
+    "status" => %w(success failure under_review),
+    "baseurl" => "admin_handyman_certifications_path"
   }
 
   TEMPLATE_PATH = "admin/handymen/certifications"

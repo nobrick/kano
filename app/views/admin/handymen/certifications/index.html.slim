@@ -32,22 +32,7 @@
 .container
   = render partial: 'shared/tabs', locals: { tabs: tabs_info }
 
-  = form_tag("/", class: "tabs__search row")
-    = text_field_tag 'search', nil, placeholder: 'Search'
-    = button_tag '搜索', class: 'btn btn-default'
 
   .tabs__content
-    .row
-      .table__filter
-        = link_to '全部', admin_handyman_certifications_path, class: 'btn btn-sm btn-primary'
-        - certified_status_filter.each do |status|
-          = link_to i18n_t(status, "D", { model: "taxon", attr: "certified_status" }), admin_handyman_certifications_path(certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
+    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard}
 
-    .row
-      = render partial: 'shared/table', locals: {resources: @taxons, dashboard: dashboard}
-
-    .row
-      = button_tag "一键通过", class: "btn btn-success"
-
-    .row.paginator
-      = paginate @taxons

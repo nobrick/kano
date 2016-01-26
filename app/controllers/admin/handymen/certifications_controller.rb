@@ -1,10 +1,8 @@
 class Admin::Handymen::CertificationsController < Admin::ApplicationController
-  before_action :ensuren_current_params, only: :update
 
   # params
   #   page: page num
   #   certified_status:  certify state
-
   def index
     tmp_taxons = Taxon.includes(:handyman).order(cert_requested_at: :desc)
 
@@ -22,12 +20,8 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   def update
     taxon = Taxon.find params[:id]
 
-    certified_info = {
-      certified_by: current_user,
-      certified_at: Time.now,
-    }.merge(certify_params)
+    certified_info = certified_info(*certify_params)
 
-    # TODO  use helper to implement t method
     if taxon.update(certified_info)
       redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
     else
@@ -41,19 +35,68 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     @taxon = Taxon.find params[:id]
   end
 
+  def new
+    @taxon = Taxon.new
+    @taxon.handyman = Handyman.new
+  end
+
+  # params
+  #   taxon
+  #     handyman_id: 师傅 id
+  #     certified_status: 认证状态
+  #     reason_code: 认证不通过原因
+  #     reasom_message: 认证不通过附加信息
+  #   taxon_codes(Array): taxon 代码
+  def create
+    begin
+      handyman = Handyman.find params[:taxon][:handyman_id]
+
+      taxon_certify_info = certified_info(*certify_params)
+
+      selected_codes = (params['taxon_codes'] || '').split(',')
+      codes_to_create = selected_codes - handyman.taxon_codes
+      if codes_to_create.blank?
+        redirect_to new_admin_handyman_certification_path, alert: "技能都已经拥有"
+        return
+      end
+
+      handyman.taxons.create!(codes_to_create.map { |e| { code: e }.merge(taxon_certify_info)})
+
+      redirect_to new_admin_handyman_certification_path, notice: "创建成功"
+    rescue ActiveRecord::RecordNotFound
+      redirect_to new_admin_handyman_certification_path, alert: "用户不存在"
+    rescue ActiveRecord::RecordInvalid => e
+      redirect_to new_admin_handyman_certification_path, alert: e.record.errors.full_messages
+    end
+  end
 
   helper_method :dashboard
+
+  def certified_info(status, reason_code, reason_message)
+    taxon_certify_info = {
+      certified_status: status,
+      reason_code: reason_code,
+      reason_message: reason_message
+    }
+
+    if !Taxon.certify_under_review_status?(status)
+      taxon_certify_info[:certified_by] = current_user
+      taxon_certify_info[:certified_at] = Time.now
+    end
+
+    if !Taxon.certify_failure_status?(status)
+      taxon_certify_info[:reason_code] = nil
+      taxon_certify_info[:reason_message] = nil
+    end
+
+    taxon_certify_info
+  end
 
   def dashboard
     @dashboard ||= ::CertifyDashboard.new
   end
 
-  # TODO wtf 怎么把 tabs_info 和 certified_status 这些显示元素去掉?
-  helper_method :tabs_info, :certified_status_filter
-
-  def certified_status_filter
-    Taxon.certified_status
-  end
+  helper_method :tabs_info
 
   def tabs_info
     [
@@ -70,19 +113,10 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   private
 
-  def ensuren_current_params
-    status = certify_params[:certified_status]
-    if !Taxon.certify_failure_status?(status)
-      params[:taxon][:reason_code] = nil
-      params[:taxon][:reason_message] = nil
-    end
-  end
-
   def certify_params
-    params.require(:taxon).permit(
-      :certified_status,
-      :reason_code,
-      :reason_message
-    )
+    status = params[:taxon][:certified_status]
+    code = params[:taxon][:reason_code]
+    message = params[:taxon][:reason_message]
+    [status, code, message]
   end
 end

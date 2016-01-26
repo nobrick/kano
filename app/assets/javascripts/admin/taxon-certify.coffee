@@ -16,3 +16,20 @@ $ ->
       modal.find('.js-certifyFail-name').html(handyman)
       modal.find('.js-certifyFail-taxon').html(taxon)
 
+
+$ ->
+  $(".js-input-enable-trigger")
+    .on 'change', () ->
+      value = $(this).val()
+      isDisabled = !!$(".js-input-enable").attr("disabled")
+      console.log isDisabled
+      if value == "failure"
+        $(".js-input-enable").removeAttr("disabled")
+      else if !isDisabled
+        $(".js-input-enable").attr("disabled", true)
+
+
+
+
+
+

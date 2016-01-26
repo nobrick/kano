@@ -13,6 +13,22 @@ class BaseDashboard
     self.class::RESOURCE_CLASS
   end
 
+  def have_filters?
+    self.class.const_defined?(:FILTER)
+  end
+
+  def filter_attribute
+    self.class::FILTER["attr"]
+  end
+
+  def filter_status
+    self.class::FILTER["status"]
+  end
+
+  def filter_baseurl
+    self.class::FILTER["baseurl"]
+  end
+
   def expand_column?(t)
     t.instance_of?(Expand)
   end
@@ -25,7 +41,7 @@ class BaseDashboard
       when nil
         @titles << Expand.new(attr, self.class::TEMPLATE_PATH)
       else
-        @titles << header_traslate(attr)
+        @titles << header_translate(attr)
       end
     end
     @titles
@@ -80,7 +96,7 @@ class BaseDashboard
     end
   end
 
-  def header_traslate(attr)
+  def header_translate(attr)
     if !(attr =~ /\./)
       original_title = "#{resource_class.downcase}." + attr
     else
