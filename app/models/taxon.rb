@@ -1,5 +1,6 @@
 class Taxon < ActiveRecord::Base
   belongs_to :handyman
+  belongs_to :certified_by, -> { where(admin: true) }, foreign_key: "certified_by", class_name: "Account"
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
@@ -18,7 +19,24 @@ class Taxon < ActiveRecord::Base
     @@taxon_codes ||= taxons_config['items']
       .map { |c, l| l.map { |t| "#{c}/#{t}" } }.flatten
   end
+
+  def self.certified_status
+    @@taxon_certified_status ||= taxons_config['certified_status']
+      .map { |k, v| v }
+  end
+
+  def self.certified_status_code(tmp_status)
+    taxons_config['certified_status'][tmp_status]
+  end
+
+  def self.reason_codes
+    @@taxon_reason_code ||= taxons_config['reason_code']
+  end
+
+  # TODO use the other model to implement taxon_codes taxons_config certified_status method
   validates_inclusion_of :code, in: self.taxon_codes
+  validates_inclusion_of :certified_status, in: self.certified_status
+  validates_inclusion_of :reason_code, in: self.reason_codes, allow_blank: true
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -74,4 +92,13 @@ class Taxon < ActiveRecord::Base
   def category_name
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
+
+  def self.certify_failure_status?(tmp_status)
+    tmp_status == taxons_config['certified_status']['failure']
+  end
+
+  def self.certify_success_status?(tmp_status)
+    tmp_status == taxons_config['certified_status']['success']
+  end
+
 end

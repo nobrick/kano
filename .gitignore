@@ -47,3 +47,7 @@ todo.md
 node_modules
 .yardoc
 doc
+
+# Ignore vim swap file
+*.swp
+*.swo

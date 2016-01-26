@@ -27,17 +27,26 @@ Rails.application.routes.draw do
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
+
       concerns :with_account_profile
     end
   end
 
   authenticated :user, -> (u) { u.admin? } do
     namespace :admin, path: '/alpha' do
-      DashboardManifest::DASHBOARDS.each do |dashboard_resource|
-        resources dashboard_resource
+      root 'dashbord#index', as: :root
+      namespace :handymen, as: :handyman do
+        resources :certifications, only: [:update, :index, :show]
+        # TODO add handymen info path
       end
+      namespace :users, as: :user do
+        # TODO add user path here
 
-      root controller: DashboardManifest::ROOT_DASHBOARD, action: :index
+      end
+      namespace :orders, as: :order do
+        # TODO add order path here
+
+      end
     end
 
     mount Sidekiq::Web => '/sidekiq'

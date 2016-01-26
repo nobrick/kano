@@ -24,6 +24,26 @@ zh-CN:
         whitewash: '粉刷及内部修缮'
         lock: '门锁问题'
         other: '其它定制服务'
+  taxon:
+    certified_status:
+      under_review: '正在审核中'
+      failure: '审核未通过'
+      success: '审核通过'
+    reason_code:
+      missing_info: '资料不全'
+      out_of_date: '资料过期'
+  views:
+    admin:
+      handymen_admin: '师傅信息管理'
+      users_admin: '用户信息管理'
+      orders_admin: '订单信息管理'
+      balance_admin: '财会信息管理'
+    pagination:
+      next: '下一页'
+      last: '最后一页'
+      first: '第一页'
+      previous: '上一页'
+      truncate: '...'
   controllers:
     root:
       should_complete_profile: '继续操作前请您完善个人资料'
@@ -54,6 +74,9 @@ zh-CN:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
+    admin/handymen/certifications:
+      update_success: '审核成功'
+      update_failure: '审核失败: %{reasons}'
   order:
     requested: '未接单'
     contracted: '已接单'
@@ -90,6 +113,7 @@ zh-CN:
       account/taxons:
         code: '服务类别'
       handyman:
+        id: '师傅 ID'
         name: '姓名'
       order:
         user: '用户'
@@ -127,6 +151,13 @@ zh-CN:
         code: '地区编号'
       taxon:
         code: '服务类别'
+        name: '技能名称'
+        reason_message: '附加信息'
+        reason_code: '失败类型'
+        certified_status: '认证状态'
+        cert_requested_at: '申请时间'
+        certified_by: '认证人'
+
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

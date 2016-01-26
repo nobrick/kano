@@ -1,0 +1,53 @@
+.modal.fade id="js-certifyFailModal"
+  .modal-dialog role="document"
+    .modal-content
+      .modal-header
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"
+            |&times;
+        h4.modal-title
+          | 详细信息
+      = form_for :taxon, method: :put, html: { class: "js-certifyFail form-horizontal" } do |f|
+        .modal-body
+          .form-group
+            = label_tag i18n_t("name", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-name
+          .form-group
+            = label_tag i18n_t("name", "M", { model: "taxon" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-taxon
+          = f.hidden_field :certified_status, value: "#{Taxon.certified_status_code('failure')}"
+          .form-group
+            = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
+            .col-sm-4
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {}, {class: "form-control"}
+          .form-group
+            = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
+            .col-sm-9
+              = f.text_area :reason_message, class: "form-control", rows: 8
+        .modal-footer
+          = submit_tag "确认", { class: "btn btn-success" }
+          button type="button" data-dismiss="modal" class="btn btn-danger"
+            | 关闭
+
+.container
+  = render partial: 'tabs', locals: { tabs: tabs_info }
+
+  = form_tag("/", class: "tabs__search row")
+    = text_field_tag 'search', nil, placeholder: 'Search'
+    = button_tag '搜索', class: 'btn btn-default'
+
+  .tabs__content
+    .row
+      .table__filter
+        = link_to '全部', admin_handyman_certifications_path, class: 'btn btn-sm btn-primary'
+        - certified_status_filter.each do |status|
+          = link_to i18n_t(status, "D", { model: "taxon", attr: "certified_status" }), admin_handyman_certifications_path(certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
+
+    .row
+      = render partial: 'shared/table', locals: {resources: @taxons, dashboard: dashboard}
+
+    .row
+      = button_tag "一键通过", class: "btn btn-success"
+
+    .row.paginator
+      = paginate @taxons
