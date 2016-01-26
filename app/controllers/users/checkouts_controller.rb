@@ -6,14 +6,11 @@ class Users::CheckoutsController < ApplicationController
   # POST /orders/:id/checkout
   def create
     @order.assign_attributes(order_params)
-    unless @order.sync_from_user_total
-      redirect_to [ :user, @order ], notice: t('.total_incorrect') and return false
+    unless sync_from_user_total
+      redirect_to [ :user, @order ],
+        notice: t('.total_incorrect') and return false
     end
-    if params[:p_method] == 'cash'
-      pay_in_cash
-    else
-      pay_in_wechat
-    end
+    in_cash? ? pay_in_cash : pay_in_wechat
   end
 
   # PUT/PATCH /orders/:id/checkout
@@ -32,6 +29,16 @@ class Users::CheckoutsController < ApplicationController
   end
 
   private
+
+  def sync_from_user_total
+    options = {}
+    options[:reset_bonus] = true if in_cash?
+    @order.sync_from_user_total(options)
+  end
+
+  def in_cash?
+    params[:p_method] == 'cash'
+  end
 
   def pay_in_cash
     set_payment('cash')

@@ -3,6 +3,7 @@ FactoryGirl.define do
     transient do
       state 'requested'
       amount { 85 + rand(1..50) * 10.0 }
+      bonus_amount { rand(0..3) * 5.0 }
     end
     user
     address
@@ -14,8 +15,8 @@ FactoryGirl.define do
       user_total { amount }
       user_promo_total 0.00
       payment_total { amount }
-      handyman_bonus_total 0.00
-      handyman_total { amount }
+      handyman_bonus_total { bonus_amount }
+      handyman_total { amount + bonus_amount }
     end
 
     before(:create) do |order, evaluator|

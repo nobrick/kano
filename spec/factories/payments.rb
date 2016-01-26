@@ -28,6 +28,6 @@ FactoryGirl.define do
     factory(:pending_payment) { state 'pending' }
     factory(:completed_payment) { state 'completed' }
     factory(:cash_payment, traits: [ :cash ])
-    factory(:pingpp_wx_pub_payment, traits: [ :pingpp_wx_pub_payment ])
+    factory(:pingpp_wx_pub_payment, traits: [ :pingpp_wx_pub ])
   end
 end

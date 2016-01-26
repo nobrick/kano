@@ -24,6 +24,28 @@ module Payment::TestHelpers
     payment
   end
 
+  def create_paid_orders_for(handyman, count)
+    user = create :user, :wechat
+
+    count.times do
+      order = create :contracted_order,
+        :payment, handyman: handyman, user: user
+      payment = build :pingpp_wx_pub_payment, order: order
+      checkout_payment!(payment)
+      prepare_payment!(payment)
+      complete_payment!(payment)
+    end
+  end
+
+  def create_cash_orders_for(handyman, count)
+    count.times do
+      order = create :contracted_order,
+        :payment, handyman: handyman, bonus_amount: 0
+      payment = build :cash_payment, order: order
+      payment.complete && payment.save!
+    end
+  end
+
   def unpaid_hash_for(payment, options = {})
     time_expire = (options[:expired] ? 1.second.ago : 2.hours.since).to_i
     {

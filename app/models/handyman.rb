@@ -4,6 +4,13 @@ class Handyman < Account
   has_many :orders
   has_many :taxons
   has_many :balance_records, -> { order(created_at: :desc) }, as: :owner
+
+  with_options class_name: 'Order' do |v|
+    v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
+    v.has_many :orders_paid_by_pingpp, -> { paid_by_pingpp }
+    v.has_many :orders_paid_in_cash, -> { paid_in_cash }
+  end
+
   has_one :latest_balance_record, -> { order(created_at: :desc) },
     class_name: 'BalanceRecord', as: :owner
   accepts_nested_attributes_for :taxons, allow_destroy: true

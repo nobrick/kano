@@ -8,7 +8,7 @@ FactoryGirl.define do
 
     trait :wechat do
       provider 'wechat'
-      uid 'abcBXxFyinSQsyM5r6EOUJRmebAM'
+      sequence(:uid, 100) { |n| "BXxFyinSQsyM5r6EOUJRmebAM#{n}" }
     end
   end
 end

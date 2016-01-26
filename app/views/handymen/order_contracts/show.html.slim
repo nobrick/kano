@@ -16,7 +16,7 @@
           - when 'completed'
             h3
               ' 已支付
-              b =< number_to_currency @order.user_total, unit: '￥'
+              b =< number_to_currency @order.handyman_total, unit: '￥'
       .order-details-attributes-card.mdl-card.mdl-shadow--2dp
         - if @order.completed?
           - record = @order.handyman.latest_balance_record
@@ -66,3 +66,5 @@
         .order-details-attributes-card.mdl-card.mdl-shadow--2dp
           .mdl-card__supporting-text
             = render 'handymen/shared/pricing', pricing: @pricing
+          .mdl-card__supporting-text.bonus-card-field
+            = render 'handymen/shared/bonus', bonus: @order.handyman_bonus_total.to_i

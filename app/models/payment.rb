@@ -6,6 +6,9 @@ class Payment < ActiveRecord::Base
   belongs_to :order, touch: true
   belongs_to :payment_profile, polymorphic: true
   has_one :balance_record, as: :adjustment_event
+  scope :in_cash, -> { where(payment_method: 'cash') }
+  scope :by_pingpp, -> { where(payment_method: 'pingpp_wx_pub') }
+  scope :completed, -> { where(state: 'completed') }
   accepts_nested_attributes_for :order, update_only: true
   accepts_nested_attributes_for :balance_record
   delegate :user, :handyman, *(Order::PAYMENT_TOTAL_ATTRIBUTES), to: :order

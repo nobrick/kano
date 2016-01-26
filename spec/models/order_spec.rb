@@ -57,6 +57,54 @@ RSpec.describe Order, type: :model do
     end
   end
 
+  describe '#sync_from_user_total' do
+    let(:order) { create :contracted_order }
+
+    shared_examples_for 'sync from user total' do
+      it 'keeping balance attributes correct' do
+        order.sync_from_user_total(options)
+        handyman_total = order.user_total + order.handyman_bonus_total
+        expect(order.handyman_total).to eq handyman_total
+        payment_total = order.user_total - order.user_promo_total
+        expect(order.payment_total).to eq payment_total
+      end
+
+      it 'returns true on valid conditions' do
+        expect(order.sync_from_user_total(options)).to eq true
+      end
+    end
+
+    context 'When user_total option is given' do
+      let(:options) { { user_total: 666 } }
+
+      it 'sets user_total' do
+        order.user_total = 777
+        expect(order.sync_from_user_total options).to eq true
+        expect(order.user_total).to eq 666
+      end
+
+      it_behaves_like 'sync from user total'
+    end
+
+    context 'When reset_bonus option is set to true' do
+      let(:options) { { reset_bonus: true } }
+
+      before do
+        order.user_total = 300
+        order.handyman_bonus_total = 10
+        order.user_promo_total = 5
+      end
+
+      it 'resets handyman_bonus_total and user_promo_total to 0' do
+        expect(order.sync_from_user_total options).to eq true
+        expect(order.handyman_bonus_total).to eq 0
+        expect(order.user_promo_total).to eq 0
+      end
+
+      it_behaves_like 'sync from user total'
+    end
+  end
+
   describe 'state machine' do
     describe 'Request event' do
       it 'creates and requests order by user' do
@@ -161,7 +209,7 @@ RSpec.describe Order, type: :model do
         context 'With cash payment' do
           shared_examples_for 'invalid payment' do
             let(:payment) { order.build_payment(payment_method: 'cash') }
-            before { order.sync_from_user_total }
+            before { order.sync_from_user_total(reset_bonus: true) }
 
             it 'is invalid after #complete and #save' do
               expect(order.valid?).to eq true
@@ -178,7 +226,7 @@ RSpec.describe Order, type: :model do
 
           it 'is valid for order within price range' do
             order.user_total = order.pricing[:total_price]
-            expect(order.sync_from_user_total).to eq true
+            expect(order.sync_from_user_total(reset_bonus: true)).to eq true
             payment = order.build_payment(payment_method: 'cash')
             payment.complete
             payment.save!
