@@ -1,7 +1,7 @@
 # Kano
 [![Circle CI](https://circleci.com/gh/nobrick/kano.svg?style=svg&circle-token=524e74c362b8210de373f211ff35129cfaaf7a7a)](https://circleci.com/gh/nobrick/kano)
-## Contribution
-### Installation
+
+## Installation for Development
 Install and configure the following services:
 - PostgreSQL
 - Redis
@@ -25,3 +25,6 @@ To start project, ensure PostgreSQL and Redis running, then execute:
 sidekiq
 rails s
 ```
+
+## Contribution
+Check [CONTRIBUTING.md](https://github.com/nobrick/kano/blob/master/CONTRIBUTING.md) for contribution guidelines.
