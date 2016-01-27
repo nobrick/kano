@@ -20,14 +20,18 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   taxon[:reason_code]: fail reason code
   #   taxon[:reason_message]: fail reason message
   def update
-    taxon = Taxon.find params[:id]
+    begin
+      taxon = Taxon.find params[:id]
 
-    certified_attrs = certified_info(*certify_params.values)
+      result = ::Admin::CertifyTaxon.call(taxon, current_user, certified_params)
+      if result.success?
+        redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
+      else
+        redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C', reasons: result.error)
+      end
 
-    if taxon.update(certified_attrs)
-      redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
-    else
-      redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C', reasons: taxon.errors.full_messages)
+    rescue ActiveRecord::RecordNotFound
+      redirect_to admin_handyman_certifications_path, alert: "技能不存在"
     end
   end
 
@@ -90,27 +94,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   private
 
-  def certify_params
+  def certified_params
     params.require(:taxon).permit(:certified_status, :reason_code, :reason_message)
-  end
-
-  def certified_info(status, reason_code, reason_message)
-    taxon_certify_info = {
-      certified_status: status,
-      reason_code: reason_code,
-      reason_message: reason_message
-    }
-
-    if !Taxon.certify_under_review_status?(status)
-      taxon_certify_info[:certified_by] = current_user
-      taxon_certify_info[:certified_at] = Time.now
-    end
-
-    if !Taxon.certify_failure_status?(status)
-      taxon_certify_info[:reason_code] = nil
-      taxon_certify_info[:reason_message] = nil
-    end
-
-    taxon_certify_info
   end
 end

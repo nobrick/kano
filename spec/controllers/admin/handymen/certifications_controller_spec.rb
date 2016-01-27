@@ -143,8 +143,6 @@ RSpec.describe Admin::Handymen::CertificationsController, type: :controller do
 
         taxon.reload
 
-        expect(flash[:alert]).to eq ""
-
         expect(flash[:alert]).to be_present
         expect(taxon.certified_status).to eq "success"
         expect(taxon.reason_message).to eq nil

@@ -4,6 +4,7 @@ class Taxon < ActiveRecord::Base
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
+  validates :reason_code, presence: true, if: :failure_status?
 
   def self.taxons_config
     @@taxons_config ||= nil
@@ -103,5 +104,9 @@ class Taxon < ActiveRecord::Base
 
   def self.certify_under_review_status?(tmp_status)
     tmp_status == taxons_config['certified_status']['under_review']
+  end
+
+  def failure_status?
+    Taxon.certify_failure_status?(certified_status)
   end
 end
