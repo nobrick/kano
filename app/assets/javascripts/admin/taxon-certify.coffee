@@ -16,7 +16,6 @@ $ ->
       modal.find('.js-certifyFail-name').html(handyman)
       modal.find('.js-certifyFail-taxon').html(taxon)
 
-
 $ ->
   $(".js-input-enable-trigger")
     .on 'change', () ->
@@ -27,9 +26,3 @@ $ ->
         $(".js-input-enable").removeAttr("disabled")
       else if !isDisabled
         $(".js-input-enable").attr("disabled", true)
-
-
-
-
-
-
