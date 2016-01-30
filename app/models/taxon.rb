@@ -1,6 +1,8 @@
 class Taxon < ActiveRecord::Base
   class << self
-    delegate :certified_statuses, :taxon_codes, :reason_codes, :items, :categories, :certified_status, :certify_failure_status?, :certify_success_status?, :certify_under_review_status?, to: "::Taxon::Config"
+    delegate :certified_statuses, :taxon_codes, :reason_codes, :items, :categories, :certified_status,
+      :certify_failure_status?, :certify_success_status?, :certify_under_review_status?,
+      to: "::Taxon::Config"
   end
 
   belongs_to :handyman
