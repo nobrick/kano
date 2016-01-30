@@ -9,10 +9,9 @@ class Taxon < ActiveRecord::Base
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
   validates :reason_code, presence: true, if: :failure_status?
-
-  validates_inclusion_of :code, in: self.taxon_codes
-  validates_inclusion_of :certified_status, in: self.certified_statuses
-  validates_inclusion_of :reason_code, in: self.reason_codes, allow_blank: true
+  validates :reason_code, inclusion: { in: self.reason_codes }, allow_nil: true
+  validates :certified_status, inclusion: { in: self.certified_statuses }
+  validates :code, inclusion: { in: self.taxon_codes }
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -60,6 +59,7 @@ class Taxon < ActiveRecord::Base
       group
     end
   end
+
 
   def name
     @taxon_name ||= Taxon.taxon_name(code)

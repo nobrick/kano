@@ -24,6 +24,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       taxon = Taxon.find params[:id]
 
       result = ::Admin::CertifyTaxon.call(taxon, current_user, certified_params)
+
       if result.success?
         redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
       else
@@ -52,26 +53,23 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #     certified_status: 认证状态
   #     reason_code: 认证不通过原因
   #     reasom_message: 认证不通过附加信息
-  #   taxon_codes(Array): taxon 代码
+  #   taxon_codes: taxon 代码
   def create
     begin
       handyman = Handyman.find params[:taxon][:handyman_id]
 
-      certified_attrs = certified_info(*certify_params.values)
-
       selected_codes = (params['taxon_codes'] || '').split(',')
-      codes_to_create = selected_codes - handyman.taxon_codes
-      if codes_to_create.blank?
-        redirect_to new_admin_handyman_certification_path, alert: "没有选择技能或欲创建的技能已经存在"
-        return
-      end
-      handyman.taxons.create!(codes_to_create.map { |e| { code: e }.merge(certified_attrs) })
+      result =
+        ::Admin::CreateTaxons.call(handyman, selected_codes, current_user, certified_params)
 
-      redirect_to new_admin_handyman_certification_path, notice: "创建成功"
+      if result.success?
+        redirect_to new_admin_handyman_certification_path, notice: "创建成功"
+      else
+        redirect_to new_admin_handyman_certification_path, alert: result.error
+      end
+
     rescue ActiveRecord::RecordNotFound
       redirect_to new_admin_handyman_certification_path, alert: "用户不存在"
-    rescue ActiveRecord::RecordInvalid => e
-      redirect_to new_admin_handyman_certification_path, alert: e.record.errors.full_messages
     end
   end
 

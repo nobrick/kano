@@ -1,26 +1,3 @@
-class Success
-  attr_reader :data
-  def initialize(data)
-    @data = data
-  end
-
-  def success?
-    true
-  end
-end
-
-class Failure
-  attr_reader :error
-  def initialize(error)
-    @error = error
-  end
-
-  def success?
-    false
-  end
-end
-
-
 class Admin::CertifyTaxon
   def self.call(*args)
     new(*args).call
@@ -34,9 +11,9 @@ class Admin::CertifyTaxon
 
   def call
     if @taxon.update(certified_info)
-      Success.new(@taxon)
+      ::Shared::Success.new(@taxon)
     else
-      Failure.new(@taxon.errors.full_messages)
+      ::Shared::Failure.new(@taxon.errors.full_messages)
     end
   end
 
