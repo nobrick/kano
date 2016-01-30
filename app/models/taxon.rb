@@ -1,12 +1,14 @@
 class Taxon < ActiveRecord::Base
   class << self
-    delegate :certified_statuses, :taxon_codes, :reason_codes, :items, :categories, :certified_status,
-      :certify_failure_status?, :certify_success_status?, :certify_under_review_status?,
+    delegate :certified_statuses, :taxon_codes, :reason_codes, :items,
+      :categories, :certified_status, :certify_failure_status?,
+      :certify_success_status?, :certify_under_review_status?,
       to: "::Taxon::Config"
   end
 
   belongs_to :handyman
-  belongs_to :certified_by, -> { where(admin: true) }, foreign_key: "certified_by", class_name: "Account"
+  belongs_to :certified_by, -> { where(admin: true) },
+    foreign_key: "certified_by", class_name: "Account"
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
