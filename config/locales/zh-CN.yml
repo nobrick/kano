@@ -75,8 +75,11 @@ zh-CN:
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
     admin/handymen/certifications:
-      update_success: '审核成功'
-      update_failure: '审核失败: %{reasons}'
+      certify_success: '审核成功'
+      certify_failure: '审核失败: %{reasons}'
+      handyman_missing: '师傅用户不存在'
+      new_taxon_success: '创建成功'
+      taxon_missing: '技能不存在'
   order:
     requested: '未接单'
     contracted: '已接单'

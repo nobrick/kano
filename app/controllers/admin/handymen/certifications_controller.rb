@@ -26,13 +26,13 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       result = ::Admin::CertifyTaxon.call(taxon, current_user, certified_params)
 
       if result.success?
-        redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('update_success', 'C')}
+        redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('certify_success', 'C')}
       else
-        redirect_to admin_handyman_certifications_path, alert: i18n_t('update_failure', 'C', reasons: result.error)
+        redirect_to admin_handyman_certifications_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
       end
 
     rescue ActiveRecord::RecordNotFound
-      redirect_to admin_handyman_certifications_path, alert: "技能不存在"
+      redirect_to admin_handyman_certifications_path, alert: i18n_t('taxon_missing', 'C')
     end
   end
 
@@ -63,13 +63,13 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
         ::Admin::CreateTaxons.call(handyman, selected_codes, current_user, certified_params)
 
       if result.success?
-        redirect_to new_admin_handyman_certification_path, notice: "创建成功"
+        redirect_to new_admin_handyman_certification_path, flash: { success: i18n_t('new_taxon_success', 'C') }
       else
-        redirect_to new_admin_handyman_certification_path, alert: result.error
+        redirect_to new_admin_handyman_certification_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
       end
 
     rescue ActiveRecord::RecordNotFound
-      redirect_to new_admin_handyman_certification_path, alert: "用户不存在"
+      redirect_to new_admin_handyman_certification_path, alert: i18n_t('handyman_missing', 'C')
     end
   end
 
