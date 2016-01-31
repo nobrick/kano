@@ -20,3 +20,10 @@ taxons:
       - whitewash
       - lock
       - other
+  certified_status:
+    success: success
+    failure: failure
+    under_review: under_review
+  reason_code:
+    - missing_info
+    - out_of_date

@@ -1,0 +1,38 @@
+doctype html
+html
+  head
+    = stylesheet_link_tag 'admin/application', media: 'all', 'data-turbolinks-track' => true
+    = javascript_include_tag 'admin/application', 'data-turbolinks-track' => true
+
+  body id="#{page_identifier}"
+    nav#nav.navbar.navbar-inverse.navbar-fixed-top[role="navigation"]
+      .container-fluid
+        ul.nav.navbar-nav.navbar-right
+          - nav_links.each do |info|
+            - if in_scope?(info[:scope])
+              li.active
+                a[href="#{info[:path]}"]
+                  | #{t info[:text], scope: [:views, :admin]}
+            - else
+              li
+                a[href="#{info[:path]}"]
+                  | #{t info[:text], scope: [:views, :admin]}
+    .main
+      .container
+        - [:success, :info, :warning, :danger, :alert, :notice].each do |type|
+          - if flash[type]
+            - case type
+            - when :alert  then style = :danger
+            - when :notice then style = :warning
+            - else style = type
+
+            = content_tag :div, class: "alert alert-#{style} alert-dismissible" do
+              button.close[type="button" data-dismiss="alert" aria-label="Close"]
+                span[aria-hidden="true"]
+                  | ×
+              = flash[type]
+
+      = yield
+
+
+

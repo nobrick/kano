@@ -1,0 +1,36 @@
+@import 'bootstrap';
+@import 'font-awesome';
+@import 'table';
+@import 'block/*';
+
+body {
+  padding-top: 65px;
+}
+
+.taxonBox {
+  text-align: left;
+  margin: 10px auto 10px;
+
+  .taxonList {
+    .taxon {
+      margin: 14px auto 14px;
+
+      .label {
+        font-size: 14px;
+      }
+
+      i.fa-trash {
+        color: #555;
+      }
+    }
+  }
+  .newTaxon {
+    select {
+      width: 80%;
+    }
+
+    i.fa-plus {
+      color: #ff6666;
+    }
+  }
+}

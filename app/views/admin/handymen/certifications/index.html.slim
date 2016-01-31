@@ -1,0 +1,38 @@
+.modal.fade id="js-certifyFailModal"
+  .modal-dialog role="document"
+    .modal-content
+      .modal-header
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"
+            |&times;
+        h4.modal-title
+          | 详细信息
+      = form_for :taxon, method: :put, html: { class: "js-certifyFail form-horizontal" } do |f|
+        .modal-body
+          .form-group
+            = label_tag i18n_t("name", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-name
+          .form-group
+            = label_tag i18n_t("name", "M", { model: "taxon" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-certifyFail-taxon
+          = f.hidden_field :certified_status, value: "#{Taxon.certified_status('failure')}"
+          .form-group
+            = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
+            .col-sm-4
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {}, {class: "form-control"}
+          .form-group
+            = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
+            .col-sm-9
+              = f.text_area :reason_message, class: "form-control", rows: 8
+        .modal-footer
+          = submit_tag "确认", { class: "btn btn-success" }
+          button type="button" data-dismiss="modal" class="btn btn-danger"
+            | 关闭
+
+.container
+  = render partial: 'shared/tabs', locals: { tabs: tabs_info }
+
+
+  .tabs__content
+    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard}
+

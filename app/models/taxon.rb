@@ -1,24 +1,21 @@
 class Taxon < ActiveRecord::Base
+  class << self
+    delegate :certified_statuses, :taxon_codes, :reason_codes, :items,
+      :categories, :certified_status, :certify_failure_status?,
+      :certify_success_status?, :certify_under_review_status?,
+      to: "::Taxon::Config"
+  end
+
   belongs_to :handyman
+  belongs_to :certified_by, -> { where(admin: true) },
+    foreign_key: "certified_by", class_name: "Account"
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
-
-  def self.taxons_config
-    @@taxons_config ||= nil
-    if @@taxons_config.nil?
-      config_file = File.join('config','taxons.yml')
-      config = YAML.load(File.read(config_file))
-      @@taxons_config = config['taxons']
-    end
-    @@taxons_config
-  end
-
-  def self.taxon_codes
-    @@taxon_codes ||= taxons_config['items']
-      .map { |c, l| l.map { |t| "#{c}/#{t}" } }.flatten
-  end
-  validates_inclusion_of :code, in: self.taxon_codes
+  validates :reason_code, presence: true, if: :failure_status?
+  validates :reason_code, inclusion: { in: self.reason_codes }, allow_nil: true
+  validates :certified_status, inclusion: { in: self.certified_statuses }
+  validates :code, inclusion: { in: self.taxon_codes }
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -40,16 +37,6 @@ class Taxon < ActiveRecord::Base
     I18n.t("taxons.categories.#{category}", default: category)
   end
 
-  def self.taxons_for_grouped_select
-    @@taxons_for_grouped_select ||= taxons_config['categories'].map do |category|
-      group = [ category_name(category), [] ]
-      taxons_config['items'][category].each do |taxon|
-        group[1] << [ taxon_name(category, taxon), "#{category}/#{taxon}" ]
-      end
-      group
-    end
-  end
-
   def self.redux_entities
     @@redux_entities ||= {
       'taxons' => taxon_codes.map do |key|
@@ -61,11 +48,22 @@ class Taxon < ActiveRecord::Base
         ]
       end.to_h,
 
-      'categories' => taxons_config['items'].keys.map do |key|
+      'categories' => items.keys.map do |key|
         [ key, { 'code' => key, 'name' => Taxon.category_name(key) } ]
       end.to_h
     }
   end
+
+  def self.taxons_for_grouped_select
+    @@taxons_for_grouped_select ||= categories.map do |category|
+      group = [ category_name(category), [] ]
+      items[category].each do |taxon|
+        group[1] << [ taxon_name(category, taxon), "#{category}/#{taxon}" ]
+      end
+      group
+    end
+  end
+
 
   def name
     @taxon_name ||= Taxon.taxon_name(code)
@@ -73,5 +71,9 @@ class Taxon < ActiveRecord::Base
 
   def category_name
     @category_name ||= Taxon.category_name(code.split('/').first)
+  end
+
+  def failure_status?
+    self.class.certify_failure_status?(certified_status)
   end
 end

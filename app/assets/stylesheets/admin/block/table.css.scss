@@ -1,0 +1,45 @@
+.table {
+  width: 100%;
+}
+
+.dashboard__new-item {
+  padding-right: 0px;
+  padding-top: 10px;
+  text-align: right;
+}
+
+.dashboard__filters {
+  padding-top: 20px;
+  padding-bottom: 5px;
+}
+
+.table__header {
+  background-color: gray;
+  padding: 10px 0;
+}
+
+.table__header th {
+  text-align: center;
+}
+
+.table__content td {
+  text-align: center;
+}
+
+.dashboard__left-filter a {
+  margin-right: 5px;
+}
+
+.dashboard__left-filter {
+  padding-left: 0px;
+}
+
+.dashboard__right-filter {
+  padding-right: 0px;
+  text-align: right;
+}
+
+.table__content form {
+  display: inline-block;
+  margin-right: 5px;
+}
