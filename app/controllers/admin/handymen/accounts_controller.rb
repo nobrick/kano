@@ -1,4 +1,4 @@
-class Admin::Handymen::AccountsController < Admin::AccountsController
+class Admin::Handymen::AccountsController < Admin::ApplicationController
 
   helper_method :dashboard, :tabs_info
 
@@ -8,6 +8,14 @@ class Admin::Handymen::AccountsController < Admin::AccountsController
     @handymen = Handyman.page(params[:page]).per(10)
   end
 
+  # params
+  #   id: handyman id
+  def show
+    @handyman = Handyman.find params[:id]
+  end
+
+  private
+
   def dashboard
     @dashboard ||= HandymanDashboard.new
   end
@@ -16,11 +24,11 @@ class Admin::Handymen::AccountsController < Admin::AccountsController
     [
       {
         text: "技能认证管理",
-        path: admin_handyman_certifications_path
+        path: admin_handyman_certification_index_path
       },
       {
         text: "师傅信息管理",
-        path: admin_handyman_accounts_path
+        path: admin_handyman_account_index_path
       }
     ]
   end

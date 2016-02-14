@@ -20,7 +20,7 @@ class CertifyDashboard < BaseDashboard
   COLLECTION_FILTER = {
     "attr" => "certified_status",
     "status" => %w(success failure under_review),
-    "baseurl" => "admin_handyman_certifications_path"
+    "baseurl" => "admin_handyman_certification_index_path"
   }
 
   EXPAND_PARTIAL_PATH = "admin/handymen/certifications"

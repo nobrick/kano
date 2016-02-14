@@ -26,13 +26,13 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       result = ::Admin::CertifyTaxon.call(taxon, current_user, certified_params)
 
       if result.success?
-        redirect_to admin_handyman_certifications_path, flash: { success: i18n_t('certify_success', 'C')}
+        redirect_to admin_handyman_certification_index_path, flash: { success: i18n_t('certify_success', 'C')}
       else
-        redirect_to admin_handyman_certifications_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
+        redirect_to admin_handyman_certification_index_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
       end
 
     rescue ActiveRecord::RecordNotFound
-      redirect_to admin_handyman_certifications_path, alert: i18n_t('taxon_missing', 'C')
+      redirect_to admin_handyman_certification_index_path, alert: i18n_t('taxon_missing', 'C')
     end
   end
 
@@ -83,11 +83,11 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     [
       {
         text: "技能认证管理",
-        path: admin_handyman_certifications_path
+        path: admin_handyman_certification_index_path
       },
       {
         text: "师傅信息管理",
-        path: admin_handyman_accounts_path
+        path: admin_handyman_account_index_path
       }
     ]
   end

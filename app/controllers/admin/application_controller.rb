@@ -24,12 +24,12 @@ class Admin::ApplicationController < ActionController::Base
     [
       {
         text: "handymen_admin",
-        path: admin_handyman_certifications_path,
+        path: admin_handyman_certification_index_path,
         scope: '/alpha/handymen'
       },
       {
         text: "users_admin",
-        path: admin_user_accounts_path,
+        path: admin_user_account_index_path,
         scope: '/alpha/users'
       },
       {
