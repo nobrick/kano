@@ -18,16 +18,8 @@ class Withdrawal < ActiveRecord::Base
   validates :total, numericality: { greater_than: 0, message: '无效' },
     if: :unfrozen_record
 
-  validate :total_must_be_eq_unfrozen_balance,
-    if: 'to? :requested'
-  validate :request_must_be_applied_at_permitted_dates,
-    if: 'to? :requested'
-  validate :requested_withdrawal_must_be_unique,
-    if: 'to? :requested'
-
-  validate :total_must_be_lt_or_eq_unfrozen_balance,
-    if: 'to? :transferred'
-
+  validate :request_must_be_applied_at_permitted_dates, if: 'to? :requested'
+  validate :requested_withdrawal_must_be_unique, if: 'to? :requested'
   validates :reason_message, presence: true, if: 'to? :declined'
 
   def self.transferred_since(time)
@@ -66,7 +58,7 @@ class Withdrawal < ActiveRecord::Base
   # @method request
   #
   # Requests the withdrawal. The event is triggered when the withdrawal is
-  # applied by the handyman and valid for persistence.
+  # applied by the handyman.
 
 
   # @method transfer
@@ -79,7 +71,7 @@ class Withdrawal < ActiveRecord::Base
   # @method decline
   #
   # Declines the withdrawal. The event is triggered when the withdrawal is
-  # invalid or inappropriate due to the +reason_message+ filled by
+  # invalid or inappropriate due to the +reason_message+ filled by the
   # +authorizer+. +declined_at+ will be touched.
 
   # @!endgroup
@@ -136,22 +128,6 @@ class Withdrawal < ActiveRecord::Base
     raise ActiveRecord::ReadOnlyRecord
   end
 
-  # Ensures that withdrawal total is equal to unfrozen balance.
-  #
-  # Triggered when transitioning into +requested+ state.
-  def total_must_be_eq_unfrozen_balance
-  end
-
-  # Ensures that withdrawal total is less than or equal to unfrozen balance.
-  #
-  # Triggered when transitioning into +transferred+ state.
-  def total_must_be_lt_or_eq_unfrozen_balance
-  end
-
-  # Ensures that no requested withdrawal but the current one may exist at a
-  # time.
-  #
-  # Triggered when transitioning into +requested+ state.
   def requested_withdrawal_must_be_unique
     if handyman.withdrawals.requested.present?
       errors.add(:base, '您已经提交过提现申请，请等待审核')
