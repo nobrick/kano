@@ -12,9 +12,17 @@ class Admin::Handymen::AccountsController < Admin::ApplicationController
   #   id: handyman id
   def show
     @handyman = Handyman.find params[:id]
+    set_address
   end
 
   private
+
+  def set_address
+    address = @handyman.primary_address
+    @handyman.build_primary_address(addressable: @handyman) if address.blank?
+    @city_code = address.try(:city_code) || '430100'
+    @district_code = address.try(:code)
+  end
 
   def dashboard
     @dashboard ||= HandymanDashboard.new

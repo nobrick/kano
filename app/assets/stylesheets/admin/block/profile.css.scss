@@ -1,0 +1,48 @@
+.profile {
+  margin-top: 20px;
+}
+
+.profile__label {
+  padding-top: 7px;
+  text-align: right;
+  font-weight: 700;
+}
+
+.profile__group {
+  margin-bottom: 15px;
+}
+
+.profile__group:after {
+  display: block;
+  content: "";
+  clear: both;
+}
+
+.profile__img {
+  display: block;
+  margin: auto;
+  max-width: 70px
+}
+
+.profile__input {
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  height: 34px;
+  padding: 6px 12px;
+}
+
+.profile__taxon {
+  display: block;
+  margin-bottom: 10px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.profile__status {
+  margin-bottom: 10px;
+}
+
+.profile__status span {
+  margin-left: 20px;
+}
+
