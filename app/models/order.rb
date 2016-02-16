@@ -1,5 +1,6 @@
 class Order < ActiveRecord::Base
   include AASM
+  include AASM::Helper
   include Redis::Objects
   include IdRandomizable
 
@@ -47,7 +48,7 @@ class Order < ActiveRecord::Base
   validates :state, presence: true
   validates :address, presence: true, associated: true
   validates :arrives_at, inclusion: {
-    in: (10.minute.from_now)..(30.days.from_now),
+    in: ->(o) { (10.minute.from_now)..(30.days.from_now) },
     message: '无效'
   }, if: 'to? :requested'
   validate :service_must_be_available, if: 'to? :requested'
@@ -283,14 +284,6 @@ class Order < ActiveRecord::Base
 
   def do_complete(in_cash = false)
     self.completed_at = Time.now
-  end
-
-  def to?(states_or_state)
-    if states_or_state.is_a? Symbol
-      aasm.to_state == states_or_state
-    else
-      states_or_state.any? { |s| aasm.to_state == s }
-    end
   end
 
   def set_address

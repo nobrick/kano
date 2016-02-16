@@ -3,7 +3,8 @@ class Handyman < Account
 
   has_many :orders
   has_many :taxons
-  has_many :balance_records, -> { order(created_at: :desc) }, as: :owner
+  has_many :balance_records, as: :owner
+  has_many :withdrawals
 
   with_options class_name: 'Order' do |v|
     v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
@@ -11,8 +12,12 @@ class Handyman < Account
     v.has_many :orders_paid_in_cash, -> { paid_in_cash }
   end
 
-  has_one :latest_balance_record, -> { order(created_at: :desc) },
-    class_name: 'BalanceRecord', as: :owner
+  with_options class_name: 'BalanceRecord' do |v|
+    v.has_one :latest_balance_record, as: :owner
+    v.has_one :unfrozen_balance_record,
+      -> { where('created_at <= ?', Withdrawal.unfrozen_date) }, as: :owner
+  end
+
   accepts_nested_attributes_for :taxons, allow_destroy: true
   validate :taxons_presence, on: :complete_info_context
 

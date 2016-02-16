@@ -404,7 +404,7 @@ class Payment < ActiveRecord::Base
 
   def set_balance_record
     self.balance_record_attributes = {}
-    self.balance_record.adjustment_event = self
+    balance_record.handler = BalanceRecord::PaymentHandler.new(self)
   end
 
   def set_pingpp_charge(charge)

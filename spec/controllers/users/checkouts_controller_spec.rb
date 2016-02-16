@@ -28,7 +28,7 @@ RSpec.describe Users::CheckoutsController, type: :controller do
         }.to change(BalanceRecord, :count).by 1
 
         record = handyman.latest_balance_record
-        expect(record.base_adjustment).to eq 200
+        expect(record.bonus_sum_total).to eq 0
         expect(record.adjustment).to eq 200
       end
 
