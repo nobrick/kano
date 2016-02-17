@@ -12,16 +12,16 @@ FactoryGirl.define do
     before(:create) do |payment, evaluator|
       case evaluator.state
       when 'processing'
-        payment.checkout && payment.save!
+        payment.checkout
       when 'pending'
         payment.checkout && payment.save!
-        payment.prepare && payment.save!
+        payment.prepare
       when 'completed'
         if payment.not_in_cash?
           payment.checkout && payment.save!
           payment.prepare && payment.save!
         end
-        payment.complete && payment.save!
+        payment.complete
       end
     end
 

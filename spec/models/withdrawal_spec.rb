@@ -1,0 +1,222 @@
+require 'rails_helper'
+require 'support/payment'
+require 'support/timecop'
+
+RSpec.describe Withdrawal, type: :model do
+  let(:withdrawal) { Withdrawal.new(attributes) }
+  let(:handyman) { create :handyman }
+  let(:authorizer) { create :admin }
+  let(:attributes) { attributes_for :withdrawal }
+  let(:date) { now.last_month.change(day: permitted_days.sample) }
+  let(:forbidden_date) { 1.day.until date }
+  let(:next_date) { dates.find { |d| d - date >= 14.days } }
+  let(:permitted_days) { [ 7, 14, 21, 28 ] }
+  let(:now) { Time.now }
+  let(:dates) do
+    m_days = [ now, now.last_month, now.next_month ]
+    permitted_days.flat_map { |n| m_days.map { |d| d.change(day: n) } }.sort
+  end
+
+  describe '#request' do
+    before { withdrawal.handyman = handyman }
+
+    context 'When requests already exist' do
+      before do
+        on(unfrozen date) { create_paid_orders_for handyman, 1 }
+        on(date) { withdrawal.request && withdrawal.save! }
+      end
+      let(:next_date) { dates.find { |d| d > date } }
+      let(:another_handyman) { create :handyman }
+      let(:new_withdrawal) { Withdrawal.new }
+
+      it 'fails to request if already does within frozen days' do
+        expect(withdrawal.reload.requested?).to eq true
+        on(next_date) do
+          new_withdrawal.handyman = handyman
+          new_withdrawal.assign_attributes(attributes)
+          expect(new_withdrawal.request).to eq true
+          expect(next_date - date).to be < 14.days
+          expect(new_withdrawal.save).to eq false
+          expect(new_withdrawal.errors.messages.keys).to eq [ :base ]
+        end
+      end
+
+      it 'does not affect legal withdrawal for other handymen' do
+        on(unfrozen next_date) { create_paid_orders_for another_handyman, 1 }
+        new_withdrawal.handyman = another_handyman
+        new_withdrawal.assign_attributes(attributes)
+        on(next_date) { new_withdrawal.request && new_withdrawal.save! }
+        expect(new_withdrawal.reload.requested?).to eq true
+      end
+    end
+
+    context 'When no unfrozen record exists' do
+      shared_examples_for 'unfrozen_record validation failure' do
+        it 'fails validation'  do
+          on(date) do
+            expect(withdrawal.request).to eq true
+            expect(withdrawal.save).to eq false
+          end
+          expect(withdrawal.errors.messages.keys).to eq [ :unfrozen_record ]
+        end
+      end
+
+      context 'With records created before' do
+        before { on(13.days.until date) { create_paid_orders_for handyman, 1 } }
+
+        it_behaves_like 'unfrozen_record validation failure'
+      end
+
+      context 'With no records ever created' do
+        it_behaves_like 'unfrozen_record validation failure'
+      end
+    end
+
+    context 'When not on permitted dates' do
+      before { on(unfrozen forbidden_date) { create_paid_orders_for handyman, 1 } }
+
+      it 'fails validation' do
+        on(forbidden_date) do
+          expect(withdrawal.request).to eq true
+          expect(withdrawal.save).to eq false
+          expect(withdrawal.errors.messages.keys).to eq [ :base ]
+        end
+      end
+    end
+
+    context 'When request is valid' do
+      before { on(unfrozen date) { create_paid_orders_for handyman, 1 } }
+
+      it 'persists' do
+        on(date) do
+          expect(withdrawal.request).to eq true
+          withdrawal.save!
+        end
+      end
+
+      it 'sets unfrozen_record' do
+        on(date) { withdrawal.request && withdrawal.save! }
+        unfrozen_record = on(unfrozen date) { handyman.latest_balance_record }
+        expect(withdrawal.unfrozen_record).to eq unfrozen_record
+      end
+
+      it 'sets total' do
+        on(date) { withdrawal.request && withdrawal.save! }
+        online_income_total = handyman.unfrozen_balance_record.online_income_total
+        withdrawal_total = handyman.latest_balance_record.withdrawal_total
+        expect(withdrawal.total).to eq online_income_total - withdrawal_total
+      end
+    end
+  end
+
+  shared_examples_for 'authorizer presence' do
+    it 'ensures that authorizer must be present' do
+      withdrawal.authorizer = nil
+      expect { withdrawal.send method }.to raise_error TransitionFailure
+    end
+
+    it 'ensures that authorizer must be admin' do
+      withdrawal.authorizer = create :user
+      expect { withdrawal.send method }.to raise_error TransitionFailure
+    end
+  end
+
+  describe '#transfer' do
+    before do
+      withdrawal.handyman = handyman
+      on(unfrozen date) { create_paid_orders_for handyman, 2 }
+      on(date) { withdrawal.request && withdrawal.save! }
+    end
+
+    context 'When transfer is valid' do
+      before { withdrawal.authorizer = authorizer }
+
+      it 'transitions into transferred state' do
+        on(2.days.since date) do
+          expect(withdrawal.transfer).to eq true
+          expect(withdrawal.save).to eq true
+        end
+        expect(withdrawal.reload.transferred?).to eq true
+      end
+
+      it 'creates balance record' do
+        on(date) do
+          expect { withdrawal.transfer && withdrawal.save! }
+            .to change(BalanceRecord, :count).by 1
+          expect(BalanceRecord.first.event).to eq withdrawal
+        end
+      end
+    end
+
+    context 'When authorizer is blank' do
+      let(:method) { :transfer }
+      it_behaves_like 'authorizer presence'
+    end
+  end
+
+  describe '#decline' do
+    before do
+      withdrawal.handyman = handyman
+      withdrawal.authorizer = authorizer
+      on(unfrozen date) { create_paid_orders_for handyman, 2 }
+      on(date) { withdrawal.request && withdrawal.save! }
+    end
+
+    context 'On valid decline' do
+      it 'transitions into declined state' do
+        on(2.days.since date) do
+          withdrawal.reason_message = 'content'
+          expect(withdrawal.decline).to eq true
+          expect(withdrawal.save).to eq true
+        end
+        expect(withdrawal.reload.declined?).to eq true
+      end
+    end
+
+    context 'When reason_message is blank' do
+      it 'fails validate' do
+        withdrawal.reason_message = ''
+        expect(withdrawal.decline).to eq true
+        expect(withdrawal.save).to eq false
+        expect(withdrawal.errors.messages.keys).to eq [ :reason_message ]
+      end
+    end
+
+    context 'When authorizer is blank' do
+      let(:method) { :decline }
+      it_behaves_like 'authorizer presence'
+    end
+  end
+
+  describe 'FactoryGirl methods' do
+    before { on(unfrozen date) { create_paid_orders_for handyman, 1 } }
+
+    it 'creates requested withdrawal' do
+      withdrawal = on(date) do
+        create :requested_withdrawal, handyman: handyman
+      end
+      expect(withdrawal).to be_persisted
+      expect(withdrawal.requested?).to eq true
+    end
+
+    it 'creates transferred withdrawal' do
+      withdrawal = on(date) do
+        create :transferred_withdrawal, handyman: handyman
+      end
+      expect(withdrawal).to be_persisted
+      expect(withdrawal.transferred?).to eq true
+    end
+
+    it 'creates declined withdrawal' do
+      withdrawal = on(date) do
+        create :declined_withdrawal, handyman: handyman
+      end
+      expect(withdrawal).to be_persisted
+      expect(withdrawal.declined?).to eq true
+    end
+  end
+
+  def unfrozen(date)
+    14.days.until(date)
+  end
+end

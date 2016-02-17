@@ -99,6 +99,7 @@ zh-CN:
       taxon: '服务类别'
       taxon_item: '维修项目'
       payment: '支付信息'
+      withdrawal: '提现申请'
     attributes:
       account:
         username: '用户名'
@@ -168,7 +169,14 @@ zh-CN:
         certified_status: '认证状态'
         cert_requested_at: '申请时间'
         certified_by: '认证人'
-
+      withdrawal:
+        handyman: '提现人'
+        authorizer: '授权人'
+        unfrozen_record: '未冻结纪录'
+        balance_record: '提现纪录'
+        total: '金额'
+        bank_code: '银行'
+        account_no: '银行卡号'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

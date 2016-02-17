@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160124083656) do
+ActiveRecord::Schema.define(version: 20160215082301) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -70,21 +70,24 @@ ActiveRecord::Schema.define(version: 20160124083656) do
   add_index "addresses", ["province", "city", "district"], name: "index_addresses_on_province_and_city_and_district", using: :btree
 
   create_table "balance_records", force: :cascade do |t|
-    t.decimal  "balance",               precision: 12, scale: 2,                 null: false
-    t.decimal  "previous_balance",      precision: 12, scale: 2,                 null: false
-    t.decimal  "cash_total",            precision: 12, scale: 2,                 null: false
-    t.decimal  "previous_cash_total",   precision: 12, scale: 2,                 null: false
-    t.decimal  "adjustment",            precision: 12, scale: 2,                 null: false
-    t.integer  "owner_id",                                                       null: false
-    t.string   "owner_type",                                                     null: false
-    t.integer  "adjustment_event_id",                                            null: false
-    t.string   "adjustment_event_type",                                          null: false
-    t.boolean  "in_cash",                                        default: false
-    t.datetime "created_at",                                                     null: false
-    t.datetime "updated_at",                                                     null: false
-    t.decimal  "base_adjustment",       precision: 12, scale: 2,                 null: false
-    t.decimal  "base_balance",          precision: 12, scale: 2,                 null: false
-    t.decimal  "previous_base_balance", precision: 12, scale: 2,                 null: false
+    t.decimal  "balance",                  precision: 12, scale: 2,                 null: false
+    t.decimal  "prev_balance",             precision: 12, scale: 2,                 null: false
+    t.decimal  "cash_total",               precision: 12, scale: 2,                 null: false
+    t.decimal  "prev_cash_total",          precision: 12, scale: 2,                 null: false
+    t.decimal  "adjustment",               precision: 12, scale: 2,                 null: false
+    t.integer  "owner_id",                                                          null: false
+    t.string   "owner_type",                                                        null: false
+    t.integer  "adjustment_event_id",                                               null: false
+    t.string   "adjustment_event_type",                                             null: false
+    t.boolean  "in_cash",                                           default: false
+    t.datetime "created_at",                                                        null: false
+    t.datetime "updated_at",                                                        null: false
+    t.decimal  "withdrawal_total",         precision: 12, scale: 2,                 null: false
+    t.decimal  "prev_withdrawal_total",    precision: 12, scale: 2,                 null: false
+    t.decimal  "online_income_total",      precision: 12, scale: 2,                 null: false
+    t.decimal  "prev_online_income_total", precision: 12, scale: 2,                 null: false
+    t.decimal  "bonus_sum_total",          precision: 12, scale: 2,                 null: false
+    t.decimal  "prev_bonus_sum_total",     precision: 12, scale: 2,                 null: false
   end
 
   add_index "balance_records", ["adjustment_event_id", "adjustment_event_type"], name: "index_balance_records_on_adjustment_event", unique: true, using: :btree
@@ -185,10 +188,36 @@ ActiveRecord::Schema.define(version: 20160124083656) do
   add_index "taxons", ["handyman_id", "code"], name: "index_taxons_on_handyman_id_and_code", unique: true, using: :btree
   add_index "taxons", ["handyman_id"], name: "index_taxons_on_handyman_id", using: :btree
 
+  create_table "withdrawals", force: :cascade do |t|
+    t.integer  "handyman_id",                                            null: false
+    t.integer  "unfrozen_record_id",                                     null: false
+    t.decimal  "total",                         precision: 12, scale: 2, null: false
+    t.string   "bank_code",          limit: 16,                          null: false
+    t.string   "account_no",         limit: 32,                          null: false
+    t.string   "state",              limit: 16,                          null: false
+    t.integer  "authorizer_id"
+    t.string   "reason_message"
+    t.datetime "transferred_at"
+    t.datetime "declined_at"
+    t.datetime "created_at",                                             null: false
+    t.datetime "updated_at",                                             null: false
+  end
+
+  add_index "withdrawals", ["account_no"], name: "index_withdrawals_on_account_no", using: :btree
+  add_index "withdrawals", ["authorizer_id"], name: "index_withdrawals_on_authorizer_id", using: :btree
+  add_index "withdrawals", ["created_at"], name: "index_withdrawals_on_created_at", using: :btree
+  add_index "withdrawals", ["declined_at"], name: "index_withdrawals_on_declined_at", using: :btree
+  add_index "withdrawals", ["handyman_id"], name: "index_withdrawals_on_handyman_id", using: :btree
+  add_index "withdrawals", ["state"], name: "index_withdrawals_on_state", using: :btree
+  add_index "withdrawals", ["transferred_at"], name: "index_withdrawals_on_transferred_at", using: :btree
+
   add_foreign_key "accounts", "addresses", column: "primary_address_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
   add_foreign_key "orders", "accounts", column: "user_id"
   add_foreign_key "payments", "orders"
   add_foreign_key "taxons", "accounts", column: "handyman_id"
+  add_foreign_key "withdrawals", "accounts", column: "authorizer_id"
+  add_foreign_key "withdrawals", "accounts", column: "handyman_id"
+  add_foreign_key "withdrawals", "balance_records", column: "unfrozen_record_id"
 end

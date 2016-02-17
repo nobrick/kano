@@ -65,14 +65,14 @@ RSpec.describe BalanceRecord, type: :model do
       expect(event).to eq payment
       expect(record.owner).to eq event.handyman
       expect(record.in_cash?).to eq false
-      expect(record.previous_balance).to eq 0
+      expect(record.prev_balance).to eq 0
       expect(record.balance).to eq event.handyman_total
-      expect(record.previous_cash_total).to eq 0
+      expect(record.prev_cash_total).to eq 0
       expect(record.cash_total).to eq 0
       expect(record.adjustment).to eq event.handyman_total
-      expect(record.base_adjustment).to eq event.user_total
-      expect(record.base_balance).to eq event.user_total
-      expect(record.previous_base_balance).to eq 0
+      expect(record.bonus_sum_total)
+        .to eq event.handyman_total - event.user_total
+      expect(record.prev_bonus_sum_total).to eq 0
     end
   end
 
@@ -84,15 +84,13 @@ RSpec.describe BalanceRecord, type: :model do
       expect(event).to eq cash_payment
       expect(record.owner).to eq event.handyman
       expect(record.in_cash?).to eq true
-      expect(record.previous_balance).to eq 0
+      expect(record.prev_balance).to eq 0
       expect(record.balance).to eq 0
-      expect(record.previous_cash_total).to eq 0
+      expect(record.prev_cash_total).to eq 0
       expect(record.cash_total).to eq event.handyman_total
       expect(record.adjustment).to eq event.handyman_total
-      expect(record.base_adjustment).to eq event.user_total
-      expect(record.base_balance).to eq 0
-      expect(record.previous_base_balance).to eq 0
-
+      expect(record.bonus_sum_total).to eq 0
+      expect(record.prev_bonus_sum_total).to eq 0
       expect(event.user_total).to eq event.handyman_total
       expect(event.handyman_bonus_total).to eq 0
     end
@@ -104,50 +102,43 @@ RSpec.describe BalanceRecord, type: :model do
       event = random_payment
       previous_events = events.dup
       events << event
-      record = event.balance_record
+      r = event.balance_record
 
-      expect(record.in_cash?).to eq event.in_cash?
-      expect(record.owner).to eq event.handyman
-      expect(record.adjustment).to eq event.handyman_total
-      expect(record.base_adjustment).to eq event.user_total
+      expect(r.in_cash?).to eq event.in_cash?
+      expect(r.owner).to eq event.handyman
+      expect(r.adjustment).to eq event.handyman_total
+      expect(r.bonus_sum_total - r.prev_bonus_sum_total).to eq event.handyman_bonus_total
 
       handyman.reload
-      expect(record).to eq handyman.latest_balance_record
+      expect(r).to eq handyman.latest_balance_record
       expect(events.map(&:balance_record))
         .to match_array handyman.balance_records
 
       previous_in_cash_events = previous_events.select(&:in_cash?)
       previous_non_in_cash_events = previous_events.reject(&:in_cash?)
-      previous_balance = previous_non_in_cash_events
+      prev_balance = previous_non_in_cash_events
         .map(&:handyman_total).reduce(0, :+)
-      previous_base_balance = previous_non_in_cash_events
-        .map(&:user_total).reduce(0, :+)
-      previous_cash_total = previous_in_cash_events
+      prev_bonus_sum_total = previous_non_in_cash_events
+        .map(&:handyman_bonus_total).reduce(0, :+)
+      prev_cash_total = previous_in_cash_events
         .map(&:handyman_total).reduce(0, :+)
 
-      balance = previous_balance
-      base_balance = previous_base_balance
-      cash_total = previous_cash_total
-
-      if record.in_cash?
+      balance = prev_balance
+      bonus_sum_total = prev_bonus_sum_total
+      cash_total = prev_cash_total
+      if r.in_cash?
         cash_total += event.handyman_total
       else
         balance += event.handyman_total
-        base_balance += event.user_total
+        bonus_sum_total += event.handyman_bonus_total
       end
 
-      expect(record.previous_balance).to eq previous_balance
-      expect(record.balance).to eq balance
-      expect(record.previous_cash_total).to eq previous_cash_total
-      expect(record.cash_total).to eq cash_total
-      expect(record.previous_base_balance).to eq previous_base_balance
-      expect(record.base_balance).to eq base_balance
-
-      if record.in_cash?
-        expect(record.adjustment).to eq record.base_adjustment
-      else
-        expect(record.adjustment).to eq record.base_adjustment + record.event.handyman_bonus_total
-      end
+      expect(r.prev_balance).to eq prev_balance
+      expect(r.balance).to eq balance
+      expect(r.prev_cash_total).to eq prev_cash_total
+      expect(r.cash_total).to eq cash_total
+      expect(r.bonus_sum_total).to eq bonus_sum_total
+      expect(r.prev_bonus_sum_total).to eq prev_bonus_sum_total
     end
   end
 

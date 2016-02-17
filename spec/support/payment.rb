@@ -27,7 +27,7 @@ module Payment::TestHelpers
   def create_paid_orders_for(handyman, count)
     user = create :user, :wechat
 
-    count.times do
+    count.times.map do
       order = create :contracted_order,
         :payment, handyman: handyman, user: user
       payment = build :pingpp_wx_pub_payment, order: order
@@ -38,7 +38,7 @@ module Payment::TestHelpers
   end
 
   def create_cash_orders_for(handyman, count)
-    count.times do
+    count.times.map do
       order = create :contracted_order,
         :payment, handyman: handyman, bonus_amount: 0
       payment = build :cash_payment, order: order

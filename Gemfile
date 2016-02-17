@@ -44,6 +44,7 @@ group :development, :test do
   gem 'pry-rails'
   gem 'jasmine'
   gem 'launchy'
+  gem 'timecop'
 end
 
 group :development do
