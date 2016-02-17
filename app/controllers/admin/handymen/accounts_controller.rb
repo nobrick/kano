@@ -2,6 +2,8 @@ class Admin::Handymen::AccountsController < Admin::ApplicationController
 
   helper_method :dashboard, :tabs_info
 
+  before_action :set_handyman, only: [:show]
+
   # params
   #   page: page num
   def index
@@ -11,11 +13,14 @@ class Admin::Handymen::AccountsController < Admin::ApplicationController
   # params
   #   id: handyman id
   def show
-    @handyman = Handyman.find params[:id]
     set_address
   end
 
   private
+
+  def set_handyman
+    @handyman = Handyman.find params[:id]
+  end
 
   def set_address
     address = @handyman.primary_address

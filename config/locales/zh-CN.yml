@@ -81,8 +81,10 @@ zh-CN:
       handyman_missing: '师傅用户不存在'
       new_taxon_success: '创建成功'
       taxon_missing: '技能不存在'
-    admin/handymen/accounts:
-      handyman_missing: '师傅用户不存在'
+    admin/handymen/profiles:
+      update_success: '修改成功'
+      lock_success: '锁定成功'
+      unlock_success: '解锁成功'
   order:
     requested: '未接单'
     contracted: '已接单'
@@ -113,6 +115,7 @@ zh-CN:
         address: '地址'
         coins: '积分'
         password: '密码'
+        gender: '性别'
         password_confirmation: '密码确认'
         current_password: '当前密码'
       account/primary_address:
@@ -121,7 +124,8 @@ zh-CN:
       account/taxons:
         code: '服务类别'
       handyman:
-        id: '师傅 ID'
+        id: '管家 ID'
+        primary_address: '地址'
         name: '姓名'
         created_at: '注册时间'
         email: '邮箱'

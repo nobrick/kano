@@ -1,4 +1,5 @@
 class Admin::Handymen::ProfilesController < Admin::ApplicationController
+
   before_action :set_handyman
 
   # params:
@@ -8,45 +9,20 @@ class Admin::Handymen::ProfilesController < Admin::ApplicationController
   #     phone:
   #     nickname:
   #     gender:
-  def update_basic_profile
-    @handyman.assign_attributes(profile_params)
-
-    if @handyman.save
-      redirect_to admin_handyman_account_path(@handyman), flash: { success: "success" }
-    else
-      redirect_to admin_handyman_account_path(@handyman), alert: @handyman.errors.full_messages
-    end
-  end
-
-  # params
-  #   id: handyman id
-  #   profile:
+  #     email:
   #     primary_address:
   #       id:
   #       code:
   #       content:
-  def update_address
-    @handyman.assign_attributes(address_params)
+  def update
+    @handyman.assign_attributes(profile_params)
 
     if @handyman.save
-      redirect_to admin_handyman_account_path(@handyman), flash: { success: "success" }
+      flash[:success] = i18n_t('update_success', 'C')
     else
-      redirect_to admin_handyman_account_path(@handyman), alert: @handyman.errors.full_messages
+      flash[:alert] = @handyman.errors.full_messages
     end
-  end
-
-  # params
-  #   id: handyman id
-  #   profile:
-  #     email
-  def update_email
-    @handyman.assign_attributes(email_params)
-
-    if @handyman.save
-      redirect_to admin_handyman_account_path(@handyman), flash: { success: "success" }
-    else
-      redirect_to admin_handyman_account_path(@handyman), alert: @handyman.errors.full_messages
-    end
+    redirect_to admin_handyman_account_path(@handyman)
   end
 
   # params
@@ -59,22 +35,33 @@ class Admin::Handymen::ProfilesController < Admin::ApplicationController
     @handyman.taxons.where(code: codes_to_destroy).destroy_all
     @handyman.taxons.create(codes_to_create.map { |e| { code: e } })
 
-    redirect_to admin_handyman_account_path(@handyman), flash: { success: "success" }
+    redirect_to admin_handyman_account_path(@handyman), flash: { success: i18n_t('update_success', 'C') }
+  end
+
+  # params
+  #   id: handyman id
+  #   account_lock:  true or false
+  def update_account_status
+    if lock_account?
+      @handyman.lock_access!
+      flash[:success] = i18n_t('lock_success', 'C')
+    elsif unlock_account? && @handyman.access_locked?
+      @handyman.unlock_access!
+      flash[:success] = i18n_t('unlock_success', 'C')
+    end
+
+    redirect_to admin_handyman_account_path(@handyman)
   end
 
   private
 
-  def address_params
-    params.require(:profile).permit(
-      primary_address_attributes: [
-      :id,
-      :code,
-      :content
-    ])
+  def lock_account?
+    params[:account_lock] == 'true'
+
   end
 
-  def email_params
-    params.require(:profile).permit(:email)
+  def unlock_account?
+    params[:account_lock] == 'false'
   end
 
   def profile_params
@@ -82,7 +69,13 @@ class Admin::Handymen::ProfilesController < Admin::ApplicationController
       :name,
       :phone,
       :nickname,
-      :gender
+      :gender,
+      :email,
+      primary_address_attributes: [
+        :id,
+        :code,
+        :content
+      ]
     )
   end
 

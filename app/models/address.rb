@@ -23,6 +23,10 @@ class Address < ActiveRecord::Base
     "#{district_with_prefix} #{content}"
   end
 
+  def to_s
+    full_content
+  end
+
   def district_with_prefix
     "#{province}#{city}#{district}"
   end

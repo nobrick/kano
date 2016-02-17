@@ -1,0 +1,145 @@
+= render layout: "shared/modal", locals: { title: "个人资料(ID: #{@handyman.id})", id: "profileEdit" } do
+  = form_for @handyman, as: :profile, url: admin_handyman_profile_path, html: { class: "form-horizontal"} do |f|
+    - [:name, :nickname, :phone].each do |attr|
+      .form-group
+        = f.label attr, class: "col-md-3 control-label"
+        .col-md-7
+          = f.text_field attr, class: "form-control"
+    .form-group
+      = f.label :gender, class: "col-md-3 control-label"
+      .col-md-7
+        label.radio-inline
+          = f.radio_button :gender, "male"
+          | 男
+        label.radio-inline
+          = f.radio_button :gender, "female"
+          | 女
+    .form-group
+      .col-md-offset-6.col-md-4
+        .btn-toolbar.pull-right
+          = f.submit "确认", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+= render layout: "shared/modal", locals: { title: "个人资料(ID: #{@handyman.id})", id: "emailEdit"} do
+  = form_for @handyman, as: :profile, url: admin_handyman_profile_path, html: { class: "form-horizontal" } do |f|
+    .alert.alert-warning.col-md-offset-2.col-md-8
+      strong 注意:
+      | 修改 Email 可能会影响用户登录
+
+    .form-group
+      = f.label :email, class: "col-md-3 control-label"
+      .col-md-7
+        = f.text_field :email, class: "form-control"
+    .form-group
+      .col-md-offset-6.col-md-4
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+= render layout: "shared/modal", locals: { title: "个人资料(ID: #{@handyman.id})", id: "addressEdit"} do
+  = form_for @handyman, as: :profile, url: admin_handyman_profile_path, html: { class: "form-horizontal" } do |f|
+    .alert.alert-warning.col-md-offset-2.col-md-8
+      strong 注意:
+      | 修改地址会影响管家接收订单
+    .city-group
+      .form-group
+        .col-md-offset-2.col-md-8
+          select.city-select.form-control
+            option value="" - 城市 -
+            = options_for_select(ChinaCity.list('430000'), @city_code )
+      .form-group
+        .col-md-offset-2.col-md-8
+          select.city-select.form-control name="profile[primary_address_attributes][code]"
+            option value="" - 地区 -
+            = options_for_select(ChinaCity.list(@city_code), @district_code)
+    = f.fields_for :primary_address do |fields|
+      .form-group
+        .col-md-offset-2.col-md-8
+          = fields.text_area :content, placeholder: '详细地址', class: "form-control"
+    .form-group
+      .col-md-offset-2.col-md-8
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+= render layout: "shared/modal", locals: { title: "技能管理(ID: #{@handyman.id})", id: "taxonEdit"} do
+  = form_for @handyman, as: :profile, url: update_taxons_admin_handyman_profile_path(@handyman), method: :put, html: { class: "form-horizontal" } do |f|
+    = react_component('Taxons', initial: @handyman.taxons_redux_state)
+    .form-group
+      .col-md-offset-2.col-md-8
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+.tabs.row
+  .col-md-12
+    ul.nav.nav-tabs
+      li.active
+        a href="#"
+          | 个人信息
+      li
+        a href="#"
+          | 订单信息
+      li
+        a href="#"
+          | 财务信息
+
+
+.tabs__content.row
+  .col-md-8
+    .panel.panel-primary
+      .panel-heading
+        | 个人信息
+      .panel-body
+        = image_tag(@handyman.wechat_headimgurl || "avatar.png", class: "img-circle profile__img")
+        .profile
+          - { id: nil, name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit", primary_address: "#addressEdit" }.each do |attr, modal_id|
+            .profile__group
+              = label :handyman, attr, class: "col-md-2 profile__label"
+              .col-md-8
+                p.profile__input
+                  | #{ @handyman.send(attr) }
+              - if modal_id
+                .col-md-offset-8.col-md-2
+                  .pull-right
+                    = button_tag "编辑资料", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#{modal_id}"}
+
+
+  .col-md-4
+    .panel.panel-primary
+      .panel-heading
+        | 账号控制
+      .panel-body
+        .col-md-offset-2.col-md-8.text-center
+          .account-status__status
+            = label_tag "账号状态:"
+            - if @handyman.access_locked?
+              span.label.label-danger
+                | 锁定
+              .alert.alert-warning.text-left
+                label 解锁时间:
+                p
+                  | #{ I18n.l(@handyman.unlock_time, format: :long) }
+            - else
+              span.label.label-success
+                | 正常
+        .col-md-8.col-md-offset-2
+          .account-status__buttons.text-center
+            = form_for @handyman, url: update_account_status_admin_handyman_profile_path(@handyman), method: :post do |f|
+              = hidden_field_tag 'account_lock', true
+              = f.submit "冻结账号", class: "btn btn-danger btn-sm", style: "float:none"
+            = form_for @handyman, url: update_account_status_admin_handyman_profile_path(@handyman), method: :post do |f|
+              = hidden_field_tag 'account_lock', false
+              = f.submit "解冻账号", class: "btn btn-success btn-sm", style: "float:none"
+
+    .panel.panel-primary
+      .panel-heading
+        | 技能
+      .panel-body
+        - @handyman.taxons.each do |t|
+          .col-md-8.col-md-offset-2
+            span.label.label-info.profile__taxon
+              | #{t.name}
+        .col-md-offset-8.col-md-2
+          .pull-right
+            = button_tag "管理技能", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#taxonEdit" }

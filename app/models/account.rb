@@ -6,6 +6,7 @@ class Account < ActiveRecord::Base
     :trackable,
     :validatable,
     :omniauthable,
+    :lockable,
     omniauth_providers: [ :wechat, :handyman_wechat ]
 
   has_many :addresses, as: :addressable
@@ -61,6 +62,10 @@ class Account < ActiveRecord::Base
     Rails.cache.fetch("user-#{id}-access_token-#{Date.today}") do
       SecureRandom.hex
     end
+  end
+
+  def unlock_time
+    self.class.unlock_in.since(locked_at) if access_locked?
   end
 
   private
