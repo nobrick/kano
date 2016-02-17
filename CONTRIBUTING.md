@@ -10,6 +10,7 @@ Bugs are tracked as [GitHub issues](https://guides.github.com/features/issues/),
 - The branch name is in the format of `<type>/<subject>` (for example `feat/handyman-bonus`), type must be one of the following:
   - **feat**: A new feature
   - **fix**: A bug fix
+  - **enhance**: A feature enhancement
   - **docs**: Documentation only changes
   - **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc.)
   - **refactor**: A code change that neither fixes a bug nor adds a feature
