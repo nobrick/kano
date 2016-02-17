@@ -5,15 +5,6 @@ RSpec.describe Users::ProfilesController, type: :controller do
   let(:user) { create :user }
   let(:address_attrs) { { primary_address_attributes: attributes_for(:address) } }
 
-  describe 'GET #profile/edit' do
-    it 'returns http success' do
-      get :edit
-      expect(assigns(:account)).to be current_user
-      expect(response).to have_http_status(:success)
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'GET #profile/complete' do
     it 'returns http success' do
       get :complete
@@ -77,11 +68,11 @@ RSpec.describe Users::ProfilesController, type: :controller do
         ]
       end
 
-      it 're-renders the :edit template' do
+      it 're-renders the :complete template' do
         invalids.each do |invalid|
           current_account.reload
-          put :update, { profile: new_attrs.merge(invalid), view_action: 'edit' }
-          expect(response).to render_template :edit
+          put :update, { profile: new_attrs.merge(invalid) }
+          expect(response).to render_template :complete
         end
       end
     end

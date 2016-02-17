@@ -2,7 +2,7 @@ require 'sidekiq/web'
 
 Rails.application.routes.draw do
   concern :with_account_profile do
-    resource :profile, only: [ :show, :edit, :update ] do
+    resource :profile, only: [ :show, :update ] do
       get :complete
     end
   end
@@ -37,15 +37,10 @@ Rails.application.routes.draw do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
         resources :certifications, only: [ :update, :index, :show, :new, :create ]
-        # TODO add handymen info path
       end
       namespace :users, as: :user do
-        # TODO add user path here
-
       end
       namespace :orders, as: :order do
-        # TODO add order path here
-
       end
     end
 
