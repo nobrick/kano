@@ -110,14 +110,18 @@ RSpec.describe Withdrawal, type: :model do
   end
 
   shared_examples_for 'authorizer presence' do
+    after do
+      expect(withdrawal.send method).to eq true
+      expect { withdrawal.save }
+        .to raise_error ActiveModel::StrictValidationFailed
+    end
+
     it 'ensures that authorizer must be present' do
       withdrawal.authorizer = nil
-      expect { withdrawal.send method }.to raise_error TransitionFailure
     end
 
     it 'ensures that authorizer must be admin' do
       withdrawal.authorizer = create :user
-      expect { withdrawal.send method }.to raise_error TransitionFailure
     end
   end
 
@@ -148,7 +152,7 @@ RSpec.describe Withdrawal, type: :model do
       end
     end
 
-    context 'When authorizer is blank' do
+    describe 'authorizer' do
       let(:method) { :transfer }
       it_behaves_like 'authorizer presence'
     end
@@ -182,7 +186,7 @@ RSpec.describe Withdrawal, type: :model do
       end
     end
 
-    context 'When authorizer is blank' do
+    describe 'authorizer' do
       let(:method) { :decline }
       it_behaves_like 'authorizer presence'
     end

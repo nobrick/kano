@@ -21,6 +21,8 @@ class Withdrawal < ActiveRecord::Base
   validate :request_must_be_applied_at_permitted_dates, if: 'to? :requested'
   validate :requested_withdrawal_must_be_unique, if: 'to? :requested'
   validates :reason_message, presence: true, if: 'to? :declined'
+  validates! :authorizer, admin: { presence: true },
+    if: 'to? [ :transferred, :declined ]'
 
   def self.transferred_since(time)
     where(state: 'transferred').where('transferred_at >= ?', time)
@@ -85,13 +87,11 @@ class Withdrawal < ActiveRecord::Base
     end
 
     event :transfer do
-      transitions from: :requested, to: :transferred, after: :do_transfer,
-        if: [ :guard_authorizer! ]
+      transitions from: :requested, to: :transferred, after: :do_transfer
     end
 
     event :decline do
-      transitions from: :requested, to: :declined, after: :do_decline,
-        if: [ :guard_authorizer! ]
+      transitions from: :requested, to: :declined, after: :do_decline
     end
   end
 
@@ -140,16 +140,8 @@ class Withdrawal < ActiveRecord::Base
     end
   end
 
-  def guard_authorizer!
-    raise TransitionFailure, 'Authorizer is not present' if authorizer.nil?
-    raise TransitionFailure, 'Permission denied' unless authorizer.admin?
-    true
-  end
-
   def set_balance_record
     self.balance_record_attributes = {}
     balance_record.handler = BalanceRecord::WithdrawalHandler.new(self)
   end
 end
-
-class TransitionFailure < RuntimeError; end
