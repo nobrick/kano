@@ -16,9 +16,10 @@ RSpec.describe Taxon, type: :model do
     expect(Taxon.category_name('electronic')).to eq expected_category_name
   end
 
-  it 'creates taxon' do
-    expect(taxon).to be_a Taxon
+  it 'creates cert-pending taxon' do
+    expect { taxon }.to change(Taxon.pending, :count).by 1
     expect(taxon).to be_persisted
+    expect(taxon.pending?).to eq true
   end
 
   it '#name' do

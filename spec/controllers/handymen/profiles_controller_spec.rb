@@ -13,15 +13,6 @@ RSpec.describe Handymen::ProfilesController, type: :controller do
     end
   end
 
-  describe 'GET #profile/edit' do
-    it 'returns success and renders :edit' do
-      get :edit
-      expect(assigns(:account)).to be current_handyman
-      expect(response).to have_http_status(:success)
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'GET #profile/complete' do
     it 'returns success and renders :complete' do
       get :complete

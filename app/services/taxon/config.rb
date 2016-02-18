@@ -10,8 +10,7 @@ class Taxon::Config
   end
 
   def self.certified_statuses
-    @@certified_statuses ||= taxons_config['certified_status']
-      .map { |k, v| v }
+    %w{ success failure under_review }
   end
 
   def self.taxon_codes
@@ -20,7 +19,7 @@ class Taxon::Config
   end
 
   def self.reason_codes
-    @@reason_codes ||= taxons_config['reason_code']
+    @@reason_codes ||= taxons_config['reason_codes']
   end
 
   def self.items
@@ -31,20 +30,19 @@ class Taxon::Config
     @@categories ||= taxons_config['categories']
   end
 
-  def self.certified_status(tmp_status)
-    taxons_config['certified_status'][tmp_status]
+  def self.certified_status(status)
+    status
   end
 
-  def self.certify_failure_status?(tmp_status)
-    tmp_status == taxons_config['certified_status']['failure']
+  def self.certify_failure_status?(status)
+    status == 'failure'
   end
 
-  def self.certify_success_status?(tmp_status)
-    tmp_status == taxons_config['certified_status']['success']
+  def self.certify_success_status?(status)
+    status == 'success'
   end
 
-  def self.certify_under_review_status?(tmp_status)
-    tmp_status == taxons_config['certified_status']['under_review']
+  def self.certify_under_review_status?(status)
+    status == 'under_review'
   end
-
 end
