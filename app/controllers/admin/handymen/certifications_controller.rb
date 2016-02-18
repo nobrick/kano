@@ -73,6 +73,8 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     end
   end
 
+  private
+
   def dashboard
     @dashboard ||= ::CertifyDashboard.new
   end
@@ -89,8 +91,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       }
     ]
   end
-
-  private
 
   def certified_params
     params.require(:taxon).permit(:certified_status, :reason_code, :reason_message)

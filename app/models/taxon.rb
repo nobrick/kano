@@ -7,15 +7,31 @@ class Taxon < ActiveRecord::Base
   end
 
   belongs_to :handyman
-  belongs_to :certified_by, -> { where(admin: true) },
-    foreign_key: "certified_by", class_name: "Account"
+  belongs_to :certified_by, foreign_key: 'certified_by', class_name: 'Account'
+  scope :pending, -> { where(state: 'under_review') }
+  scope :certified, -> { where(state: 'success') }
+  scope :declined, -> { where(state: 'failure') }
+  alias_attribute :state, :certified_status
+  alias_attribute :declined_at, :certified_at
 
   validates :handyman, presence: true
   validates :code, presence: true, uniqueness: { scope: :handyman }
-  validates :reason_code, presence: true, if: :failure_status?
-  validates :reason_code, inclusion: { in: self.reason_codes }, allow_nil: true
   validates :certified_status, inclusion: { in: self.certified_statuses }
   validates :code, inclusion: { in: self.taxon_codes }
+  validates :state, presence: true
+
+  with_options if: :declined? do |v|
+    v.validates :reason_message, presence: true
+    v.validates :reason_code, presence: true
+    v.validates :reason_code,
+      inclusion: { in: self.reason_codes },
+      allow_nil: true
+  end
+
+  with_options unless: :pending? do |v|
+    v.validates! :certified_by, admin: { presence: true }
+    v.validates! :certified_at, presence: true
+  end
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -64,7 +80,6 @@ class Taxon < ActiveRecord::Base
     end
   end
 
-
   def name
     @taxon_name ||= Taxon.taxon_name(code)
   end
@@ -73,7 +88,15 @@ class Taxon < ActiveRecord::Base
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
 
-  def failure_status?
+  def declined?
     self.class.certify_failure_status?(certified_status)
+  end
+
+  def certified?
+    self.class.certify_success_status?(certified_status)
+  end
+
+  def pending?
+    self.class.certify_under_review_status?(certified_status)
   end
 end
