@@ -20,6 +20,6 @@ FactoryGirl.define do
       end
     end
 
-    factory(:handyman_with_taxons) { with_taxons true }
+    factory(:handyman_with_taxons) { with_taxons 'certified' }
   end
 end
