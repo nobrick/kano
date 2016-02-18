@@ -8,11 +8,14 @@ FactoryGirl.define do
     primary_address_attributes { attributes_for(:address) }
 
     after(:create) do |handyman, evaluator|
-      if evaluator.with_taxons
-        handyman.taxons_attributes = [
-          { code: 'electronic/lighting' },
-          { code: 'water/faucet' }
-        ]
+      codes = %w{ electronic/lighting water/faucet }
+      case evaluator.with_taxons.to_s
+      when 'certified'
+        codes.each do |code|
+          create :taxon, handyman: handyman, code: code, state: :certified
+        end
+      when 'pending', 'true'
+        handyman.taxons_attributes = codes.map { |c| { code: c } }
         handyman.save!
       end
     end

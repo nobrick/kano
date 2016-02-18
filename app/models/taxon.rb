@@ -12,13 +12,14 @@ class Taxon < ActiveRecord::Base
   scope :certified, -> { where(state: 'success') }
   scope :declined, -> { where(state: 'failure') }
   alias_attribute :state, :certified_status
+  alias_attribute :declined_by, :certified_by
   alias_attribute :declined_at, :certified_at
-
+  alias_attribute :requested_at, :cert_requested_at
   validates :handyman, presence: true
-  validates :code, presence: true, uniqueness: { scope: :handyman }
-  validates :certified_status, inclusion: { in: self.certified_statuses }
-  validates :code, inclusion: { in: self.taxon_codes }
-  validates :state, presence: true
+  validates :code, presence: true, uniqueness: { scope: :handyman },
+    inclusion: { in: self.taxon_codes }
+  validates :state, inclusion: { in: self.certified_statuses }
+  validates :requested_at, presence: true, if: :pending?
 
   with_options if: :declined? do |v|
     v.validates :reason_message, presence: true
@@ -32,6 +33,8 @@ class Taxon < ActiveRecord::Base
     v.validates! :certified_by, admin: { presence: true }
     v.validates! :certified_at, presence: true
   end
+
+  before_validation :touch_requested_at, if: :pending?
 
   # Usage1: taxon_name(category, taxon)
   # Usage2: taxon_name(taxon)
@@ -98,5 +101,11 @@ class Taxon < ActiveRecord::Base
 
   def pending?
     self.class.certify_under_review_status?(certified_status)
+  end
+
+  private
+
+  def touch_requested_at
+    self.requested_at = Time.now
   end
 end

@@ -29,4 +29,27 @@ RSpec.describe Taxon, type: :model do
   it '#category_name' do
     expect(taxon.category_name).to eq expected_category_name
   end
+
+  describe 'FactoryGirl methods' do
+    it 'creates pending taxon' do
+      taxon = create :taxon, state: :pending
+      expect(taxon.pending?).to eq true
+      expect(taxon.state).to eq 'under_review'
+      expect(Taxon.pending).to eq [ taxon ]
+    end
+
+    it 'creates certified taxon' do
+      taxon = create :taxon, state: :certified
+      expect(taxon.certified?).to eq true
+      expect(taxon.state).to eq 'success'
+      expect(Taxon.certified).to eq [ taxon ]
+    end
+
+    it 'creates declined taxon' do
+      taxon = create :taxon, state: :declined
+      expect(taxon.declined?).to eq true
+      expect(taxon.state).to eq 'failure'
+      expect(Taxon.declined).to eq [ taxon ]
+    end
+  end
 end
