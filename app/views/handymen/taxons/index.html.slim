@@ -1,7 +1,7 @@
 - content_for :row
-  .order-show-page.handyman-order-show-page
+  .details-card-layout
     .col-md-6.col-md-offset-3
-      .order-details-header-card.mdl-card.mdl-shadow--2dp
+      .details-header-card.mdl-card.mdl-shadow--2dp
         .mdl-card__supporting-text.text-center
           - if @taxons.certified.blank?
             span.h2 您的维修项目未被开通
@@ -10,13 +10,13 @@
           - else
             span.h2 您的维修项目已经全部开通
           h3 如需帮助，请联系我们
-      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+      .details-content-card.mdl-card.mdl-shadow--2dp
         - if @taxons.certified.any?
           .mdl-card__supporting-text
             .card-attr-title
               span.fa-icon
                 => fa_icon('tags')
-                ' 已为您开通的维修项目
+                ' 已为您开通的维修项目（可接单）
             - @taxons.certified.each do |taxon|
               span.label.label-success
                 = taxon.name
@@ -25,7 +25,7 @@
             .card-attr-title
               span.fa-icon
                 => fa_icon('tags')
-                ' 申请中的维修项目
+                ' 正在审核中的维修项目
             - @taxons.pending.each do |taxon|
               span.label.label-info
                 = taxon.name

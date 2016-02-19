@@ -165,7 +165,52 @@ input[type=checkbox] {
   margin-right: auto;
 }
 
-/* App style */
+.common-card {
+  width: 94%;
+  margin: 0px auto 16px;
+  .mdl-card__supporting-text {
+    width: 100%;
+    padding-bottom: 16px;
+  }
+  .card-divider {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.tight-elements {
+  p {
+    padding-bottom: 0px;
+    margin-bottom: 0px;
+  }
+  p.small-text {
+    font-size: 12px;
+    line-height: 17px;
+    margin-bottom: 7px;
+  }
+  h1, h2, h3, h4 {
+    margin: 0px auto 0px;
+  }
+}
+
+/* App layouts */
+.details-card-layout {
+  .details-header-card, .details-content-card {
+    @extend .common-card;
+    @extend .tight-elements;
+    min-height: 80px;
+  }
+  .details-header-card {
+    padding-top: 8px;
+  }
+  .details-content-card {
+    .card-attr-title {
+      color: #0688cc;
+      margin-bottom: 4px;
+    }
+  }
+}
+
+/* App components style */
 .field_with_errors {
   display: inline;
   color: #e84141;
@@ -443,35 +488,9 @@ input[type=checkbox] {
   }
 }
 
-.common-card {
-  width: 94%;
-  margin: 0px auto 16px;
-  .mdl-card__supporting-text {
-    width: 100%;
-    padding-bottom: 16px;
-  }
-  .mdl-textfield {
-    width: 100%;
-  }
-  .card-divider {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-  }
-}
-
 .order-details-header-card, .order-details-attributes-card {
   @extend .common-card;
-  p {
-    padding-bottom: 0px;
-    margin-bottom: 0px;
-  }
-  p.small-text {
-    font-size: 12px;
-    line-height: 17px;
-    margin-bottom: 7px;
-  }
-  h1, h2, h3, h4 {
-    margin: 0px auto 0px;
-  }
+  @extend .tight-elements;
   .mdl-textfield__label {
     text-align: center;
   }
