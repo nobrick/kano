@@ -1,0 +1,50 @@
+- content_for :row
+  .order-show-page.handyman-order-show-page
+    .col-md-6.col-md-offset-3
+      .order-details-header-card.mdl-card.mdl-shadow--2dp
+        .mdl-card__supporting-text.text-center
+          - if @taxons.certified.blank?
+            span.h2 您的维修项目未被开通
+          - elsif @taxons.pending.any?
+            span.h2 已为您开通部分维修项目
+          - else
+            span.h2 您的维修项目已经全部开通
+          h3 如需帮助，请联系我们
+      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
+        - if @taxons.certified.any?
+          .mdl-card__supporting-text
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('tags')
+                ' 已为您开通的维修项目
+            - @taxons.certified.each do |taxon|
+              span.label.label-success
+                = taxon.name
+        - if @taxons.pending.any?
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('tags')
+                ' 申请中的维修项目
+            - @taxons.pending.each do |taxon|
+              span.label.label-info
+                = taxon.name
+        - if @taxons.declined.any?
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('tags')
+                ' 审核未通过的维修项目
+            - @taxons.declined.each do |taxon|
+              p
+                span.label.label-danger
+                  = taxon.name
+              p #{taxon.reason_code_desc}: #{taxon.reason_message}
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('info-circle')
+              ' 个人信息
+          p ID: #{@handyman.id}
+      = link_to '开始抢单', handyman_orders_path, class: 'mdl-button mdl-js-button mdl-button--accent'
+      = link_to '申请新项目', complete_handyman_profile_path, class: 'mdl-button mdl-js-button mdl-button--accent pull-right'

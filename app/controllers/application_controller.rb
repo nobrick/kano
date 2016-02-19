@@ -48,12 +48,16 @@ class ApplicationController < ActionController::Base
   end
 
   def authenticate_completed_handyman(options = {})
-    return unless authenticate_handyman!
-    if current_handyman.completed_info?
-      true
-    else
+    return false unless authenticate_handyman!
+    unless current_handyman.completed_info?
       sign_up_uncompleted('handyman', options)
+      return false
     end
+    unless current_handyman.certified?
+      redirect_to handyman_taxons_path
+      return false
+    end
+    true
   end
 
   def complete_profile_url_for(scope)

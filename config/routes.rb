@@ -27,7 +27,7 @@ Rails.application.routes.draw do
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
-
+      resources :taxons, only: [ :index ]
       concerns :with_account_profile
     end
   end

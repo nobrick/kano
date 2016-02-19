@@ -15,7 +15,8 @@ class ProfilesController < ApplicationController
   def update
     @account.assign_attributes(profile_params)
     if @account.save(context: :complete_info_context)
-      redirect_to root_url, notice: t("^profiles.complete_success")
+      redirect_to after_update_success_path,
+        notice: t("^profiles.complete_success")
     else
       set_address
       yield :failure if block_given?
@@ -24,6 +25,10 @@ class ProfilesController < ApplicationController
   end
 
   private
+
+  def after_update_success_path
+    root_url
+  end
 
   def set_account
     @account = current_account

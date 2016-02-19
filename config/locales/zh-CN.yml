@@ -48,8 +48,7 @@ zh-CN:
     root:
       should_complete_profile: '继续操作前请您完善个人资料'
       profiles:
-        edit_success: '成功更新个人资料'
-        complete_success: '恭喜您注册成功'
+        complete_success: '申请已提交'
     omniauth_callbacks:
       failure: '获取您的微信资料失败，请稍后重试'
       persist_failure: '暂时无法微信登录。如需帮助，请联系客服'

@@ -23,7 +23,11 @@
             strong 现金支付收入
             =< number_to_currency @account.cash_total, unit: '￥'
       .mdl-card__actions.mdl-card--border
-        = link_to '我的订单', handyman_contracts_path,
+        = link_to '订单', handyman_contracts_path,
+          class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+        = link_to '提现', '#',
+          class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+        = link_to '维修项目', handyman_taxons_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
     - if @orders.present?
       .order-cards-list.handyman-order-cards-list
