@@ -25,8 +25,17 @@ class Handyman < Account
     true
   end
 
-  def taxon_codes
-    taxons.map(&:code)
+  def certified?
+    taxons.certified.any?
+  end
+
+  def taxon_codes(taxon_state = :all)
+    case taxon_state.to_sym
+    when :all
+      taxons.map(&:code)
+    else
+      taxons.send(taxon_state).map(&:code)
+    end
   end
 
   def taxon_names
@@ -36,8 +45,8 @@ class Handyman < Account
   def taxons_redux_state
     {
       'result' => {
-        'selectedTaxons' => taxon_codes,
-        'taxons' => Taxon.taxon_codes
+        'selectedTaxons' => taxon_codes(:pending),
+        'taxons' => Taxon.taxon_codes - taxon_codes(:certified)
       },
       'entities' => Taxon.redux_entities
     }

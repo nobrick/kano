@@ -21,5 +21,6 @@ FactoryGirl.define do
     end
 
     factory(:handyman_with_taxons) { with_taxons 'certified' }
+    factory(:handyman_with_pending_taxons) { with_taxons 'pending' }
   end
 end

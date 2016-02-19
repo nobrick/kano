@@ -31,6 +31,7 @@ RSpec.describe Handyman, type: :model do
       handyman = create :handyman_with_taxons
       expect(handyman.taxons.first).to be_persisted
       expect(handyman.taxons.count).to eq 2
+      expect(handyman.taxons.certified.count).to eq 2
     end
   end
 

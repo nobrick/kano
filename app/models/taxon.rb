@@ -11,6 +11,9 @@ class Taxon < ActiveRecord::Base
   scope :pending, -> { where(state: 'under_review') }
   scope :certified, -> { where(state: 'success') }
   scope :declined, -> { where(state: 'failure') }
+  scope :non_pending, -> { where.not(state: 'under_review') }
+  scope :non_certified, -> { where.not(state: 'success') }
+  scope :non_declined, -> { where.not(state: 'failure') }
   alias_attribute :state, :certified_status
   alias_attribute :declined_by, :certified_by
   alias_attribute :declined_at, :certified_at
@@ -91,21 +94,39 @@ class Taxon < ActiveRecord::Base
     @category_name ||= Taxon.category_name(code.split('/').first)
   end
 
+  def pending?
+    state == 'under_review'
+  end
+
   def declined?
-    self.class.certify_failure_status?(certified_status)
+    state == 'failure'
   end
 
   def certified?
-    self.class.certify_success_status?(certified_status)
+    state == 'success'
   end
 
-  def pending?
-    self.class.certify_under_review_status?(certified_status)
+  def pend
+    self.state = 'under_review'
+    self.requested_at = Time.now
+    true
+  end
+
+  def decline
+    self.state = 'failure'
+    self.declined_at = Time.now
+    true
+  end
+
+  def certify
+    self.state = 'success'
+    self.certified_at = Time.now
+    true
   end
 
   private
 
   def touch_requested_at
-    self.requested_at = Time.now
+    self.requested_at ||= Time.now
   end
 end

@@ -42,18 +42,22 @@ module Kano
       g.helper false
     end
 
-    # Auto load service objects.
-    config.autoload_paths += %W{ #{config.root}/app/services }
-    config.eager_load_paths += %W{ #{config.root}/app/services }
+    # Auto load service objects and validators.
+    autoload_paths = %w{ app/services app/validators }
+      .map { |p| "#{config.root}/#{p}" }
+    config.autoload_paths += autoload_paths
+    config.eager_load_paths += autoload_paths
 
     # Browserify trasformation for react jsx files.
-    config.browserify_rails.commandline_options = '-t [ babelify --presets [ es2015 react ] ] --extension=".jsx" --debug'
+    config .browserify_rails
+      .commandline_options = '-t [ babelify --presets [ es2015 react ] ] --extension=".jsx" --debug'
 
     # Add node modules into assets paths.
     config.assets.paths << Rails.root.join('node_modules')
 
     # Precompile material design icons.
-    material_icons_paths = %w( eot woff2 woff ttf ).map { |f| "material-design-icons/iconfont/MaterialIcons-Regular.#{f}" }
+    material_icons_paths = %w( eot woff2 woff ttf )
+      .map { |f| "material-design-icons/iconfont/MaterialIcons-Regular.#{f}" }
     Rails.application.config.assets.precompile += material_icons_paths
   end
 end
