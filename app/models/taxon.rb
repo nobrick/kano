@@ -124,6 +124,10 @@ class Taxon < ActiveRecord::Base
     true
   end
 
+  def reason_code_desc
+    I18n.t "taxon.reason_code.#{reason_code}", default: :missing_info
+  end
+
   private
 
   def touch_requested_at

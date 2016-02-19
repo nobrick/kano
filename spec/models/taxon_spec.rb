@@ -30,6 +30,11 @@ RSpec.describe Taxon, type: :model do
     expect(taxon.category_name).to eq expected_category_name
   end
 
+  it '#reason_code_desc' do
+    taxon.reason_code = 'missing_info'
+    expect(taxon.reason_code_desc).to eq '资料不全'
+  end
+
   describe 'FactoryGirl methods' do
     it 'creates pending taxon' do
       taxon = create :taxon, state: :pending
