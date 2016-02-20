@@ -3,10 +3,6 @@ class Handymen::ProfilesController < ProfilesController
   before_action :gray_background, only: [ :show ]
 
   def show
-    @orders = Order.includes(:user, :address)
-      .where(handyman: current_handyman)
-      .order(updated_at: :desc)
-      .limit(2)
   end
 
   def update
