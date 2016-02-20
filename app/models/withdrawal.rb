@@ -99,15 +99,58 @@ class Withdrawal < ActiveRecord::Base
     14.days.ago.end_of_day
   end
 
+  def self.permitted_days
+    [ 7, 14, 21, 28 ]
+  end
+
+  def self.at_permitted_requesting_date?
+    permitted_days.include? Date.today.day
+  end
+
+  # Next permitted requesting date.
+  #
+  # @return [Date] Next permitted date for withdrawal request.
+  def self.next_permitted_requesting_date(date = Date.today)
+    dates = permitted_days.flat_map do |day|
+      [ date, date.next_month ].map { |d| d.change(day: day) }
+    end
+    dates.select { |d| d > date }.min.to_date
+  end
+
+  # Computes unfrozen balance for the specified handyman. If a block is given,
+  # the unfrozen balance record and withdrawable balance for the handyman are
+  # passed as yielding parameters.
+  #
+  # @return [Decimal] Unfrozen withdrawable balance for handyman.
+  # @yield [unfrozen_record, unfrozen_balance]
+  # @yield_param [BalanceRecord] unfrozen_record The handyman's unfrozen
+  # balance record.
+  # @yield_param [Decimal] unfrozen_balance The returned unfrozen withdrawable
+  # balance for the handyman.
+  def self.unfrozen_balance_for(handyman)
+    handyman.reload
+    unfrozen = handyman.unfrozen_balance_record
+    latest = handyman.latest_balance_record
+    u = unfrozen ? (unfrozen.online_income_total - latest.withdrawal_total) : 0
+    yield unfrozen, u if block_given?
+    u
+  end
+
+  # Checks if there exists no other requesting withdrawal.
+  #
+  # @return [Boolean] Whether current withdrawal request is unique.
+  def withdrawal_request_unique?
+    requested = handyman.withdrawals.requested
+    requested = requested.where.not(id: id) if persisted?
+    requested.blank?
+  end
+
   private
 
   def do_request
-    handyman.reload
-    self.unfrozen_record = handyman.unfrozen_balance_record
-
-    if unfrozen_record
-      withdrawal_total = handyman.latest_balance_record.withdrawal_total
-      self.total = unfrozen_record.online_income_total - withdrawal_total
+    Withdrawal.unfrozen_balance_for(handyman) do |u_record, u_balance|
+      self.unfrozen_record = u_record
+      self.total = u_balance
     end
   end
 
@@ -129,13 +172,13 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def requested_withdrawal_must_be_unique
-    if handyman.withdrawals.requested.present?
+    unless withdrawal_request_unique?
       errors.add(:base, '您已经提交过提现申请，请等待审核')
     end
   end
 
   def request_must_be_applied_at_permitted_dates
-    if [ 7, 14, 21, 28 ].exclude? Date.today.day
+    unless Withdrawal.at_permitted_requesting_date?
       errors.add(:base, '请在每月7、14、21、28日提交提现申请')
     end
   end
