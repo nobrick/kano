@@ -7,7 +7,9 @@
             span.h3
               ' 可提现
               b #{number_to_currency @unfrozen_balance, unit: '￥'}
-            - if @is_today_permitted
+            - if @already_requested
+              h3 提现申请正在审核中
+            - elsif @is_today_permitted
               h3 = link_to '申请提现', new_handyman_withdrawal_path, class: 'mdl-button mdl-js-button mdl-button--accent'
             - else
               h3

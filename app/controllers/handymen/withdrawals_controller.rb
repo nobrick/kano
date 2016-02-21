@@ -11,6 +11,7 @@ class Handymen::WithdrawalsController < ApplicationController
       .page(params[:page])
       .per(7)
     @last_withdrawal_total = @withdrawals.first.try(:total) || 0
+    @already_requested = @withdrawals.any?(&:requested?)
   end
 
   # GET /withdrawals/new
