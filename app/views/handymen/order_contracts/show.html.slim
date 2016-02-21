@@ -53,15 +53,21 @@
         .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon
-              => fa_icon('envelope')
+              => fa_icon('envelope-o')
             ' 维修内容
           p = @order.content
         .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon
-              => fa_icon('tag')
+              => fa_icon('folder-o')
             ' 维修项目
           p = @order.taxon_name
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('bars')
+            ' 订单编号
+          p = @order.id
       - if (@order.contracted? || @order.payment?) && @pricing
         .order-details-attributes-card.mdl-card.mdl-shadow--2dp
           .mdl-card__supporting-text
