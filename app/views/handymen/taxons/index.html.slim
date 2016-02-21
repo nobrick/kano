@@ -43,8 +43,9 @@
         .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon
-              => fa_icon('info-circle')
+              => fa_icon('user')
               ' 个人信息
           p ID: #{@handyman.id}
-      = link_to '开始抢单', handyman_orders_path, class: 'mdl-button mdl-js-button mdl-button--accent'
+      - if @taxons.certified.blank?
+        = link_to '开始抢单', handyman_orders_path, class: 'mdl-button mdl-js-button mdl-button--accent'
       = link_to '申请新项目', complete_handyman_profile_path, class: 'mdl-button mdl-js-button mdl-button--accent pull-right'
