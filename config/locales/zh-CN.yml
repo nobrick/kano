@@ -177,7 +177,7 @@ zh-CN:
         balance_record: '提现纪录'
         total: '金额'
         bank_code: '银行'
-        account_no: '银行卡号'
+        account_no: '卡号'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

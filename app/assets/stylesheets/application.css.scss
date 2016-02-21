@@ -154,6 +154,20 @@ input[type=checkbox] {
   color: #777777;
 }
 
+select.select-block {
+  display: block;
+}
+
+select.select-block.select-block-center {
+  max-width: 300px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+select.select-block.select-block-fullwidth {
+  width: 100%;
+}
+
 @mixin h-center($max-width, $screen-sm-width) {
   @extend .text-center;
   width: 100%;
@@ -177,6 +191,10 @@ input[type=checkbox] {
   }
 }
 
+.accent-color {
+  color: #ff4081;
+}
+
 .tight-elements {
   p {
     padding-bottom: 0px;
@@ -186,6 +204,11 @@ input[type=checkbox] {
     font-size: 12px;
     line-height: 17px;
     margin-bottom: 7px;
+  }
+  p.medium-text {
+    font-size: 13px;
+    line-height: 19px;
+    margin-bottom: 10px;
   }
   h1, h2, h3, h4 {
     margin: 0px auto 0px;
@@ -206,6 +229,9 @@ input[type=checkbox] {
     .card-attr-title {
       color: #0688cc;
       margin-bottom: 4px;
+      .fa-icon {
+        margin-right: 5px;
+      }
     }
   }
 }
@@ -339,9 +365,6 @@ input[type=checkbox] {
   }
   select.select-block, .datetime-select-zone {
     max-width: 300px;
-  }
-  select.select-block {
-    display: block;
   }
   .datetime-select-zone {
     width: 100%;
