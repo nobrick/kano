@@ -8,8 +8,15 @@ class Withdrawal < ActiveRecord::Base
   has_one :balance_record, as: :adjustment_event
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
-  validates :bank_code, presence: true
   validates :account_no, presence: true
+  validates :account_no, allow_blank: true, format: {
+    with: /\A\d{16,19}\z/,
+    message: '格式无效'
+  }
+  validates :bank_code, inclusion: {
+    in: Withdrawal::Banking.bank_codes,
+    message: '不能为空'
+  }
   accepts_nested_attributes_for :balance_record
 
   # @!visibility private
