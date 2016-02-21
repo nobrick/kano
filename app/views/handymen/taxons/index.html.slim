@@ -18,7 +18,7 @@
                 => fa_icon('tags')
                 ' 已为您开通的维修项目（可接单）
             - @taxons.certified.each do |taxon|
-              span.label.label-success
+              span.label.label-success.label-span
                 = taxon.name
         - if @taxons.pending.any?
           .mdl-card__supporting-text.card-divider
@@ -27,7 +27,7 @@
                 => fa_icon('tags')
                 ' 正在审核中的维修项目
             - @taxons.pending.each do |taxon|
-              span.label.label-info
+              span.label.label-info.label-span
                 = taxon.name
         - if @taxons.declined.any?
           .mdl-card__supporting-text.card-divider
@@ -37,7 +37,7 @@
                 ' 审核未通过的维修项目
             - @taxons.declined.each do |taxon|
               p
-                span.label.label-danger
+                span.label.label-danger.label-span
                   = taxon.name
               p #{taxon.reason_code_desc}: #{taxon.reason_message}
         .mdl-card__supporting-text.card-divider
