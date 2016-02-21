@@ -60,6 +60,10 @@ class Handyman < Account
     latest_balance_record.try(:cash_total) || 0
   end
 
+  def unfrozen_balance
+    Withdrawal.unfrozen_balance_for(self)
+  end
+
   private
 
   def taxons_presence

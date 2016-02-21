@@ -15,23 +15,43 @@
         p
           span.fa-icon
             => fa_icon('archive')
-            strong 在线支付余额
+            strong 当前余额
             =< number_to_currency @account.balance, unit: '￥'
           br
           span.fa-icon
             => fa_icon('ticket')
-            strong 现金支付收入
+            strong 现金收入
             =< number_to_currency @account.cash_total, unit: '￥'
       .mdl-card__actions.mdl-card--border
         = link_to '订单', handyman_contracts_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
-        = link_to '提现', '#',
+        = link_to '提现', handyman_withdrawals_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
-        = link_to '维修项目', handyman_taxons_path,
+        = link_to '技能', handyman_taxons_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
-    - if @orders.present?
-      .order-cards-list.handyman-order-cards-list
-        = render partial: 'handymen/order_contracts/order', collection: @orders
-        .page-navigation
-          = link_to '更多订单', handyman_contracts_path,
-            class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+
+    .details-card-layout
+      .col-md-6.col-md-offset-3
+        .details-content-card.mdl-card.mdl-shadow--2dp
+          .mdl-card__supporting-text
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('user')
+                ' 个人信息
+            p #{@account.name}
+            p ID-#{@account.id}
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('envelope')
+                ' 联系方式
+            p #{@account.readable_phone_number}
+            p #{@account.primary_address.full_content}
+          .mdl-card__supporting-text.card-divider
+            .card-attr-title
+              span.fa-icon
+                => fa_icon('tags')
+                ' 已开通服务
+            - @account.taxons.certified.each do |taxon|
+              span.label.label-success
+                = taxon.name

@@ -1,0 +1,32 @@
+- content_for :row
+  .details-card-layout
+    .col-md-6.col-md-offset-3
+      .details-content-card.mdl-card.mdl-shadow--2dp
+        h3.text-center
+          b 请填写您的收款账户信息
+        .mdl-card__supporting-text.card-divider
+          = render 'shared/error_messages', model: @withdrawal
+          = form_for(@withdrawal, url: handyman_withdrawals_path, class: 'form-horizontal') do |f|
+            .form-group
+              = label_tag '金额', nil, class: 'i-md-label'
+              p
+                b = number_to_currency @unfrozen_balance, unit: '￥'
+            .field.form-group
+              = f.label :account_no, class: 'i-md-label'
+              = f.text_field :account_no, pattern: '\d*', class: 'mdl-textfield__input'
+            .field.form-group
+              = f.label :bank_code, class: 'i-md-label'
+              = f.select :bank_code, Withdrawal::Banking.invert_banks,
+                { include_blank: true }, { class: 'select-block select-block-fullwidth' }
+            .form-group
+              = label_tag '持卡人', nil, class: 'i-md-label'
+              p = @account.name
+            .form-group
+              = label_tag '联系方式', nil, class: 'i-md-label'
+              p = @account.phone
+            div.text-center
+              = button_to nil, class: 'mdl-button mdl-js-button mdl-button--accent btn-create-order' do
+                span.fa-icon.icon-in-button
+                  = fa_icon('check-circle')
+                ' 提交
+      = render 'handymen/shared/withdrawal_desc'

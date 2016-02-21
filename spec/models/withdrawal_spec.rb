@@ -192,6 +192,17 @@ RSpec.describe Withdrawal, type: :model do
     end
   end
 
+  describe '.next_permitted_requesting_date' do
+    it 'returns next permitted date for withdrawal request' do
+      expect(Withdrawal.next_permitted_requesting_date on(1, 7).to_date)
+        .to eq on(1, 14).to_date
+      expect(Withdrawal.next_permitted_requesting_date on(1, 28))
+        .to eq on(2, 7).to_date
+      expect(Withdrawal.next_permitted_requesting_date on(1, 31))
+        .to eq on(2, 7).to_date
+    end
+  end
+
   describe 'FactoryGirl methods' do
     before { on(unfrozen date) { create_paid_orders_for handyman, 1 } }
 
