@@ -186,24 +186,4 @@ RSpec.describe Admin::Handymen::ProfilesController, type: :controller do
       end
     end
   end
-
-  describe 'PUT #update_account_status' do
-    it 'locks the account successful' do
-      post :update_account_status, id: handyman.id, account_lock: 'true'
-
-      handyman.reload
-
-      expect(handyman.access_locked?).to eq true
-    end
-
-    it 'unlocks the account successful' do
-      handyman.lock_access!
-
-      put :update_account_status, id: handyman.id, account_lock: 'false'
-
-      handyman.reload
-
-      expect(handyman.access_locked?).to eq false
-    end
-  end
 end

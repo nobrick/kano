@@ -4,6 +4,8 @@
 //= require 'china_city/jquery.china_city'
 //= require bootstrap
 //= require admin/taxon-certify
+//= require admin/modal
+//= require admin/address-edit
 //= require admin/table
 //= require react_ujs
 //= require ../components

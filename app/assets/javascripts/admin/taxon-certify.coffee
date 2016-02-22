@@ -17,12 +17,13 @@ $ ->
       modal.find('.js-certifyFail-taxon').html(taxon)
 
 $ ->
-  $(".js-input-enable-trigger")
+  $(".js-taxonCertifyFailReasonTrigger")
     .on 'change', () ->
       value = $(this).val()
-      isDisabled = !!$(".js-input-enable").attr("disabled")
-      console.log isDisabled
+      targetField = $(this).data('target')
+      console.log(targetField)
+      isDisabled = !!$(targetField).attr("visiability")
       if value == "failure"
-        $(".js-input-enable").removeAttr("disabled")
+        $(targetField).removeAttr("style")
       else if !isDisabled
-        $(".js-input-enable").attr("disabled", true)
+        $(targetField).attr("style", "display: none")

@@ -5,6 +5,7 @@ class Address < ActiveRecord::Base
 
   validates :addressable, presence: true
   validates :content, presence: true
+  validates :content, uniqueness: { scope: [:code, :addressable] }
   validate { errors.add(:base, '请选择您所在的地区') unless code_valid? }
 
   def primary?
@@ -37,6 +38,10 @@ class Address < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def primary_address?
+    self == addressable.primary_address
   end
 
   def province_code

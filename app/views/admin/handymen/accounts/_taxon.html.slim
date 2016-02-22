@@ -1,0 +1,57 @@
+.profile__taxon
+  .col-md-9
+    - if taxon.certified_status == "failure"
+      span.label.certify__label.label-danger
+        |认证失败
+    - elsif taxon.certified_status == "success"
+      span.label.certify__label.label-success
+        |认证通过
+    - elsif taxon.certified_status == "under_review"
+      span.label.certify__label.label-warning
+        |等待认证
+    span.label.label-info.taxon
+      | #{taxon.name}
+  .col-md-3.text-right
+    = link_to "详情", "#", class: "js-modalShow", data: { target: "#taxonInfo#{index}"}
+    = link_to "认证", "#", class: "js-modalShow", data: { target: "#taxonCertify#{index}"}
+
+  = render layout: "admin/shared/modal", locals: { title: "技能详情", id: "taxonInfo#{index}" } do
+    .row.taxon_info
+      = render partial: "taxon_info", locals: {taxon: taxon}
+      .col-md-11.text-right
+        = button_tag "确定", class: "btn btn-primary", data: { dismiss: "modal" }
+
+
+  = render layout: "admin/shared/modal", locals: { title: "技能认证", id: "taxonCertify#{index}" } do
+    = form_for taxon, url: admin_handyman_certification_path(taxon), html: {class: "form-horizontal"} do |f|
+      .form-group
+        = hidden_field_tag 'backurl', backurl
+        = f.label :certified_status, class: "control-label col-md-2"
+        .col-md-8
+          label.radio-inline
+            = f.radio_button :certified_status, "success", class: "js-taxonCertifyFailReasonTrigger", data: { target: "#js-certifyField#{index}"}
+            | 通过
+          label.radio-inline
+            = f.radio_button :certified_status, "failure", class: "js-taxonCertifyFailReasonTrigger", data: { target: "#js-certifyField#{index}"}
+            | 不通过
+          label.radio-inline
+            = f.radio_button :certified_status, "under_review", class: "js-taxonCertifyFailReasonTrigger", data: { target: "#js-certifyField#{index}"}
+            | 审核中
+
+      - display = taxon.certified_status == "failure" ? nil : "none"
+      div id="js-certifyField#{index}" style="display: #{display}"
+        .form-group
+          = f.label :reason_code, class: "control-label col-md-2"
+          .col-md-8
+            = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {include_blank: true}, {class: "form-control"}
+
+        .form-group
+          = f.label :reason_message, class: "control-label col-md-2"
+          .col-md-8
+            = f.text_area :reason_message, class: "form-control"
+
+      .form-group
+        .col-md-10
+          .btn-toolbar.pull-right
+            = f.submit "确定", class: "btn btn-primary"
+            = button_tag "返回", class: "btn btn-default", data: { dismiss: "modal" }

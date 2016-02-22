@@ -10,6 +10,11 @@ class Admin::ApplicationController < ActionController::Base
     true
   end
 
+  def account_model_class
+    name = controller_path.match(/admin\/(\w+)\//)[1].singularize.capitalize
+    ActiveRecord.const_get(name)
+  end
+
   def in_scope?(parent_path)
     request.path =~ /^#{parent_path}/
   end
@@ -24,17 +29,17 @@ class Admin::ApplicationController < ActionController::Base
     [
       {
         text: "handymen_admin",
-        path: admin_handyman_certification_index_path,
+        path: admin_handyman_certifications_path,
         scope: '/alpha/handymen'
       },
       {
         text: "users_admin",
-        path: admin_user_account_index_path,
+        path: admin_user_accounts_path,
         scope: '/alpha/users'
       },
       {
         text: "orders_admin",
-        path: admin_order_index_path,
+        path: admin_orders_path,
         scope: '/alpha/orders'
       },
       {

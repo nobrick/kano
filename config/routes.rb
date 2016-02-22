@@ -38,18 +38,38 @@ Rails.application.routes.draw do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
         resources :certifications, only: [ :update, :index, :show, :new, :create ]
-        resources :accounts, only: [:index, :update, :show]
+        resources :accounts, only: [:index, :show] do
+          member do
+            post :update_account_status
+          end
+        end
+
+        resources :profiles, only: [:update] do
+          member do
+            put :update_taxons
+          end
+        end
       end
+
       namespace :users, as: :user do
-        resources :accounts, only: [:index, :update, :show]
+        resources :accounts, only: [:index, :show] do
+          member do
+            post :update_account_status
+          end
+        end
+
+        resources :profiles, only: [:update], shallow: true do
+          resources :addresses, only: [:create, :update, :destroy]
+          member do
+            post :set_primary_address
+          end
+        end
       end
+
       namespace :managers, as: :manager do
         resources :accounts, only: [:index, :update, :show]
       end
-
-
-      resources :orders, as: :order, only: [:index, :update, :show]
-
+      resources :orders, only: [:index, :update, :show]
     end
 
     mount Sidekiq::Web => '/sidekiq'

@@ -1,0 +1,54 @@
+= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{account.id})", id: "profileEdit" } do
+  = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
+    - [:name, :nickname, :phone].each do |attr|
+      .form-group
+        = f.label attr, class: "col-md-3 control-label"
+        .col-md-7
+          = f.text_field attr, class: "form-control"
+    .form-group
+      = f.label :gender, class: "col-md-3 control-label"
+      .col-md-7
+        label.radio-inline
+          = f.radio_button :gender, "male"
+          | 男
+        label.radio-inline
+          = f.radio_button :gender, "female"
+          | 女
+    .form-group
+      .col-md-offset-6.col-md-4
+        .btn-toolbar.pull-right
+          = f.submit "确认", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{account.id})", id: "emailEdit"} do
+  = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
+    .alert.alert-warning.col-md-offset-2.col-md-8
+      strong 注意:
+      | 修改 Email 可能会影响用户登录
+
+    .form-group
+      = f.label :email, class: "col-md-3 control-label"
+      .col-md-7
+        = f.text_field :email, class: "form-control"
+    .form-group
+      .col-md-offset-6.col-md-4
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+.panel.panel-primary
+  .panel-heading
+    | 个人信息
+  .panel-body
+    = image_tag(account.wechat_headimgurl || "avatar.png", class: "img-circle profile__img")
+    .profile
+      - attrs.each do |attr, modal_id|
+        .profile__group
+          = label :account, attr, class: "col-md-2 profile__label"
+          .col-md-8
+            p.profile__input
+              | #{ account.send(attr) }
+          - if modal_id
+            .col-md-offset-8.col-md-2
+              .pull-right
+                = button_tag "编辑资料", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#{modal_id}"}
