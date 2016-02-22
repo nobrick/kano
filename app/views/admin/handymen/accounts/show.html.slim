@@ -60,7 +60,7 @@
         | 技能
       .panel-body
         - i = 0
-        - @account.taxons.each do |t|
+        - @account.taxons.order(:id).each do |t|
           - i += 1
           = render partial: "taxon", locals: { taxon: t, index: i, backurl: admin_handyman_account_path(@account) }
         .col-md-offset-10.col-md-2

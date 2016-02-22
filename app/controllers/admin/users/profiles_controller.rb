@@ -24,7 +24,11 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
   def set_primary_address
     address = @account.addresses.find params[:address_id]
     @account.primary_address = address
-    @account.save
+    if @account.save
+      flash[:success] = i18n_t('update_success', 'C')
+    else
+      flash[:alert] = @account.errors.full_messages
+    end
     redirect_to admin_user_account_path(@account)
   end
 

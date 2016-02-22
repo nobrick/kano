@@ -49,7 +49,7 @@
         | 地址管理
       .panel-body
         - i = 0
-        - @account.addresses.each do |address|
+        - @account.addresses.order(:id).each do |address|
           dl.address
             dt
               | 地址 #{ i += 1 }

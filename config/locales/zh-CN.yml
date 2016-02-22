@@ -83,8 +83,14 @@ zh-CN:
       taxon_missing: '技能不存在'
     admin/handymen/profiles:
       update_success: '修改成功'
-      lock_success: '锁定成功'
+    admin/users/profiles:
+      update_success: '修改成功'
+    admin/handymen/accounts:
       unlock_success: '解锁成功'
+      lock_success: '锁定成功'
+    admin/users/accounts:
+      unlock_success: '解锁成功'
+      lock_success: '锁定成功'
   order:
     requested: '未接单'
     contracted: '已接单'
