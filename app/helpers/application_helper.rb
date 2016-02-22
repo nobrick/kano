@@ -11,7 +11,7 @@ module ApplicationHelper
     end
   end
 
-  def display_nav_button?
-    account_signed_in? || !wechat_request?
+  def display_navbar?
+    account_signed_in?
   end
 end

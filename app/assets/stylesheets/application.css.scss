@@ -157,7 +157,6 @@ input[type=checkbox] {
   width: 28%;
   margin: 0 6px;
 }
-
 .btn-simple-letters {
   font-size: 18px;
 }
@@ -255,27 +254,36 @@ select.select-block.select-block-fullwidth {
 }
 
 #brand_navbar {
-  background-color: rgba(54, 54, 54, 0.93);
-  .logo_brand {
-    color: lighten(#3dbcf5, 10%);
-    line-height: 21px;
-
-    &:hover {
-      color: lighten(#3dbcf5, 20%);
-      transition: color 1s;
-    }
-  }
+  background-color: adjust-color(#b5b4b4, $lightness: -30%, $alpha: -0.4);
   a {
-    color: $alphaWhite;
+    color: white;
+    /*color: $alphaWhite;*/
     &:hover {
-      color: #36a1de;
+      /*color: #36a1de;*/
     }
   }
-  .navbar-toggle-button {
-    color: $alphaWhite;
-    font-size: 124%;
-    &:hover, &:focus {
-      color: #3dbcf5;
+  .navbar-right-btns {
+    margin-right: 12px;
+    margin-top: 10px;
+    .btn-navbar {
+      background-color: #4d9dcd;
+      font-size: 12px;
+      margin-right: 5px;
+    }
+  }
+  .navbar-btn {
+    margin-top: 3px;
+    margin-bottom: 0px;
+    .logo-img {
+      @include background-image(url("/images/navbar_logo.svg"), url("/images/navbar_logo.png"));
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+      background-position: center 0;
+      padding-top: 78%;
+      height: 0px;
+      width: 25px;//100%;
+      margin-top: 0px;
+      margin-left: 12px;
     }
   }
 }

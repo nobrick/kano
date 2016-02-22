@@ -9,31 +9,31 @@ html
     = csrf_meta_tags
   body[class="#{@body_css_class}"]
     = Gon::Base.render_data({})
-    nav#brand_navbar.navbar.navbar-inverse.navbar-fixed-top[role="navigation"]
-      .container-fluid
-        .navbar-header
-          a.navbar-brand.logo_brand[href="/"]
-            span.logo
-              = t(:logo_name)
-          - if display_nav_button?
-            a.visible-xs-inline-block.btn.navbar-btn.pull-right.nav_toggle[type="button" data-toggle="collapse" data-target="#navbar-collapse"]
+    - if display_navbar?
+      nav#brand_navbar.navbar.navbar-fixed-top[role="navigation"]
+        .container-fluid
+          .navbar-right-btns.pull-right
+            - with_options class: 'btn btn-blue btn-navbar' do |v|
+              - if user_signed_in?
+                  = v.link_to '预约服务', new_user_order_path
+                  = v.link_to '我的订单', user_orders_path
+              - elsif handyman_signed_in?
+                = v.link_to '开始抢单', handyman_orders_path
+                = v.link_to '我的订单', handyman_contracts_path
+          .navbar-header
+            a.visible-xs-inline-block.btn.navbar-btn.pull-left.nav_toggle[type="button" data-toggle="collapse" data-target="#navbar-collapse"]
               span.sr-only
                 | Toggle navigation
-              span.fa-icon
-                = fa_icon('wrench', class: 'navbar-toggle-button')
-        - if display_nav_button?
+              .logo-img
           #navbar-collapse.collapse.navbar-collapse
-            ul.nav.navbar-nav.navbar-right
+            ul.nav.navbar-nav.navbar-left
+              li = link_to '首页', root_path
               li.devider
                 - if handyman_signed_in?
-                  li = link_to '开始抢单', handyman_orders_path
-                  li = link_to "我的账户", handyman_profile_path
-                  li = link_to "我的订单", handyman_contracts_path
+                  li = link_to '我的账户', handyman_profile_path
                   li = link_to t(:sign_out), destroy_account_session_path, method: :delete
                 - elsif user_signed_in?
-                  li = link_to '预约服务', new_user_order_path
-                  li = link_to "#{current_user.full_or_nickname}的订单", user_orders_path
-                  li = link_to t(:sign_out), destroy_account_session_path, method: :delete
+                  = link_to t(:sign_out), destroy_account_session_path, method: :delete
                 - else
                   li = link_to '加盟管家', new_handyman_registration_path
                   li = link_to t(:sign_up), new_user_registration_path
