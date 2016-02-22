@@ -63,8 +63,14 @@ Rails.application.routes.draw do
   resource :user_wechat, only: [ :show, :create ]
   resource :handyman_wechat, only: [ :show, :create ]
 
-  devise_for :accounts, controllers:
-    { :sessions => 'sessions', :omniauth_callbacks => 'omniauth_callbacks' }, skip: :registrations
+  devise_for :accounts, controllers: {
+    sessions: 'sessions',
+    omniauth_callbacks: 'omniauth_callbacks'
+  }, skip: :registrations
 
   [ :users, :handymen ].each { |r| devise_for r, module: r.to_s, only: :registrations }
+
+  devise_scope :account do
+    get 'getout', to: 'sessions#destroy'
+  end
 end
