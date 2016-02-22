@@ -1,4 +1,6 @@
 - content_for :row
+  - if @taxons.certified.blank?
+    .top-spacer
   .details-card-layout
     .col-md-6.col-md-offset-3
       .details-header-card.mdl-card.mdl-shadow--2dp
@@ -46,6 +48,6 @@
               => fa_icon('user')
               ' 个人信息
           p ID: #{@handyman.id}
-      - if @taxons.certified.blank?
+      - if @taxons.certified.any?
         = link_to '开始抢单', handyman_orders_path, class: 'mdl-button mdl-js-button mdl-button--accent'
       = link_to '申请新项目', complete_handyman_profile_path, class: 'mdl-button mdl-js-button mdl-button--accent pull-right'

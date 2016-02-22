@@ -12,6 +12,12 @@ module ApplicationHelper
   end
 
   def display_navbar?
-    account_signed_in?
+    if user_signed_in?
+      return true
+    elsif handyman_signed_in?
+      account = current_handyman
+      return account.completed_info? && account.certified?
+    end
+    false
   end
 end

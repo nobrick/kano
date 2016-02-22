@@ -14,8 +14,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: "liga", "kern";
   text-rendering: optimizelegibility;
-  padding-top: 65px;
   color: #555555;
+}
+
+.navbar-spacer {
+  padding-top: 65px;
+}
+
+.top-spacer {
+  padding-top: 24px;
 }
 
 .gray-backgroud {
@@ -361,7 +368,6 @@ select.select-block.select-block-fullwidth {
 
 .home-index-page {
   p.normal-text {
-    /*margin: 0 auto 10px;*/
     display: inline-block;
   }
   .btn-in-flash {
