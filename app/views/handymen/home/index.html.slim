@@ -1,22 +1,21 @@
 - content_for :row
   .home-index-page
-    - if handyman_signed_in?
-      - if current_handyman.completed_info?.blank?
-        = content_tag :div, class: 'alert alert-warning' do
-          p.normal-text 您还没有完善个人资料。
-          = link_to '完善资料', complete_handyman_profile_path,
-            class: 'btn btn-danger btn-in-flash'
-    - elsif user_signed_in?
-      p 您已经以普通用户身份登录，请注销后重新访问本页面
-    - elsif wechat_request?
-      = content_tag :div, class: 'alert alert-warning' do
-        p.normal-text 您还没有微信登录。
-        = link_to '管家登录', account_omniauth_authorize_path(:handyman_wechat),
-          class: 'btn btn-danger btn-in-flash'
-    - else
-      = content_tag :div, class: 'alert alert-warning' do
-        p.normal-text 您还没有登录。
-        = link_to '登录', new_account_session_path,
-          class: 'btn btn-danger btn-in-flash btn-sign-in'
-        = link_to '加盟', new_handyman_registration_path,
-          class: 'btn btn-danger btn-in-flash btn-sign-up'
+    .intro-container
+      .intro-pattern
+      .intro-logo
+      .text-center
+        - if handyman_signed_in?
+          - if current_handyman.completed_info?.blank?
+            = link_to '完善资料', complete_handyman_profile_path,
+              class: 'btn btn-blue btn-one-in-row'
+        - elsif user_signed_in?
+          p 您已以普通用户身份登录，请注销后重新访问
+          = link_to '注销', destroy_account_session_path, method: :delete,
+            class: 'btn btn-blue btn-one-in-row'
+        - elsif wechat_request?
+          = link_to '管家登录', account_omniauth_authorize_path(:handyman_wechat), class: 'btn btn-blue btn-one-in-row'
+        - else
+          = link_to '登录', new_account_session_path,
+            class: 'btn btn-blue btn-two-in-row'
+          = link_to '加盟', new_handyman_registration_path,
+            class: 'btn btn-blue btn-two-in-row'
