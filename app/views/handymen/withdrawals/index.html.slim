@@ -51,11 +51,11 @@
             span.fa-icon
               = fa_icon('columns')
             ' 上次提现金额
-          = number_to_currency @withdrawals.first.total, unit: '￥'
+          = number_to_currency @last_withdrawal_total, unit: '￥'
         .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon
               = fa_icon('table')
             ' 累计提现金额
-          = number_to_currency @latest_record.withdrawal_total, unit: '￥'
+          = number_to_currency @acc_withdrawal_total, unit: '￥'
       = render 'handymen/shared/withdrawal_desc'
