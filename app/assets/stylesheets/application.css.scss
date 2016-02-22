@@ -150,6 +150,13 @@ input[type=checkbox] {
     background-color: #3dbcf5;
   }
 }
+.btn.btn-one-in-row {
+  width: 42%;
+}
+.btn.btn-two-in-row {
+  width: 28%;
+  margin: 0 6px;
+}
 
 .btn-simple-letters {
   font-size: 18px;
@@ -361,6 +368,33 @@ select.select-block.select-block-fullwidth {
   .btn-sign-up {
     padding: 3px 9px;
     margin-left: 10px;
+  }
+}
+
+.user-home-index-page {
+  .intro-container {
+    max-width: 500px;
+    margin: -20px auto 40px;
+    .intro-pattern {
+      @include background-image(url("/images/intro_pattern.svg"));
+      background-repeat: no-repeat;
+      background-size: 100% auto;
+      background-position: center 0;
+      padding-top: 91%;
+      height: 0px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .intro-logo {
+      @include background-image(url("/images/intro_logo.svg"));
+      background-repeat: no-repeat;
+      background-size: 38% auto;
+      background-position: center 0;
+      padding-top: 42%;
+      height: 0px;
+      width: 100%;
+      margin: 0 auto;
+    }
   }
 }
 
