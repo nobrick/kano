@@ -9,7 +9,7 @@ class CertifyDashboard < BaseDashboard
   #     i18n: 数据需要通过 I18n.t 进行翻译
   COLLECTION_ATTRIBUTES = {
     "handyman.id" => :string,
-    "handyman.name" => :string,
+    "_self_expand.handyman_name" => nil,
     "name" => :string,
     "cert_requested_at" => :time,
     "certified_status" => :i18n ,

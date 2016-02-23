@@ -20,21 +20,19 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   taxon[:reason_code]: fail reason code
   #   taxon[:reason_message]: fail reason message
   def update
-    begin
-      taxon = Taxon.find params[:id]
+    taxon = Taxon.find params[:id]
 
-      result = ::Admin::CertifyTaxon.call(taxon, current_user, certified_params)
+    taxon.assign_attributes(certified_info)
 
-      back_url = params[:backurl]
-      if result.success?
-        redirect_to back_url || admin_handyman_certifications_path, flash: { success: i18n_t('certify_success', 'C')}
-      else
-        redirect_to back_url || admin_handyman_certifications_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
-      end
+    back_url = params[:backurl]
 
-    rescue ActiveRecord::RecordNotFound
-      redirect_to back_url || admin_handyman_certifications_path, alert: i18n_t('taxon_missing', 'C')
+    if taxon.save(context: :taxon_certification)
+      flash[:success] = i18n_t('certify_success', 'C')
+    else
+      flash[:alert] = i18n_t('certify_failure', 'C', reasons: taxon.errors.full_messages)
     end
+
+    redirect_to back_url || admin_handyman_certifications_path
   end
 
   # params
@@ -44,6 +42,28 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   end
 
   private
+
+  def certified_info
+    info = certified_params.merge({
+      certified_by: current_user,
+      certified_at: Time.now
+    })
+
+    status = info[:certified_status]
+
+    case status
+    when "success"
+      info[:reason_code] = nil
+      info[:reason_message] = nil
+    when "under_review"
+      info[:reason_code] = nil
+      info[:reason_message] = nil
+      info[:certified_by] = nil
+      info[:certified_at] = nil
+    end
+
+    info
+  end
 
   def dashboard
     @dashboard ||= ::CertifyDashboard.new
@@ -63,6 +83,9 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   end
 
   def certified_params
-    params.require(:taxon).permit(:certified_status, :reason_code, :reason_message)
+    params.require(:taxon).permit(
+      :certified_status,
+      :reason_code,
+      :reason_message)
   end
 end

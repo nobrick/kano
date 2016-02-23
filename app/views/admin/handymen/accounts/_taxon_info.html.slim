@@ -3,7 +3,8 @@
   dd #{ taxon.name }
 .col-md-10.col-md-offset-1
   dt 申请时间
-  dd #{ l(taxon.created_at, format: :long) }
+  - cer_req_at = taxon.cert_requested_at ? l(taxon.cert_requested_at, format: :long) : ""
+  dd #{ cer_req_at }
 .col-md-5.col-md-offset-1
   dt 认证状态
   - cert_status = taxon.certified_status ? i18n_t(taxon.certified_status, "D", model: :taxon, attr: :certified_status) : ""

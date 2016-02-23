@@ -26,9 +26,9 @@ zh-CN:
         other: '其它定制服务'
   taxon:
     certified_status:
-      under_review: '正在审核中'
-      failure: '审核未通过'
-      success: '审核通过'
+      under_review: '等待认证'
+      failure: '认证失败'
+      success: '认证成功'
     reason_code:
       missing_info: '资料不全'
       out_of_date: '资料过期'

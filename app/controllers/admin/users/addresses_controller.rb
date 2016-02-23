@@ -6,7 +6,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
     user = User.find params[:profile_id]
     address = Address.new(address_params, addressable: user)
     address.addressable = user
-    puts address.addressable
+
     if address.save
       flash[:success] = "success"
     else
