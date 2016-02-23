@@ -37,7 +37,7 @@ Rails.application.routes.draw do
     namespace :admin, path: '/alpha' do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
-        resources :certifications, only: [ :update, :index, :show, :new, :create ]
+        resources :certifications, only: [:update, :index, :show]
         resources :accounts, only: [:index, :show] do
           member do
             post :update_account_status

@@ -43,37 +43,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     @taxon = Taxon.find params[:id]
   end
 
-  def new
-    @taxon = Taxon.new
-    @taxon.handyman = Handyman.new
-  end
-
-  # params
-  #   taxon
-  #     handyman_id: 师傅 id
-  #     certified_status: 认证状态
-  #     reason_code: 认证不通过原因
-  #     reasom_message: 认证不通过附加信息
-  #   taxon_codes: taxon 代码
-  def create
-    begin
-      handyman = Handyman.find params[:taxon][:handyman_id]
-
-      selected_codes = (params['taxon_codes'] || '').split(',')
-      result =
-        ::Admin::CreateTaxons.call(handyman, selected_codes, current_user, certified_params)
-
-      if result.success?
-        redirect_to new_admin_handyman_certification_path, flash: { success: i18n_t('new_taxon_success', 'C') }
-      else
-        redirect_to new_admin_handyman_certification_path, alert: i18n_t('certify_failure', 'C', reasons: result.error)
-      end
-
-    rescue ActiveRecord::RecordNotFound
-      redirect_to new_admin_handyman_certification_path, alert: i18n_t('handyman_missing', 'C')
-    end
-  end
-
   private
 
   def dashboard
