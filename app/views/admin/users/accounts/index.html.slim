@@ -1,7 +1,7 @@
 .container
   .tabs__content
     .row
-      = render partial: 'shared/dashboard/index', locals: { resources: @accounts, dashboard: dashboard, search: { instance: @search, url: admin_user_accounts_path, predicate: :id_cont, placeholder: '用户ID' }}
+      = render partial: 'shared/dashboard/index', locals: { resources: @accounts, dashboard: dashboard, search: { instance: @search, url: admin_user_accounts_path, predicate: :id_or_name_or_email_cont }}
 
     .row.paginator
       = paginate @accounts

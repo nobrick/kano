@@ -11,7 +11,7 @@
 
   - if search
     = search_form_for search[:instance], url: search[:url], class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
-      = f.text_field search[:predicate], placeholder: search[:placeholder], class: "form-control"
+      = f.text_field search[:predicate], placeholder: '你在寻找什么...', class: "form-control"
       .input-group-btn
         = f.submit '搜索', class: 'btn btn-default'
 
