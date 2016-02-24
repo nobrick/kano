@@ -5,7 +5,8 @@ class Admin::AccountsController < Admin::ApplicationController
   # params
   #   page: page num
   def index
-    @accounts = account_model_class.page(params[:page]).per(10)
+    @search = account_model_class.ransack(params[:q])
+    @accounts = @search.result.page(params[:page]).per(10)
   end
 
   def show

@@ -9,6 +9,13 @@ class Account < ActiveRecord::Base
     :lockable,
     omniauth_providers: [ :wechat, :handyman_wechat ]
 
+  ransacker :id do
+    # FM suppresses leading zeroes and trailing blanks that would otherwise be added to make the output of a pattern be fixed-width.
+    # TM does not include trailing blanks.
+    # http://www.postgresql.org/docs/8.2/static/functions-formatting.html
+    Arel.sql("to_char(\"#{table_name}\".\"id\", 'FM9999999TM')")
+  end
+
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'
   accepts_nested_attributes_for :primary_address
