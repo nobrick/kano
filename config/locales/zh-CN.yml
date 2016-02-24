@@ -91,6 +91,8 @@ zh-CN:
     admin/users/accounts:
       unlock_success: '解锁成功'
       lock_success: '锁定成功'
+    admin/users/addresses:
+      update_success: '修改成功'
   order:
     requested: '未接单'
     contracted: '已接单'

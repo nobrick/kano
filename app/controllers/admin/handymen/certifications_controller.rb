@@ -1,5 +1,8 @@
 class Admin::Handymen::CertificationsController < Admin::ApplicationController
+
   helper_method :tabs_info, :dashboard
+
+  before_action :set_taxon, only: [:update, :show]
 
   # params
   #   page: page num
@@ -21,16 +24,12 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   taxon[:reason_code]: fail reason code
   #   taxon[:reason_message]: fail reason message
   def update
-    taxon = Taxon.find params[:id]
-
-    taxon.assign_attributes(certified_info)
-
     back_url = params[:backurl]
 
-    if taxon.save(context: :taxon_certification)
+    if certify_taxon
       flash[:success] = i18n_t('certify_success', 'C')
     else
-      flash[:alert] = i18n_t('certify_failure', 'C', reasons: taxon.errors.full_messages)
+      flash[:alert] = i18n_t('certify_failure', 'C', reasons: @taxon.errors.full_messages)
     end
 
     redirect_to back_url || admin_handyman_certifications_path
@@ -39,31 +38,29 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   # params
   #   id: taxon id
   def show
-    @taxon = Taxon.find params[:id]
   end
 
   private
 
-  def certified_info
-    info = certified_params.merge({
-      certified_by: current_user,
-      certified_at: Time.now
-    })
+  def certify_taxon
+    state = certify_params[:certified_status]
+    code = certify_params[:reason_code]
+    msg = certify_params[:reason_message]
 
-    status = info[:certified_status]
-
-    case status
-    when "success"
-      info[:reason_code] = nil
-      info[:reason_message] = nil
-    when "under_review"
-      info[:reason_code] = nil
-      info[:reason_message] = nil
-      info[:certified_by] = nil
-      info[:certified_at] = nil
+    case state
+    when 'under_review'
+      @taxon.pend
+    when 'failure'
+      @taxon.decline(current_user, code, msg)
+    when 'success'
+      @taxon.certify(current_user)
+    else
+      false
     end
+  end
 
-    info
+  def set_taxon
+    @taxon = Taxon.find params[:id]
   end
 
   def dashboard
@@ -83,7 +80,11 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     ]
   end
 
-  def certified_params
+  def status_param
+    params.require(:taxon).permit(:certified_status)
+  end
+
+  def certify_params
     params.require(:taxon).permit(
       :certified_status,
       :reason_code,

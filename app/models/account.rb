@@ -13,7 +13,7 @@ class Account < ActiveRecord::Base
     # FM suppresses leading zeroes and trailing blanks that would otherwise be added to make the output of a pattern be fixed-width.
     # TM does not include trailing blanks.
     # http://www.postgresql.org/docs/8.2/static/functions-formatting.html
-    Arel.sql("to_char(\"#{table_name}\".\"id\", 'FM9999999TM')")
+    Arel.sql("to_char(\"#{table_name}\".\"id\", 'FM9999999999TM')")
   end
 
   has_many :addresses, as: :addressable

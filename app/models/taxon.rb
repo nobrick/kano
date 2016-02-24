@@ -10,7 +10,7 @@ class Taxon < ActiveRecord::Base
     # FM suppresses leading zeroes and trailing blanks that would otherwise be added to make the output of a pattern be fixed-width.
     # TM does not include trailing blanks.
     # http://www.postgresql.org/docs/8.2/static/functions-formatting.html
-    Arel.sql("to_char(\"#{table_name}\".\"handyman_id\", 'FM9999999TM')")
+    Arel.sql("to_char(\"#{table_name}\".\"handyman_id\", 'FM9999999999TM')")
   end
 
   belongs_to :handyman
@@ -35,8 +35,7 @@ class Taxon < ActiveRecord::Base
     v.validates :reason_message, presence: true
     v.validates :reason_code, presence: true
     v.validates :reason_code,
-      inclusion: { in: self.reason_codes },
-      allow_nil: true
+      inclusion: { in: self.reason_codes }
   end
 
   with_options unless: :pending? do |v|
@@ -116,19 +115,29 @@ class Taxon < ActiveRecord::Base
   def pend
     self.state = 'under_review'
     self.requested_at = Time.now
-    true
+    self.reason_code = nil
+    self.reason_message = nil
+    self.certified_by = nil
+    self.certified_at = nil
+    save
   end
 
-  def decline
+  def decline(guy, reason, msg)
     self.state = 'failure'
     self.declined_at = Time.now
-    true
+    self.declined_by = guy
+    self.reason_code = reason
+    self.reason_message = msg
+    save
   end
 
-  def certify
+  def certify(guy)
     self.state = 'success'
     self.certified_at = Time.now
-    true
+    self.certified_by = guy
+    self.reason_code = nil
+    self.reason_message = nil
+    save
   end
 
   def reason_code_desc

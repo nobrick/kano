@@ -1,12 +1,12 @@
 .profile__taxon
   .col-md-9
-    - if taxon.certified_status == "failure"
+    - if taxon.declined?
       span.label.certify__label.label-danger
         |认证失败
-    - elsif taxon.certified_status == "success"
+    - elsif taxon.certified?
       span.label.certify__label.label-success
         |认证通过
-    - elsif taxon.certified_status == "under_review"
+    - elsif taxon.pending?
       span.label.certify__label.label-warning
         |等待认证
     span.label.label-info.taxon

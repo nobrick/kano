@@ -4,11 +4,7 @@ RSpec.describe Admin::Handymen::CertificationsController, type: :controller do
   before { sign_in :user, admin }
   let(:admin) { create :admin }
   let(:taxon) do
-    create(:certified_taxon, {
-      certified_status: "failure",
-      reason_code: "out_of_date",
-      reason_message: "out_of_date_msg"
-    })
+    create(:taxon, state: "declined")
   end
 
   let(:success_params)  do
@@ -47,14 +43,16 @@ RSpec.describe Admin::Handymen::CertificationsController, type: :controller do
       end
 
       it 'should update the certified status to failure' do
+        taxon
+
         put :update, id: taxon.id, taxon: failure_params
 
         taxon.reload
 
         expect(taxon.certified_status).to eq failure_params[:certified_status]
-        expect(taxon.certified_by).to eq admin
         expect(taxon.reason_code).to eq failure_params[:reason_code]
         expect(taxon.reason_message).to eq failure_params[:reason_message]
+        expect(taxon.certified_by).to eq admin
         expect(flash[:success]).to be_present
       end
 
@@ -97,6 +95,9 @@ RSpec.describe Admin::Handymen::CertificationsController, type: :controller do
         origin_code = taxon.reason_code
 
         put :update, id: taxon.id, taxon: { reason_code: "test_not_valid_code" }
+        puts taxon.state
+        puts taxon.reason_code
+        puts taxon.reason_message
 
         taxon.reload
 

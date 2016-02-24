@@ -8,7 +8,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
     address.addressable = user
 
     if address.save
-      flash[:success] = "success"
+      flash[:success] = i18n_t('update_success', 'C')
     else
       flash[:alert] = address.errors.full_messages
     end
@@ -19,9 +19,9 @@ class Admin::Users::AddressesController < Admin::ApplicationController
   def update
     @address.assign_attributes(address_params)
     if @address.save
-      flash[:success] = "success"
+      flash[:success] = i18n_t('update_success', 'C')
     else
-      flash[:alert] = "failure"
+      flash[:alert] = @address.errors.full_messages
     end
 
     redirect_to admin_user_account_path(@address.addressable)
@@ -29,9 +29,9 @@ class Admin::Users::AddressesController < Admin::ApplicationController
 
   def destroy
     if @address.destroy
-      flash[:success] = "success"
+      flash[:success] = i18n_t('update_success', 'C')
     else
-      flash[:alert] = "failure"
+      flash[:alert] = @address.errors.full_messages
     end
 
     redirect_to admin_user_account_path(@address.addressable)

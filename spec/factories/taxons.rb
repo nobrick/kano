@@ -9,22 +9,10 @@ FactoryGirl.define do
       when 'pending'
         taxon.pend
       when 'certified'
-        taxon.certified_by ||= create :admin
-        taxon.certify
+        taxon.certify(create :admin)
       when 'declined'
-        taxon.reason_code ||= 'out_of_date'
-        taxon.reason_message ||= 'message'
-        taxon.declined_by ||= create :admin
-        taxon.decline
+        taxon.decline(create(:admin), 'out_of_date', 'message')
       end
-    end
-
-    factory :certified_taxon do
-      certified_status { certified_status }
-      reason_code { reason_code }
-      reason_message { reason_message }
-      certified_at { Time.now }
-      certified_by
     end
   end
 end
