@@ -30,6 +30,8 @@ class Account < ActiveRecord::Base
   validates! :type, presence: true
   validates_presence_of :name, :phone, :primary_address, on: :complete_info_context
 
+  before_validation :set_phone
+
   def self.from_omniauth(auth, type)
     account = where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
       account.nickname = auth.info.nickname
@@ -76,6 +78,12 @@ class Account < ActiveRecord::Base
   end
 
   private
+
+  def set_phone
+    if self.phone != nil && self.phone.blank?
+      self.phone = nil
+    end
+  end
 
   # Disable devise email validation for omniauth
   def email_required?
