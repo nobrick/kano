@@ -35,7 +35,8 @@ class Taxon < ActiveRecord::Base
     v.validates :reason_message, presence: true
     v.validates :reason_code, presence: true
     v.validates :reason_code,
-      inclusion: { in: self.reason_codes }
+      inclusion: { in: self.reason_codes },
+      allow_nil: true
   end
 
   with_options unless: :pending? do |v|
