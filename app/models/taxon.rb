@@ -115,30 +115,26 @@ class Taxon < ActiveRecord::Base
 
   def pend
     self.state = 'under_review'
+    reset_reason
+    reset_authorizer
     self.requested_at = Time.now
-    self.reason_code = nil
-    self.reason_message = nil
-    self.certified_by = nil
-    self.certified_at = nil
-    save
+    self
   end
 
-  def decline(guy, reason, msg)
+  def decline(options = {})
     self.state = 'failure'
+    attrs = options.slice(:declined_by, :reason_code, :reason_message)
+    assign_attributes(attrs)
     self.declined_at = Time.now
-    self.declined_by = guy
-    self.reason_code = reason
-    self.reason_message = msg
-    save
+    self
   end
 
-  def certify(guy)
+  def certify(options = {})
     self.state = 'success'
+    assign_attributes(options.slice(:certified_by))
+    reset_reason
     self.certified_at = Time.now
-    self.certified_by = guy
-    self.reason_code = nil
-    self.reason_message = nil
-    save
+    self
   end
 
   def reason_code_desc
@@ -146,6 +142,21 @@ class Taxon < ActiveRecord::Base
   end
 
   private
+
+  def set_reason(reason_code, reason_message)
+    self.reason_code = reason_code
+    self.reason_message = reason_message
+  end
+
+  def reset_reason
+    self.reason_code = nil
+    self.reason_message = nil
+  end
+
+  def reset_authorizer
+    self.certified_by = nil
+    self.certified_at = nil
+  end
 
   def touch_requested_at
     self.requested_at ||= Time.now

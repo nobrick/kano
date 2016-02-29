@@ -43,17 +43,14 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   private
 
   def certify_taxon
-    state = certify_params[:certified_status]
-    code = certify_params[:reason_code]
-    msg = certify_params[:reason_message]
-
-    case state
+    case cert_params[:certified_status]
     when 'under_review'
-      @taxon.pend
+      @taxon.pend.save
     when 'failure'
-      @taxon.decline(current_user, code, msg)
+      @taxon.declined_by = current_user
+      @taxon.decline(cert_params.slice(:reason_code, :reason_message)).save
     when 'success'
-      @taxon.certify(current_user)
+      @taxon.certify(certified_by: current_user).save
     else
       false
     end
@@ -84,7 +81,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     params.require(:taxon).permit(:certified_status)
   end
 
-  def certify_params
+  def cert_params
     params.require(:taxon).permit(
       :certified_status,
       :reason_code,
