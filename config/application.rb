@@ -49,7 +49,7 @@ module Kano
     config.eager_load_paths += autoload_paths
 
     # Browserify trasformation for react jsx files.
-    config .browserify_rails
+    config.browserify_rails
       .commandline_options = '-t [ babelify --presets [ es2015 react ] ] --extension=".jsx" --debug'
 
     # Add node modules into assets paths.
