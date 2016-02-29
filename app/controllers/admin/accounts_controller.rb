@@ -5,7 +5,8 @@ class Admin::AccountsController < Admin::ApplicationController
   # params
   #   page: page num
   def index
-    @search = account_model_class.ransack(params[:q])
+    q_params = ransack_params_for(:name_or_email_cont, :id_or_phone_eq)
+    @search = account_model_class.ransack(q_params)
     @accounts = @search.result.page(params[:page]).per(10)
   end
 

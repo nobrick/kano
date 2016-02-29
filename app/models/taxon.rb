@@ -6,13 +6,6 @@ class Taxon < ActiveRecord::Base
       to: "::Taxon::Config"
   end
 
-  ransacker :handyman_id do
-    # FM suppresses leading zeroes and trailing blanks that would otherwise be added to make the output of a pattern be fixed-width.
-    # TM does not include trailing blanks.
-    # http://www.postgresql.org/docs/8.2/static/functions-formatting.html
-    Arel.sql("to_char(\"#{table_name}\".\"handyman_id\", 'FM9999999999TM')")
-  end
-
   belongs_to :handyman
   belongs_to :certified_by, foreign_key: 'certified_by', class_name: 'Account'
   scope :pending, -> { where(state: 'under_review') }

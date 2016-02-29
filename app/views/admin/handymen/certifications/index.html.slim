@@ -33,4 +33,4 @@
   = render partial: 'shared/tabs', locals: { tabs: tabs_info }
 
   .tabs__content
-    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard, search: { instance: @search, url: admin_handyman_certifications_path, predicate: :handyman_id_or_handyman_name_cont }}
+    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard, search: { instance: @search, url: admin_handyman_certifications_path, predicate: @predicate }}
