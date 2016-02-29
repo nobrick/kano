@@ -95,9 +95,6 @@ RSpec.describe Admin::Handymen::CertificationsController, type: :controller do
         origin_code = taxon.reason_code
 
         put :update, id: taxon.id, taxon: { reason_code: "test_not_valid_code" }
-        puts taxon.state
-        puts taxon.reason_code
-        puts taxon.reason_message
 
         taxon.reload
 
