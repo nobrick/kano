@@ -53,7 +53,7 @@
           dl.address
             dt
               | 地址 #{ i += 1 }
-              - if address.primary_address?
+              - if address.primary?
                 span.label.label-warning.address__label
                   | 默认地址
             dd.col-md-8

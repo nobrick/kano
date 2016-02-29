@@ -39,10 +39,6 @@ class Address < ActiveRecord::Base
     end
   end
 
-  def primary_address?
-    self == addressable.primary_address
-  end
-
   def province_code
     if code
       code[0..1] + '0000'
