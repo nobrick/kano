@@ -73,9 +73,7 @@ class Account < ActiveRecord::Base
   private
 
   def set_phone
-    if self.phone != nil && self.phone.blank?
-      self.phone = nil
-    end
+    self.phone = nil if phone.blank?
   end
 
   # Disable devise email validation for omniauth
