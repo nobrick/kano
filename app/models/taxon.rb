@@ -1,9 +1,7 @@
 class Taxon < ActiveRecord::Base
   class << self
-    delegate :certified_statuses, :taxon_codes, :reason_codes, :items,
-      :categories, :certified_status, :certify_failure_status?,
-      :certify_success_status?, :certify_under_review_status?,
-      to: "::Taxon::Config"
+    delegate :taxon_codes, :reason_codes, :items, :categories,
+      :certified_status, :certified_statuses, to: '::Taxon::Config'
   end
 
   belongs_to :handyman
@@ -153,9 +151,5 @@ class Taxon < ActiveRecord::Base
 
   def touch_requested_at
     self.requested_at ||= Time.now
-  end
-
-  def failure_status?
-    certified_status == ::Taxon::Config.certified_status("failure")
   end
 end
