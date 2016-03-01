@@ -1,9 +1,7 @@
 class Taxon < ActiveRecord::Base
   class << self
-    delegate :certified_statuses, :taxon_codes, :reason_codes, :items,
-      :categories, :certified_status, :certify_failure_status?,
-      :certify_success_status?, :certify_under_review_status?,
-      to: "::Taxon::Config"
+    delegate :taxon_codes, :reason_codes, :items, :categories,
+      :certified_status, :certified_statuses, to: '::Taxon::Config'
   end
 
   belongs_to :handyman
@@ -108,20 +106,26 @@ class Taxon < ActiveRecord::Base
 
   def pend
     self.state = 'under_review'
+    reset_reason
+    reset_authorizer
     self.requested_at = Time.now
-    true
+    self
   end
 
-  def decline
+  def decline(options = {})
     self.state = 'failure'
+    attrs = options.slice(:declined_by, :reason_code, :reason_message)
+    assign_attributes(attrs)
     self.declined_at = Time.now
-    true
+    self
   end
 
-  def certify
+  def certify(options = {})
     self.state = 'success'
+    assign_attributes(options.slice(:certified_by))
+    reset_reason
     self.certified_at = Time.now
-    true
+    self
   end
 
   def reason_code_desc
@@ -129,6 +133,21 @@ class Taxon < ActiveRecord::Base
   end
 
   private
+
+  def set_reason(reason_code, reason_message)
+    self.reason_code = reason_code
+    self.reason_message = reason_message
+  end
+
+  def reset_reason
+    self.reason_code = nil
+    self.reason_message = nil
+  end
+
+  def reset_authorizer
+    self.certified_by = nil
+    self.certified_at = nil
+  end
 
   def touch_requested_at
     self.requested_at ||= Time.now

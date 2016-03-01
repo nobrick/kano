@@ -6,6 +6,7 @@ class Account < ActiveRecord::Base
     :trackable,
     :validatable,
     :omniauthable,
+    :lockable,
     omniauth_providers: [ :wechat, :handyman_wechat ]
 
   has_many :addresses, as: :addressable
@@ -21,6 +22,8 @@ class Account < ActiveRecord::Base
   validates! :provider, presence: true, if: 'uid.present?'
   validates! :type, presence: true
   validates_presence_of :name, :phone, :primary_address, on: :complete_info_context
+
+  before_validation :set_phone
 
   def self.from_omniauth(auth, type)
     account = where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
@@ -63,7 +66,15 @@ class Account < ActiveRecord::Base
     end
   end
 
+  def unlock_time
+    self.class.unlock_in.since(locked_at) if access_locked?
+  end
+
   private
+
+  def set_phone
+    self.phone = nil if phone.blank?
+  end
 
   # Disable devise email validation for omniauth
   def email_required?

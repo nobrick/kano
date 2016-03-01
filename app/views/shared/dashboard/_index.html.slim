@@ -9,10 +9,11 @@
       - dashboard.filter_status.each do |status|
         = link_to i18n_t(status, "D", { model: dashboard.resource_class.downcase, attr: dashboard.filter_attribute }), send(dashboard.filter_basepath, certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
 
-  = form_tag("/", class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group")
-    = text_field_tag 'search', nil, placeholder: 'Search', class: "form-control"
-    .input-group-btn
-      = button_tag '搜索', class: 'btn btn-default'
+  - if search
+    = search_form_for search[:instance], url: search[:url], class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
+      = f.text_field search[:predicate], placeholder: '你在寻找什么...', class: "form-control"
+      .input-group-btn
+        = f.submit '搜索', class: 'btn btn-default'
 
 .row
   table.table.table-bordered.table-hover.col-md-12.table--more-info.js-table
@@ -36,4 +37,3 @@
 
 .row.paginator
   = paginate resources
-

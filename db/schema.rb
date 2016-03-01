@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160215082301) do
+ActiveRecord::Schema.define(version: 20160216073943) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(version: 20160215082301) do
     t.datetime "updated_at"
     t.string   "type",                                   null: false
     t.integer  "primary_address_id"
+    t.datetime "locked_at"
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree

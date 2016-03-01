@@ -5,9 +5,16 @@ class Admin::ApplicationController < ActionController::Base
 
   helper_method :nav_links, :in_scope?, :page_identifier, :i18n_t
 
+  private
+
   def authenticate_admin
     redirect_to root_url, alert: 'PERMISSION DENIED' unless current_user.try :admin?
     true
+  end
+
+  def account_model_class
+    name = controller_path.match(/admin\/(\w+)\//)[1].singularize.capitalize
+    ActiveRecord.const_get(name)
   end
 
   def in_scope?(parent_path)
@@ -20,6 +27,15 @@ class Admin::ApplicationController < ActionController::Base
     "#{controller}-#{action}"
   end
 
+  def ransack_params_for(*predicates)
+    @predicate = predicates.shift
+    query = params.permit(q: @predicate)[:q]
+    return unless query
+    value = query.values.first
+    combinator = predicates.map { |p| [ p, value ] }.to_h
+    query.merge(combinator).merge(m: 'or')
+  end
+
   def nav_links
     [
       {
@@ -29,12 +45,12 @@ class Admin::ApplicationController < ActionController::Base
       },
       {
         text: "users_admin",
-        path: '/',
+        path: admin_user_accounts_path,
         scope: '/alpha/users'
       },
       {
         text: "orders_admin",
-        path: "/",
+        path: admin_orders_path,
         scope: '/alpha/orders'
       },
       {

@@ -1,0 +1,36 @@
+.address:after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+.address > dd {
+  border: 1px solid rgb(204, 204, 204);
+  border-radius: 4px;
+  min-height: 34px;
+  padding: 6px 12px;
+  margin-top: 8px;
+}
+
+.address__label {
+  display: inline-block;
+  margin-left: 10px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.address .btn-toolbar {
+  margin-top: 14px;
+}
+
+.address__link {
+  display: inline;
+  color: #337ab7;
+  border: none;
+  background: transparent;
+  margin-left: -15px;
+}
+
+.address__link:hover {
+  text-decoration: underline;
+}

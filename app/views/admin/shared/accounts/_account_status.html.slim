@@ -1,0 +1,25 @@
+.panel.panel-primary
+  .panel-heading
+    | 账号控制
+  .panel-body
+    .col-md-offset-2.col-md-8.text-center
+      .account-status__status
+        = label_tag "账号状态:"
+        - if account.access_locked?
+          span.label.label-danger
+            | 锁定
+          .alert.alert-warning.text-left
+            label 解锁时间:
+            p
+              | #{ I18n.l(account.unlock_time, format: :long) }
+        - else
+          span.label.label-success
+            | 正常
+    .col-md-8.col-md-offset-2
+      .account-status__buttons.text-center
+        = form_for account, url: path, method: :post do |f|
+          = hidden_field_tag 'account_lock', true
+          = f.submit "冻结账号", class: "btn btn-danger btn-sm", style: "float:none"
+        = form_for account, url: path, method: :post do |f|
+          = hidden_field_tag 'account_lock', false
+          = f.submit "解冻账号", class: "btn btn-success btn-sm", style: "float:none"

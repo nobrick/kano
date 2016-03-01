@@ -17,22 +17,17 @@ html
               li
                 a[href="#{info[:path]}"]
                   | #{t info[:text], scope: [:views, :admin]}
-    .main
-      .container
-        - [:success, :info, :warning, :danger, :alert, :notice].each do |type|
-          - if flash[type]
-            - case type
-            - when :alert  then style = :danger
-            - when :notice then style = :warning
-            - else style = type
+    .container
+      - [:success, :info, :warning, :danger, :alert, :notice].each do |type|
+        - if flash[type]
+          - case type
+          - when :alert  then style = :danger
+          - when :notice then style = :warning
+          - else style = type
 
-            = content_tag :div, class: "alert alert-#{style} alert-dismissible" do
-              button.close[type="button" data-dismiss="alert" aria-label="Close"]
-                span[aria-hidden="true"]
-                  | ×
-              = flash[type]
-
+          = content_tag :div, class: "alert alert-#{style} alert-dismissible" do
+            button.close[type="button" data-dismiss="alert" aria-label="Close"]
+              span[aria-hidden="true"]
+                | ×
+            = flash[type]
       = yield
-
-
-

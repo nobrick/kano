@@ -9,10 +9,6 @@ class Taxon::Config
     @@taxons_config
   end
 
-  def self.certified_statuses
-    %w{ success failure under_review }
-  end
-
   def self.taxon_codes
     @@taxon_codes ||= taxons_config['items']
       .map { |c, l| l.map { |t| "#{c}/#{t}" } }.flatten
@@ -34,15 +30,7 @@ class Taxon::Config
     status
   end
 
-  def self.certify_failure_status?(status)
-    status == 'failure'
-  end
-
-  def self.certify_success_status?(status)
-    status == 'success'
-  end
-
-  def self.certify_under_review_status?(status)
-    status == 'under_review'
+  def self.certified_statuses
+    %w{ success failure under_review }
   end
 end

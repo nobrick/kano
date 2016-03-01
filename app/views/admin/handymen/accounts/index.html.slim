@@ -1,0 +1,5 @@
+.container
+  = render partial: 'shared/tabs', locals: { tabs: tabs_info }
+
+  .tabs__content
+    = render partial: 'shared/dashboard/index', locals: { resources: @accounts, dashboard: dashboard, search: { instance: @search, url: admin_handyman_accounts_path, predicate: @predicate }}
