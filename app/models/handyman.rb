@@ -14,7 +14,6 @@ class Handyman < Account
 
   with_options class_name: 'BalanceRecord' do |v|
     v.belongs_to :last_balance_record
-    v.has_one :latest_balance_record, as: :owner
     v.has_one :unfrozen_balance_record,
       -> { where('created_at <= ?', Withdrawal.unfrozen_date) }, as: :owner
   end
