@@ -42,7 +42,7 @@ RSpec.describe Handyman, type: :model do
       on(15.days.ago) { create_paid_orders_for handyman, 1 }
       on(14.days.ago) { create_paid_orders_for handyman, 2 }
       handyman.reload
-      record_14 = handyman.latest_balance_record
+      record_14 = handyman.last_balance_record
       expect(handyman.unfrozen_balance_record).to be_present
       expect(handyman.unfrozen_balance_record).to eq record_14
 
@@ -51,7 +51,7 @@ RSpec.describe Handyman, type: :model do
       expect(handyman.unfrozen_balance_record).to be_present
       expect(handyman.unfrozen_balance_record).to eq record_14
       expect(handyman.unfrozen_balance_record)
-        .not_to eq handyman.latest_balance_record
+        .not_to eq handyman.last_balance_record
     end
   end
 end

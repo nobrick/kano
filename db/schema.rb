@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160216073943) do
+ActiveRecord::Schema.define(version: 20160302003755) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,11 +41,13 @@ ActiveRecord::Schema.define(version: 20160216073943) do
     t.string   "type",                                   null: false
     t.integer  "primary_address_id"
     t.datetime "locked_at"
+    t.integer  "last_balance_record_id"
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
   add_index "accounts", ["email"], name: "index_accounts_on_email", unique: true, where: "(email IS NOT NULL)", using: :btree
   add_index "accounts", ["gender"], name: "index_accounts_on_gender", using: :btree
+  add_index "accounts", ["last_balance_record_id"], name: "index_accounts_on_last_balance_record_id", using: :btree
   add_index "accounts", ["name"], name: "index_accounts_on_name", using: :btree
   add_index "accounts", ["phone"], name: "index_accounts_on_phone", unique: true, where: "(phone IS NOT NULL)", using: :btree
   add_index "accounts", ["primary_address_id"], name: "index_accounts_on_primary_address_id", using: :btree
@@ -213,6 +215,7 @@ ActiveRecord::Schema.define(version: 20160216073943) do
   add_index "withdrawals", ["transferred_at"], name: "index_withdrawals_on_transferred_at", using: :btree
 
   add_foreign_key "accounts", "addresses", column: "primary_address_id"
+  add_foreign_key "accounts", "balance_records", column: "last_balance_record_id"
   add_foreign_key "orders", "accounts", column: "canceler_id"
   add_foreign_key "orders", "accounts", column: "handyman_id"
   add_foreign_key "orders", "accounts", column: "user_id"

@@ -96,14 +96,14 @@ RSpec.describe Withdrawal, type: :model do
 
       it 'sets unfrozen_record' do
         on(date) { withdrawal.request && withdrawal.save! }
-        unfrozen_record = on(unfrozen date) { handyman.latest_balance_record }
+        unfrozen_record = on(unfrozen date) { handyman.last_balance_record }
         expect(withdrawal.unfrozen_record).to eq unfrozen_record
       end
 
       it 'sets total' do
         on(date) { withdrawal.request && withdrawal.save! }
         online_income_total = handyman.unfrozen_balance_record.online_income_total
-        withdrawal_total = handyman.latest_balance_record.withdrawal_total
+        withdrawal_total = handyman.last_balance_record.withdrawal_total
         expect(withdrawal.total).to eq online_income_total - withdrawal_total
       end
     end

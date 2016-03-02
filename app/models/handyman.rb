@@ -3,8 +3,8 @@ class Handyman < Account
 
   has_many :orders
   has_many :taxons
-  has_many :balance_records, as: :owner
   has_many :withdrawals
+  has_many :balance_records, as: :owner
 
   with_options class_name: 'Order' do |v|
     v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
@@ -13,7 +13,7 @@ class Handyman < Account
   end
 
   with_options class_name: 'BalanceRecord' do |v|
-    v.has_one :latest_balance_record, as: :owner
+    v.belongs_to :last_balance_record
     v.has_one :unfrozen_balance_record,
       -> { where('created_at <= ?', Withdrawal.unfrozen_date) }, as: :owner
   end
@@ -53,11 +53,11 @@ class Handyman < Account
   end
 
   def balance
-    latest_balance_record.try(:balance) || 0
+    last_balance_record.try(:balance) || 0
   end
 
   def cash_total
-    latest_balance_record.try(:cash_total) || 0
+    last_balance_record.try(:cash_total) || 0
   end
 
   def unfrozen_balance

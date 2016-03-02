@@ -137,8 +137,8 @@ class Withdrawal < ActiveRecord::Base
   def self.unfrozen_balance_for(handyman)
     handyman.reload
     unfrozen = handyman.unfrozen_balance_record
-    latest = handyman.latest_balance_record
-    u = unfrozen ? (unfrozen.online_income_total - latest.withdrawal_total) : 0
+    last = handyman.last_balance_record
+    u = unfrozen ? (unfrozen.online_income_total - last.withdrawal_total) : 0
     yield unfrozen, u if block_given?
     u
   end
@@ -162,8 +162,8 @@ class Withdrawal < ActiveRecord::Base
   end
 
   def do_transfer
-    self.transferred_at = Time.now
     set_balance_record
+    self.transferred_at = Time.now
   end
 
   def do_decline
