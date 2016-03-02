@@ -20,7 +20,7 @@ RSpec.describe BalanceRecord, type: :model do
     it 'creates balance record on cash payment' do
       payment.order.sync_from_user_total(reset_bonus: true)
       payment.payment_method = 'cash'
-      payment.complete
+      expect(payment.complete).to eq true
       expect { payment.save! }.to change(BalanceRecord, :count).by 1
       expect(payment.balance_record).to be_persisted
     end
@@ -45,13 +45,14 @@ RSpec.describe BalanceRecord, type: :model do
 
   it 'keeps associations on handyman' do
     record
-    expect(handyman.latest_balance_record).to eq record
+    handyman.reload
+    expect(handyman.last_balance_record).to eq record
     expect(handyman.balance_records).to eq [ record ]
 
     cash_record
     handyman.reload
     expect(handyman.balance_records).to eq [ cash_record, record ]
-    expect(handyman.latest_balance_record).to eq cash_record
+    expect(handyman.last_balance_record).to eq cash_record
   end
 
   it 'is readonly once created' do
@@ -110,7 +111,7 @@ RSpec.describe BalanceRecord, type: :model do
       expect(r.bonus_sum_total - r.prev_bonus_sum_total).to eq event.handyman_bonus_total
 
       handyman.reload
-      expect(r).to eq handyman.latest_balance_record
+      expect(r).to eq handyman.last_balance_record
       expect(events.map(&:balance_record))
         .to match_array handyman.balance_records
 

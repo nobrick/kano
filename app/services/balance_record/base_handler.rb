@@ -2,6 +2,7 @@ class BalanceRecord::BaseHandler
   attr_reader :event, :record, :last_record
 
   def initialize(event)
+    event.handyman.lock!
     @event = event
   end
 
@@ -9,7 +10,7 @@ class BalanceRecord::BaseHandler
     record.adjustment_event = event
     record.owner = event.handyman
     @record = record
-    @last_record = record.owner.reload.latest_balance_record
+    @last_record = record.owner.last_balance_record
     set_previous_balance
     yield
     set_current_balance

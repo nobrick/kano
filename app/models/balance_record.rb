@@ -49,6 +49,7 @@ class BalanceRecord < ActiveRecord::Base
   ]
   validates_presence_of BALANCE_ATTRIBUTES, strict: true
   before_validation :update_balance_attributes
+  after_create :set_handyman_last_balance_record
   attr_accessor :handler
 
   def update_balance_attributes
@@ -58,6 +59,11 @@ class BalanceRecord < ActiveRecord::Base
   end
 
   private
+
+  def set_handyman_last_balance_record
+    owner.last_balance_record = self
+    owner.save!
+  end
 
   def check_adjustment_event
     case event

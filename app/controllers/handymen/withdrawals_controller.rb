@@ -45,7 +45,7 @@ class Handymen::WithdrawalsController < ApplicationController
     @balance = account.balance
     @unfrozen_balance = account.unfrozen_balance
     @frozen_balance = @balance - @unfrozen_balance
-    @latest_record = account.latest_balance_record
+    @latest_record = account.last_balance_record
     @is_today_permitted = Withdrawal.at_permitted_requesting_date?
     @next_permitted_date = Withdrawal.next_permitted_requesting_date
   end

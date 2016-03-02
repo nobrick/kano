@@ -19,7 +19,7 @@
               b =< number_to_currency @order.handyman_total, unit: '￥'
       .order-details-attributes-card.mdl-card.mdl-shadow--2dp
         - if @order.completed?
-          - record = @order.handyman.latest_balance_record
+          - record = @order.handyman.last_balance_record
           - if record.balance > 0
             .mdl-card__supporting-text.card-divider
               .card-attr-title
