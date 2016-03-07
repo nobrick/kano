@@ -14,7 +14,7 @@
             - else
               h3
                 | 您可在
-                = timeago_tag @next_permitted_date, lang: 'zh-CN', limit: nil
+                = timeago_tag @next_permitted_date.end_of_day, lang: 'zh-CN', limit: nil
                 | 申请提现
           - else
             span.h3 您还没有可提现金额

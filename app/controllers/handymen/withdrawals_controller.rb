@@ -10,7 +10,7 @@ class Handymen::WithdrawalsController < ApplicationController
       .order(created_at: :desc)
       .page(params[:page])
       .per(7)
-    @last_withdrawal_total = @withdrawals.first.try(:total) || 0
+    @last_withdrawal_total = @withdrawals.transferred.first.try(:total) || 0
     @acc_withdrawal_total = @latest_record.try(:withdrawal_total) || 0
     @already_requested = @withdrawals.any?(&:requested?)
   end
