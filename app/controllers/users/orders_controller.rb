@@ -1,5 +1,4 @@
 class Users::OrdersController < ApplicationController
-  before_action :authenticate_completed_user
   before_action :set_order, only: [ :show, :charge, :cancel ]
   before_action :gray_background, only: [ :new, :show, :index ]
 

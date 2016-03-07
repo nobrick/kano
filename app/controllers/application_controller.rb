@@ -38,15 +38,6 @@ class ApplicationController < ActionController::Base
     current_user || current_handyman
   end
 
-  def authenticate_completed_user(options = {})
-    return unless authenticate_user!
-    if current_user.completed_info?
-      true
-    else
-      sign_up_uncompleted('user', options)
-    end
-  end
-
   def authenticate_completed_handyman(options = {})
     return false unless authenticate_handyman!
     unless current_handyman.completed_info?

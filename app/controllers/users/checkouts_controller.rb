@@ -1,5 +1,4 @@
 class Users::CheckoutsController < ApplicationController
-  before_action :authenticate_completed_user
   before_action :set_order, only: [ :create, :update ]
   before_action :check_order_permission, only: [ :create, :update ]
 
