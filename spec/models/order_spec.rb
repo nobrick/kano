@@ -105,12 +105,55 @@ RSpec.describe Order, type: :model do
     end
   end
 
-  describe 'state machine' do
+  describe 'State machine' do
     describe 'Request event' do
       it 'creates and requests order by user' do
         expect(order_requested).to be_persisted
         expect(order_requested.requested?).to eq true
         expect(order_requested.address).to be_valid
+      end
+
+      describe 'Primary address' do
+        let(:address_hash) do
+          {
+            address_attributes: {
+              code: '430105',
+              content: 'content 121'
+            }
+          }
+        end
+
+        context 'When user does not have the requested order adderss' do
+          it 'adds and updates user primary address' do
+            expect(order.request).to eq true
+            content = address_hash[:address_attributes][:content]
+            expect { order.save! }
+              .to change { user.primary_address.reload.content }.to(content)
+              .and change(user.addresses, :count).by 1
+          end
+        end
+
+        context 'When user already has the requested order address' do
+          let!(:address_1) do
+            hash = address_hash[:address_attributes].merge(addressable: user)
+            create :address, hash
+          end
+
+          let!(:address_2) do
+            hash = address_hash[:address_attributes]
+              .merge(addressable: user, content: 'content 139')
+            create :address, hash
+          end
+
+          it 'sets user primary address to the order address' do
+            expect(user.addresses).to include address_1
+            expect(user.primary_address).not_to eq address_1
+            expect(order.request).to eq true
+            expect { order.save! }
+              .to change { user.reload.primary_address }.to(address_1)
+              .and change(user.addresses, :count).by(0)
+          end
+        end
       end
     end
 

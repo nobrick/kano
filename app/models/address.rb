@@ -7,6 +7,14 @@ class Address < ActiveRecord::Base
   validates :content, presence: true
   validate { errors.add(:base, '请选择您所在的地区') unless code_valid? }
 
+  # Look up addresses in the database with the same attributes except +:id+ of
+  # the given address.
+  #
+  # @param address [Address] The address.
+  def self.lookup(address)
+    where(address.attribute_hash)
+  end
+
   def primary?
     addressable.try(:primary_address_id) == id
   end
@@ -45,6 +53,10 @@ class Address < ActiveRecord::Base
     else
       nil
     end
+  end
+
+  def attribute_hash
+    { code: code, content: content }
   end
 
   private

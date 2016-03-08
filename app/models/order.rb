@@ -40,6 +40,7 @@ class Order < ActiveRecord::Base
 
   before_validation :set_address
   after_touch :clear_association_cache
+  after_create :update_user_address
 
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
@@ -288,6 +289,18 @@ class Order < ActiveRecord::Base
 
   def set_address
     self.address.addressable = self if address.present?
+  end
+
+  def update_user_address
+    return true unless requested?
+    user_addresses = user.addresses.lookup(address)
+    if user_addresses.present?
+      user_address = user_addresses.first
+      return true if user_address == user.primary_address
+      user.update!(primary_address_id: user_address.id)
+    else
+      user.update!(primary_address_attributes: address.attribute_hash)
+    end
   end
 
   def check_payment_totals
