@@ -47,7 +47,9 @@ class BalanceRecord < ActiveRecord::Base
     :bonus_sum_total,
     :prev_bonus_sum_total
   ]
-  validates_presence_of BALANCE_ATTRIBUTES, strict: true
+  validates_presence_of *BALANCE_ATTRIBUTES, strict: true
+  validate :balance_attributes_must_be_positive
+
   before_validation :update_balance_attributes
   after_create :set_handyman_last_balance_record
   attr_accessor :handler
@@ -75,6 +77,13 @@ class BalanceRecord < ActiveRecord::Base
       true
     else
       raise 'Invalid adjustment event type'
+    end
+  end
+
+  def balance_attributes_must_be_positive
+    (BALANCE_ATTRIBUTES - [ :adjustment ]).each do |attr|
+      next unless self[attr]
+      errors.add(attr, 'should be positive') if self[attr] < 0
     end
   end
 
