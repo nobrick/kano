@@ -1,0 +1,7 @@
+sms:
+  api_key: 410001111fcc2116286f7b6def311671
+  templates:
+    verification:
+      template_id: 1200065
+      required_keys:
+        - code

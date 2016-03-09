@@ -45,6 +45,7 @@ group :development, :test do
   gem 'jasmine'
   gem 'launchy'
   gem 'timecop'
+  gem 'webmock'
 end
 
 group :development do

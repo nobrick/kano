@@ -6,6 +6,7 @@ abort('Running in PRODUCTION mode!') if Rails.env.production?
 require 'spec_helper'
 require 'rspec/rails'
 require 'capybara/rspec'
+require 'webmock/rspec'
 require_relative 'support/taxon_item'
 
 # Add additional requires below this line. Rails is not loaded until this point!

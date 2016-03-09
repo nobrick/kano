@@ -37,6 +37,9 @@ coverage
 # Ignore redis config
 /config/redis.yml
 
+# Ignore SMS config
+/config/sms.yml
+
 # Miscellaneous.
 public/assets
 /vendor/cache
