@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160302003755) do
+ActiveRecord::Schema.define(version: 20160309125143) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -210,6 +210,7 @@ ActiveRecord::Schema.define(version: 20160302003755) do
   add_index "withdrawals", ["authorizer_id"], name: "index_withdrawals_on_authorizer_id", using: :btree
   add_index "withdrawals", ["created_at"], name: "index_withdrawals_on_created_at", using: :btree
   add_index "withdrawals", ["declined_at"], name: "index_withdrawals_on_declined_at", using: :btree
+  add_index "withdrawals", ["handyman_id"], name: "index_requested_withdrawals_on_handyman_id", unique: true, where: "((state)::text = 'requested'::text)", using: :btree
   add_index "withdrawals", ["handyman_id"], name: "index_withdrawals_on_handyman_id", using: :btree
   add_index "withdrawals", ["state"], name: "index_withdrawals_on_state", using: :btree
   add_index "withdrawals", ["transferred_at"], name: "index_withdrawals_on_transferred_at", using: :btree

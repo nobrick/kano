@@ -24,8 +24,8 @@ RSpec.describe Withdrawal, type: :model do
       before do
         on(unfrozen date) { create_paid_orders_for handyman, 1 }
         on(date) { withdrawal.request && withdrawal.save! }
+        on(unfrozen next_date) { create_paid_orders_for handyman, 1 }
       end
-      let(:next_date) { dates.find { |d| d > date } }
       let(:another_handyman) { create :handyman }
       let(:new_withdrawal) { Withdrawal.new }
 
@@ -35,9 +35,20 @@ RSpec.describe Withdrawal, type: :model do
           new_withdrawal.handyman = handyman
           new_withdrawal.assign_attributes(attributes)
           expect(new_withdrawal.request).to eq true
-          expect(next_date - date).to be < 14.days
           expect(new_withdrawal.save).to eq false
           expect(new_withdrawal.errors.messages.keys).to eq [ :base ]
+          expect(new_withdrawal.errors.messages[:base].count).to eq 1
+        end
+      end
+
+      it 'ensures uniqueness of requested withdrawal for race condition' do
+        on(next_date) do
+          new_withdrawal.handyman = handyman
+          new_withdrawal.assign_attributes(attributes)
+          new_withdrawal.request
+          expect {
+            new_withdrawal.save(validate: false)
+          }.to raise_error  ActiveRecord::RecordNotUnique, /index_requested_wi/
         end
       end
 
