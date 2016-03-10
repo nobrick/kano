@@ -12,18 +12,17 @@ class Account < ActiveRecord::Base
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'
   accepts_nested_attributes_for :primary_address
-  before_validation :set_primary_address
-
   validates :password, length: { in: 6..128 }, on: :create
   validates :password, length: { in: 6..128 }, on: :update, allow_blank: true
   validates :name, length: { in: 1..30 }, allow_blank: true
-  validates :phone, format: { with: /\A1\d{10,10}\Z/ }, uniqueness: true, allow_blank: true
+  validates :phone, format: { with: /\A1\d{10}\Z/ }, uniqueness: true, allow_blank: true
   validates! :uid, uniqueness: { scope: :provider }, if: 'uid.present?'
   validates! :provider, presence: true, if: 'uid.present?'
   validates! :type, presence: true
   validates_presence_of :name, :phone, :primary_address, on: :complete_info_context
-
+  before_validation :set_primary_address
   before_validation :set_phone
+  before_validation :set_name
 
   def self.from_omniauth(auth, type)
     account = where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
@@ -74,6 +73,11 @@ class Account < ActiveRecord::Base
 
   def set_phone
     self.phone = nil if phone.blank?
+  end
+
+  def set_name
+    self.name.try :strip!
+    self.name = nil if self.name.blank?
   end
 
   # Disable devise email validation for omniauth
