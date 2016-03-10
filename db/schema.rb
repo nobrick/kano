@@ -206,6 +206,7 @@ ActiveRecord::Schema.define(version: 20160310150624) do
     t.datetime "declined_at"
     t.datetime "created_at",                                             null: false
     t.datetime "updated_at",                                             null: false
+    t.boolean  "verify_passed"
   end
 
   add_index "withdrawals", ["account_no"], name: "index_withdrawals_on_account_no", using: :btree
