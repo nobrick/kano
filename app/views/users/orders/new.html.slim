@@ -12,7 +12,21 @@
               = f.label :arrives_at, class: 'i-md-label'
               br
               .datetime-select-zone
-                = f.datetime_select :arrives_at,
+                .row.days-shift-picker
+                  - with_options class: 'mdl-radio__button' do |v|
+                    .col-xs-4
+                      label.mdl-radio.mdl-js-radio.mdl-js-ripple-effect for="days-shift-0"
+                        = v.radio_button_tag :arrives_at_shift, 0, @arrives_at_shift == 0, id: 'days-shift-0'
+                        span.mdl-radio__label 今天
+                    .col-xs-4
+                      label.mdl-radio.mdl-js-radio.mdl-js-ripple-effect for="days-shift-1"
+                        = v.radio_button_tag :arrives_at_shift, 1, @arrives_at_shift == 1, id: 'days-shift-1'
+                        span.mdl-radio__label 明天
+                    .col-xs-4
+                      label.mdl-radio.mdl-js-radio.mdl-js-ripple-effect for="days-shift-2"
+                        = v.radio_button_tag :arrives_at_shift, 2, @arrives_at_shift == 2, id: 'days-shift-2'
+                        span.mdl-radio__label 后天 
+                = f.time_select :arrives_at,
                   { start_hour: 8, end_hour: 23, minute_step: 10,
                   start_year: Time.now.year, end_year: Time.now.year + 1,
                   time_separator: '', datetime_separator: "<br>",

@@ -1,6 +1,6 @@
 class Users::OrdersController < ApplicationController
   before_action :set_order, only: [ :show, :charge, :cancel ]
-  before_action :gray_background, only: [ :new, :show, :index ]
+  before_action :gray_background, only: [ :show, :index ]
 
   # GET /orders
   def index
@@ -21,7 +21,9 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/new
   def new
-    @order = current_user.orders.build(arrives_at: 3.hours.since)
+    gray_background
+    @order ||= current_user.orders.build(arrives_at: Time.now)
+    set_arrives_at_shift
     set_pricing_for_new
     set_address
   end
@@ -29,12 +31,11 @@ class Users::OrdersController < ApplicationController
   # POST /orders
   def create
     @order = current_user.orders.build(order_params)
+    set_arrives_at_shift
     if @order.request && @order.save
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
-      gray_background
-      set_pricing_for_new
-      set_address
+      new
       render :new
     end
   end
@@ -98,6 +99,15 @@ class Users::OrdersController < ApplicationController
 
   def set_pricing_for_contracted
     @pricing = @order.pricing(calculate: false) if @order.contracted?
+  end
+
+  def set_arrives_at_shift
+    @arrives_at_shift = params.fetch(:arrives_at_shift, 0).to_i
+    if @order.arrives_at
+      date = @arrives_at_shift.days.since(Date.today)
+      change = { year: date.year, month: date.month, day: date.day }
+      @order.arrives_at = @order.arrives_at.change(change)
+    end
   end
 
   def fallback_redirect

@@ -4,7 +4,12 @@ RSpec.describe Users::OrdersController, type: :controller do
   before { sign_in :user, user }
   let(:user) { create :user }
   let(:address_params) { { address_attributes: attributes_for(:address) } }
-  let(:valid_params) { { order: attributes_for(:order).merge(address_params) } }
+  let(:valid_params) do
+    {
+      order: attributes_for(:order).merge(address_params),
+      arrives_at_shift: '0'
+    }
+  end
   let(:invalid) { { address_attributes: { content: '' } } }
   let(:invalid_params) { valid_params.merge(order: invalid) }
 
@@ -32,6 +37,26 @@ RSpec.describe Users::OrdersController, type: :controller do
         expect(address).to be_a Address
         expect(address).to be_persisted
         expect(address.addressable).to eq assigns(:order)
+      end
+
+      describe 'arrives_at_shift' do
+        it 'picks today for arrives_at' do
+          post :create, valid_params.merge(arrives_at_shift: 0)
+          order = assigns(:order)
+          expect(order.arrives_at.to_date).to eq Date.today
+        end
+
+        it 'picks tomorrow for arrives_at' do
+          post :create, valid_params.merge(arrives_at_shift: 1)
+          order = assigns(:order)
+          expect(order.arrives_at.to_date).to eq Date.tomorrow
+        end
+
+        it 'picks the day after tomorrow for arrives_at' do
+          post :create, valid_params.merge(arrives_at_shift: 2)
+          order = assigns(:order)
+          expect(order.arrives_at.to_date).to eq 1.day.since(Date.tomorrow)
+        end
       end
     end
 
