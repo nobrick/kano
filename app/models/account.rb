@@ -1,4 +1,6 @@
 class Account < ActiveRecord::Base
+  include Redis::Objects
+
   devise :database_authenticatable,
     :registerable,
     :recoverable,
@@ -23,6 +25,9 @@ class Account < ActiveRecord::Base
   before_validation :set_primary_address
   before_validation :set_phone
   before_validation :set_name
+
+  value :phone_vcode, expiration: 30.minutes
+  counter :phone_vcode_sent_times_in_hour, expiration: 1.hour
 
   def self.from_omniauth(auth, type)
     account = where(provider: auth.provider, uid: auth.uid).first_or_create do |account|
@@ -67,6 +72,10 @@ class Account < ActiveRecord::Base
 
   def unlock_time
     self.class.unlock_in.since(locked_at) if access_locked?
+  end
+
+  def phone_verified?
+    phone_verified_at.present?
   end
 
   private

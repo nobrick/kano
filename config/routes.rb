@@ -17,6 +17,7 @@ Rails.application.routes.draw do
           put :cancel
         end
       end
+      resources :phone_verifications, only: [ :create ]
       concerns :with_account_profile
     end
   end
