@@ -57,6 +57,9 @@ class Order < ActiveRecord::Base
   validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
   validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
 
+  attr_reader :retained_errors
+  validate :add_retained_errors
+
   # Payment total attributes
   #
   # user_total: The total fee that displays to user.
@@ -258,6 +261,18 @@ class Order < ActiveRecord::Base
     info
   end
 
+  def retained_errors
+    @retained_errors ||= ActiveModel::Errors.new(self)
+  end
+
+  def save_with_user_phone(phone)
+    return save if user.phone == phone && user.phone_verified?
+    transaction { user.update!(phone: phone) if save }
+  rescue ActiveRecord::RecordInvalid
+    user.errors.each { |a, e| errors.add a, e }
+    false
+  end
+
   private
 
   def do_contract(*args)
@@ -310,6 +325,10 @@ class Order < ActiveRecord::Base
     elsif handyman_total != user_total + handyman_bonus_total
       errors.add(:handyman_total, 'should be sum of user_total and handyman_bonus_total')
     end
+  end
+
+  def add_retained_errors
+    retained_errors.each { |a, e| errors.add a, e }
   end
 
   def service_must_be_available

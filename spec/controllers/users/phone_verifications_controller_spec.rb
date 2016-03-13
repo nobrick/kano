@@ -41,7 +41,7 @@ RSpec.describe Users::PhoneVerificationsController, type: :controller do
       expect(xhr_create).not_to change(&fetch_value).from(3)
     end
 
-    it 'sends the same verification code within 30 minutes' do
+    it 'sends the same verification code within 5 minutes' do
       xhr_create.call
       expect(pushed[0]).to eq(pushed[1])
       user.phone_vcode.expire(0)

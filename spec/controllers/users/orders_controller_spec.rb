@@ -14,7 +14,7 @@ RSpec.describe Users::OrdersController, type: :controller do
   let(:invalid_params) { valid_params.merge(order: invalid) }
 
   describe 'GET #create' do
-    context 'with valid params' do
+    context 'With valid params' do
       it 'creates new order' do
         expect { post :create, valid_params }.to change(Order, :count).by 1
       end
@@ -39,7 +39,7 @@ RSpec.describe Users::OrdersController, type: :controller do
         expect(address.addressable).to eq assigns(:order)
       end
 
-      describe 'arrives_at_shift' do
+      describe 'Arrives at shift' do
         it 'picks today for arrives_at' do
           post :create, valid_params.merge(arrives_at_shift: 0)
           order = assigns(:order)
@@ -60,7 +60,7 @@ RSpec.describe Users::OrdersController, type: :controller do
       end
     end
 
-    context 'with invalid params' do
+    context 'With invalid params' do
       it 'does not create new order' do
         expect { post :create, invalid_params }.not_to change(Order, :count)
       end
@@ -78,6 +78,133 @@ RSpec.describe Users::OrdersController, type: :controller do
         post :create, invalid_params
         address = assigns(:order).address
         expect(address).to be_a_new Address
+      end
+    end
+
+    describe 'User phone update' do
+      let!(:prev_phone) { user.phone }
+      let!(:prev_verified) { user.phone_verified? }
+      let(:vcode) { '1111' }
+      let(:phone) { '13166661111' }
+
+      shared_examples_for 'Failure for saving order and user phone' do
+        it 'fails to create an order' do
+          expect { post :create, params }.not_to change(Order, :count)
+        end
+
+        it 'fails to update user phone attribute' do
+          post :create, params
+          user.reload
+          expect(user.phone).to eq prev_phone
+          expect(user.phone_verified?).to eq prev_verified
+        end
+      end
+
+      shared_examples_for 'Order and user phone saving failure cases' do
+        context 'With invalid verification code' do
+          let(:params) { valid_params.merge(vcode: '0000', phone: phone) }
+          it_behaves_like 'Failure for saving order and user phone'
+        end
+
+        context 'With blank verification code' do
+          let(:params) { valid_params.merge(vcode: '', phone: phone) }
+          it_behaves_like 'Failure for saving order and user phone'
+        end
+
+        context 'With blank phone number' do
+          let(:params) { valid_params.merge(vcode: vcode, phone: '') }
+          it_behaves_like 'Failure for saving order and user phone'
+        end
+
+        context 'With duplicate phone number' do
+          before { create :user, phone: phone }
+          let(:params) { valid_params.merge(vcode: vcode, phone: phone) }
+          it_behaves_like 'Failure for saving order and user phone'
+        end
+
+        context 'With invalid phone number' do
+          let(:params) { valid_params.merge(vcode: vcode, phone: '110') }
+          it_behaves_like 'Failure for saving order and user phone'
+        end
+      end
+
+      context 'When user has no verified phone number' do
+        let(:user) { create :user, :unverified }
+
+        context 'When verification code is sent and not expired' do
+          before { user.phone_vcode.value = vcode }
+
+          context 'With valid verification code' do
+            let(:params) { valid_params.merge(vcode: vcode, phone: phone) }
+
+            it 'creates an order' do
+              expect { post :create, params }.to change(Order, :count).by 1
+            end
+
+            it 'updates user phone attribute' do
+              post :create, params
+              user.reload
+              expect(user.phone).to eq phone
+              expect(user).to be_phone_verified
+            end
+          end
+
+          it_behaves_like 'Order and user phone saving failure cases'
+        end
+
+        context 'When verification code is expired or not sent' do
+          before { user.phone_vcode = nil }
+          it_behaves_like 'Order and user phone saving failure cases'
+        end
+      end
+
+      context 'When user verified phone number before' do
+        let(:user) { create :user }
+
+        shared_examples_for 'Cases with existing verified phone number' do
+          context 'With existing phone number and no verification code' do
+            let(:params) { valid_params.merge(phone: prev_phone) }
+
+            it 'creates an order' do
+              expect { post :create, params }.to change(Order, :count).by 1
+            end
+
+            it 'does not change user phone' do
+              post :create, params
+              user.reload
+              expect(user.phone).to eq prev_phone
+              expect(user).to be_phone_verified
+            end
+          end
+        end
+
+        context 'When verification code is sent and not expired' do
+          before { user.phone_vcode.value = vcode }
+
+          context 'With valid verification code' do
+            let(:params) { valid_params.merge(vcode: vcode, phone: phone) }
+
+            it 'creates an order' do
+              expect { post :create, params }.to change(Order, :count).by 1
+            end
+
+            it 'updates user phone attribute' do
+              post :create, params
+              user.reload
+              expect(user.phone).to eq phone
+              expect(user).to be_phone_verified
+            end
+          end
+
+          it_behaves_like 'Cases with existing verified phone number'
+          it_behaves_like 'Order and user phone saving failure cases'
+        end
+
+        context 'When verification code is expired or not sent' do
+          before { user.phone_vcode = nil }
+          it_behaves_like 'Cases with existing verified phone number'
+          it_behaves_like 'Order and user phone saving failure cases'
+        end
       end
     end
   end

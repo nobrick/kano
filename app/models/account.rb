@@ -25,8 +25,9 @@ class Account < ActiveRecord::Base
   before_validation :set_primary_address
   before_validation :set_phone
   before_validation :set_name
+  before_save :update_phone_verified_at
 
-  value :phone_vcode, expiration: 30.minutes
+  value :phone_vcode, expiration: 5.minutes
   counter :phone_vcode_sent_times_in_hour, expiration: 1.hour
 
   def self.from_omniauth(auth, type)
@@ -75,6 +76,10 @@ class Account < ActiveRecord::Base
   end
 
   def phone_verified?
+    phone_verified_at && !phone_changed?
+  end
+
+  def was_phone_verified?
     phone_verified_at.present?
   end
 
@@ -96,5 +101,10 @@ class Account < ActiveRecord::Base
 
   def set_primary_address
     self.primary_address.addressable = self if primary_address.present?
+  end
+
+  def update_phone_verified_at
+    return if phone.nil? || phone_verified?
+    self.phone_verified_at = Time.now
   end
 end

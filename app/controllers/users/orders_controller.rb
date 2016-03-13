@@ -1,5 +1,6 @@
 class Users::OrdersController < ApplicationController
   before_action :set_order, only: [ :show, :charge, :cancel ]
+  before_action :set_phone_and_vcode, only: [ :new, :create ]
   before_action :gray_background, only: [ :show, :index ]
 
   # GET /orders
@@ -32,7 +33,8 @@ class Users::OrdersController < ApplicationController
   def create
     @order = current_user.orders.build(order_params)
     set_arrives_at_shift
-    if @order.request && @order.save
+    verify_vcode
+    if @order.request && @order.save_with_user_phone(@phone)
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       new
@@ -77,6 +79,32 @@ class Users::OrdersController < ApplicationController
     }
   end
 
+  def set_phone_and_vcode
+    @vcode = params[:vcode]
+    @phone = params[:phone] || current_user.phone
+  end
+
+  def verify_vcode
+    errors.clear
+    return if current_user.phone_verified? && current_user.phone == @phone
+    vcode_sent = current_user.phone_vcode.value
+    sent_times = current_user.phone_vcode_sent_times_in_hour
+    case
+    when @phone.blank?
+      errors.add(:base, '手机号码为空')
+    when vcode_sent.nil? && sent_times < 3
+      errors.add(:base, '请您重新发送手机验证码')
+    when vcode_sent.nil?
+      errors.add(:base, '暂时无法发送验证码，请稍后再试')
+    when @vcode != vcode_sent
+      errors.add(:base, '手机验证码错误')
+    end
+  end
+
+  def errors
+    @order.retained_errors
+  end
+
   def set_order
     @order = Order.find(params[:id])
     @order = nil unless @order.user == current_user
@@ -115,7 +143,11 @@ class Users::OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:content, :arrives_at, :taxon_code,
-                                  address_attributes: [ :code, :content ] )
+    params.require(:order).permit(
+      :content,
+      :arrives_at,
+      :taxon_code,
+      address_attributes: [ :code, :content ]
+    )
   end
 end
