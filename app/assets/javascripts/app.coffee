@@ -63,6 +63,6 @@ jQuery ->
     wx.error (res) ->
       alertOnDebug("ERR.\n#{Global.getDebugInfo()}")
 
-# Fix turbolinks confliction with MDL.
+# Fix turbolinks conflicting with MDL.
 $(document).on 'page:change', ->
   componentHandler.upgradeDom()
