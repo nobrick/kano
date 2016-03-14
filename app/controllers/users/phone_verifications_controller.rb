@@ -1,11 +1,12 @@
 class Users::PhoneVerificationsController < ApplicationController
-  attr_reader :user
-  before_action :set_user, only: [ :create ]
+  attr_reader :user, :phone
 
   # POST /phone_verifications
   def create
     return unless user
-    user.phone = params[:phone]
+    render json: { code: -1, msg: 'PHONE_IS_BLANK' } and return if phone.blank?
+
+    user.phone = phone
     if user.valid?
       create_for_valid
     else
@@ -34,10 +35,15 @@ class Users::PhoneVerificationsController < ApplicationController
   end
 
   def random_code
+    return phone[-4..-1] if Rails.env.development?
     SecureRandom.random_number.to_s[-4..-1]
   end
 
-  def set_user
-    @user = current_user
+  def user
+    @user ||= current_user
+  end
+
+  def phone
+    @phone ||= params[:phone]
   end
 end
