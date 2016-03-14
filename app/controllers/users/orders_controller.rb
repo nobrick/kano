@@ -23,7 +23,8 @@ class Users::OrdersController < ApplicationController
   # GET /orders/new
   def new
     gray_background
-    @order ||= current_user.orders.build(arrives_at: Time.now)
+    set_sms_zone_hidden_class
+    @order ||= current_user.orders.build(arrives_at: 1.hour.from_now)
     set_arrives_at_shift
     set_pricing_for_new
     set_address
@@ -84,6 +85,15 @@ class Users::OrdersController < ApplicationController
     @phone = params[:phone] || current_user.phone
   end
 
+  def set_sms_zone_hidden_class
+    verified = current_user.phone_verified?
+    if verified && @phone == current_user.phone
+      @sms_zone_hidden_class = 'hidden'
+    else
+      @sms_zone_hidden_class = ''
+    end
+  end
+
   def verify_vcode
     errors.clear
     return if current_user.phone_verified? && current_user.phone == @phone
@@ -113,8 +123,8 @@ class Users::OrdersController < ApplicationController
   def set_address
     address = @order.address
     if address.blank?
-      address = current_user.primary_address
-      address = @order.build_address(code: address.code, content: address.content)
+      opts = current_user.primary_address.try(:attribute_hash) || {}
+      address = @order.build_address(opts)
     end
 
     @city_code = address.try(:city_code) || '430100'
