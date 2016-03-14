@@ -7,7 +7,7 @@ RSpec.describe Users::OrdersController, type: :controller do
   let(:valid_params) do
     {
       order: attributes_for(:order).merge(address_params),
-      arrives_at_shift: '0'
+      arrives_at_shift: '1'
     }
   end
   let(:invalid) { { address_attributes: { content: '' } } }
