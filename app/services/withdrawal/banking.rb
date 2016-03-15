@@ -15,7 +15,7 @@ class Withdrawal::Banking
   end
 
   def self.bank_codes
-    @@bank_codes ||= banks.keys
+    @@bank_codes ||= banking_config['banks']
   end
 
   # The banks hash from the config file with banks code as keys.
@@ -23,7 +23,7 @@ class Withdrawal::Banking
   # @return [Hash] The bank map with bank codes as the keys and names as the
   # values.
   def self.banks
-    @@banks ||= banking_config['banks']
+    @@banks ||= banking_config['banks'].map { |code| [code, I18n.t("withdrawal.bank_code.#{code}")] }.to_h
   end
 
   # The invert banks hash which is intended for select tag helpers.
@@ -31,6 +31,6 @@ class Withdrawal::Banking
   # @return [Hash] The bank map with bank names as the keys and codes as the
   # values.
   def self.invert_banks
-    @@invert_banks ||= @@banks.invert 
+    @@invert_banks ||= banks.invert
   end
 end

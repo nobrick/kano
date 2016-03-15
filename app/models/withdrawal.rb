@@ -6,9 +6,10 @@ class Withdrawal < ActiveRecord::Base
   belongs_to :authorizer, class_name: 'Account'
   belongs_to :unfrozen_record, class_name: 'BalanceRecord'
   has_one :balance_record, as: :adjustment_event
-  scope :verified, -> { where('verify_passed IS NOT NULL') }
   scope :unverified, -> { where('verify_passed IS NULL') }
   scope :verified_failure, -> { where(verify_passed: false) }
+  scope :unprocessed, -> { where(verify_passed: true, state: 'requested') }
+  scope :processed, -> { where(state: %w(declined transferred)) }
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
   validates :account_no, presence: true
@@ -153,6 +154,10 @@ class Withdrawal < ActiveRecord::Base
     requested = handyman.withdrawals.requested
     requested = requested.where.not(id: id) if persisted?
     requested.blank?
+  end
+
+  def declined_at_or_transferred_at
+    transferred_at || declined_at
   end
 
   private
