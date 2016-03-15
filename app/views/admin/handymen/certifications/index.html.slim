@@ -29,8 +29,7 @@
           button type="button" data-dismiss="modal" class="btn btn-danger"
             | 关闭
 
-.container
-  = render partial: 'shared/tabs', locals: { tabs: tabs_info }
+= render partial: 'shared/tabs', locals: { tabs: tabs_info }
 
-  .tabs__content
-    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard, search: { instance: @search, url: admin_handyman_certifications_path, predicate: @predicate }}
+.tabs__content
+  = render partial: 'admin/shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard,  instance: @search }

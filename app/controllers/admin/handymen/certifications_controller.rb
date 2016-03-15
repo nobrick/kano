@@ -8,15 +8,16 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   page: page num
   #   certified_status:  certify state
   def index
-    q_params = ransack_params_for(:handyman_name_cont, :handyman_id_eq)
+    q_params = dashboard.filter_params(params)
+    @search = Taxon.ransack(q_params)
+    @taxons = @search.result.includes(:handyman).order(cert_requested_at: :desc).
+      page(params[:page]).per(10)
+  end
+
+  def search
+    q_params = dashboard.search_params(params)
     @search = Taxon.ransack(q_params)
     @taxons = @search.result.includes(:handyman).order(cert_requested_at: :desc)
-
-    if Taxon.certified_statuses.include?(params[:certified_status])
-      @taxons = @taxons.where(certified_status: params[:certified_status])
-    end
-
-    @taxons = @taxons.page(params[:page]).per(10)
   end
 
   # params

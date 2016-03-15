@@ -27,15 +27,6 @@ class Admin::ApplicationController < ActionController::Base
     "#{controller}-#{action}"
   end
 
-  def ransack_params_for(*predicates)
-    @predicate = predicates.shift
-    query = params.permit(q: @predicate)[:q]
-    return unless query
-    value = query.values.first
-    combinator = predicates.map { |p| [ p, value ] }.to_h
-    query.merge(combinator).merge(m: 'or')
-  end
-
   def nav_links
     [
       {
@@ -54,9 +45,9 @@ class Admin::ApplicationController < ActionController::Base
         scope: '/alpha/orders'
       },
       {
-        text: "balance_admin",
-        path: "/",
-        scope: '/alpha/balance'
+        text: "finance_admin",
+        path: admin_finance_withdrawal_verifications_path,
+        scope: '/alpha/finance'
       }
     ]
   end

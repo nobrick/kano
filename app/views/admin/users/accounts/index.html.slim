@@ -1,4 +1,4 @@
 .container
   .tabs__content
     .row
-      = render partial: 'shared/dashboard/index', locals: { resources: @accounts, dashboard: dashboard, search: { instance: @search, url: admin_user_accounts_path, predicate: @predicate }}
+      = render partial: 'admin/shared/dashboard/index', locals: { resources: @accounts, dashboard: dashboard, instance: @search }
