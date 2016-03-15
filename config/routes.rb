@@ -44,7 +44,11 @@ Rails.application.routes.draw do
     namespace :admin, path: '/alpha' do
       root 'dashbord#index', as: :root
       namespace :handymen, as: :handyman do
-        resources :certifications, only: [:update, :index, :show]
+        resources :certifications, only: [:update, :index, :show] do
+          collection do
+            match 'search' => 'certifications#search', via: :get
+          end
+        end
         resources :accounts, only: [:index, :show] do
           member do
             post :update_account_status
@@ -77,6 +81,31 @@ Rails.application.routes.draw do
         resources :accounts, only: [:index, :update, :show]
       end
       resources :orders, only: [:index, :update, :show]
+
+      namespace :finance do
+        namespace :withdrawals, as: :withdrawal do
+          resources :verifications, only: [:index, :update] do
+            collection do
+              match 'search' => 'verifications#search', via: :get
+            end
+          end
+          resources :transfer, only: [:index, :update] do
+            collection do
+              match 'search' => 'transfer#search', via: :get
+            end
+          end
+          resources :history, only: [:index] do
+            collection do
+              match 'search' => 'history#search', via: :get
+            end
+          end
+          resources :exceptions, only: [:index] do
+            collection do
+              match 'search' => 'exceptions#search', via: :get
+            end
+          end
+        end
+      end
     end
 
     mount Sidekiq::Web => '/sidekiq'

@@ -134,9 +134,10 @@ zh-CN:
       handyman:
         id: '管家 ID'
         primary_address: '地址'
-        name: '姓名'
+        name: '管家姓名'
         created_at: '注册时间'
         email: '邮箱'
+        balance: '现有余额'
       user:
         id: '用户 ID'
         name: '用户姓名'
@@ -194,6 +195,8 @@ zh-CN:
         total: '金额'
         bank_code: '银行'
         account_no: '卡号'
+        created_at: '申请时间'
+        id: '提现 ID'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

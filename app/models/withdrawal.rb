@@ -6,6 +6,9 @@ class Withdrawal < ActiveRecord::Base
   belongs_to :authorizer, class_name: 'Account'
   belongs_to :unfrozen_record, class_name: 'BalanceRecord'
   has_one :balance_record, as: :adjustment_event
+  scope :verified, -> { where('verify_passed IS NOT NULL') }
+  scope :unverified, -> { where('verify_passed IS NULL') }
+  scope :verified_failure, -> { where(verify_passed: false) }
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
   validates :account_no, presence: true

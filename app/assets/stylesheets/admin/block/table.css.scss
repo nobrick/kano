@@ -39,6 +39,15 @@
   text-align: right;
 }
 
+.dashboard__filter-info {
+  margin-bottom: 5px;
+}
+
+.dashboard__filter-info > span {
+  display: inline-block;
+  margin-right: 5px;
+}
+
 .table__content form {
   display: inline-block;
   margin-right: 5px;

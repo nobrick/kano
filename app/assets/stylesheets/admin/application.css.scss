@@ -1,3 +1,6 @@
+/*
+ *= require jquery-ui/datepicker
+ */
 @import 'bootstrap';
 @import 'font-awesome';
 @import 'table';
@@ -5,6 +8,10 @@
 
 body {
   padding-top: 65px;
+}
+
+#ui-datepicker-div {
+  z-index: 9999999!important;
 }
 
 .taxonBox {

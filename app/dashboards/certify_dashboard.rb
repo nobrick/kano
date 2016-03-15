@@ -17,10 +17,15 @@ class CertifyDashboard < BaseDashboard
   }
 
   COLLECTION_FILTER = {
-    "attr" => "certified_status",
-    "status" => %w(success failure under_review),
-    "baseurl" => "admin_handyman_certifications_path"
+    "certified_status" => { type: :radio, values: { self.value_translate("certified_status", "success")  => "success", self.value_translate("certified_status", "failure") => "failure", self.value_translate("certified_status", "under_review") => "under_review" } },
+    "cert_requested_at" => { type: :time_range }
   }
+
+  COLLECTION_FILTER_PATH_HELPER = "admin_handyman_certifications_path"
+
+  SEARCH_PATH_HELPER = "search_admin_handyman_certifications_path"
+
+  SEARCH_PREDICATES = [:handyman_name_cont, :handyman_id_eq]
 
   EXPAND_PARTIAL_PATH = "admin/handymen/certifications"
 
