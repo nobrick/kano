@@ -161,17 +161,23 @@ zh-CN:
         code: '服务类别'
       handyman:
         id: '管家 ID'
+        nickname: '昵称'
         primary_address: '地址'
         phone: '手机号码'
         name: '管家姓名'
         created_at: '注册时间'
+        last_sign_in_at: '最近一次登陆时间'
         email: '邮箱'
         balance: '现有余额'
+        unfrozen_balance: '现有解冻余额'
       user:
+        nickname: '昵称'
         id: '用户 ID'
         name: '用户姓名'
         created_at: '注册时间'
         email: '邮箱'
+        phone: '手机号码'
+        last_sign_in_at: '最近一次登陆时间'
       order:
         id: '订单 ID'
         created_at: '订单时间'
@@ -216,6 +222,7 @@ zh-CN:
         reason_code: '失败类型'
         certified_status: '认证状态'
         cert_requested_at: '申请时间'
+        certified_at: '认证时间'
         certified_by: '认证人'
       withdrawal:
         handyman: '提现人'

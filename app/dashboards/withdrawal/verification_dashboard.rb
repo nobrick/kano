@@ -8,7 +8,7 @@ class Withdrawal::VerificationDashboard < BaseDashboard
     "bank_code" => :i18n,
     "account_no" => :string,
     "total" => :string,
-    "handyman.balance" => :string,
+    "handyman.unfrozen_balance" => :string,
     "created_at" => :time,
     "_self_expand.verify_buttons" => nil
   }

@@ -217,7 +217,7 @@ class BaseDashboard
   end
 
   def resource_attr_data(resource, methods)
-    methods.inject(resource) { |result, method| result.send(method) }
+    methods.inject(resource) { |result, method| result.try(method) }
   end
 
   def attr_data_i18n_scope(attr)
