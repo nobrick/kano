@@ -1,10 +1,6 @@
 require 'active_support/configurable'
 
 module SMS
-  def self.config
-    @config ||= Config.new
-  end
-
   class Config
     include ActiveSupport::Configurable
     config_accessor :api_key, :templates

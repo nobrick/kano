@@ -50,6 +50,16 @@
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                 = fields.text_field :content, class: 'mdl-textfield__input'
                 label.mdl-textfield__label for="order_address_attributes_content" 详细地址
+            .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+              = phone_field_tag :phone, @phone, data: { phone: current_user.phone }, class: 'mdl-textfield__input'
+              label.mdl-textfield__label for="phone" 电话号码
+            .row.sms-zone class=@sms_zone_hidden_class
+              .col-xs-6
+                .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
+                  = text_field_tag :vcode, @vcode, pattern: '\d*', class: 'mdl-textfield__input'
+                  label.mdl-textfield__label for="vcode" 短信验证
+              .col-xs-6
+                = button_tag '发送验证码', class: 'mdl-button mdl-js-button mdl-button--accent btn-request-user-vcode'
             .field.form-group.price-desc-field.hidden data-pricing=@prices_json
               = render 'users/orders/pricing'
             div

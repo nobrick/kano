@@ -1,11 +1,12 @@
 FactoryGirl.define do
   factory :handyman do
     transient { with_taxons false }
+    primary_address_attributes { attributes_for(:address) }
     sequence(:email, 100) { |n| "handyman#{n}@example.com" }
     password 'abcdefg'
-    phone { "1#{rand(10**9...10**10)}" }
     name '小明'
-    primary_address_attributes { attributes_for(:address) }
+    phone { "1#{rand(10**9...10**10)}" }
+    phone_verified_at { Time.now }
 
     after(:create) do |handyman, evaluator|
       codes = %w{ electronic/lighting water/faucet }

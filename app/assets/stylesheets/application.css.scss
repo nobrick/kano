@@ -433,7 +433,11 @@ select.select-block.select-block-fullwidth {
   }
   .btn-create-order {
     letter-spacing: 3px;
-    margin-bottom: 7px;
+    margin: 16px 0px 7px;
+  }
+  .btn-request-user-vcode {
+    display: block;
+    margin-top: 16px;
   }
 }
 
