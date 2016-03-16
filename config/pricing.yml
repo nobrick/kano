@@ -1,18 +1,18 @@
 pricing:
   strategy_one:
     base:
-      '_traffic': 10
+      '_traffic': 5
     items:
       'electronic/lighting': 30
       'electronic/socket': 20
-      'electronic/appliance': 80
+      'electronic/appliance': 40
       'electronic/other': 50
-      'water/pipe': 30
+      'water/pipe': 50
       'water/faucet': 30
-      'water/toilet': 50
+      'water/toilet': 100
       'water/other': 50
-      'misc/shelf': 20
-      'misc/air_conditioning': 80
+      'misc/shelf': 30
+      'misc/air_conditioning': 100
       'misc/whitewash': 50
       'misc/lock': 60
       'misc/other': 60
