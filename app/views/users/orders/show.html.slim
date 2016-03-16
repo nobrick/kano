@@ -1,7 +1,7 @@
 - content_for :row
   - on_wechat = wechat_request_or_debug?
   - arrives_at_expired = @order.arrives_at_expired?
-  - cache [ '1.6', @order, arrives_at_expired, on_wechat ] do
+  - cache [ '1.71', @order, arrives_at_expired, on_wechat ] do
     .order-show-page
       .col-md-6.col-md-offset-3
         - case @order.state
@@ -21,7 +21,7 @@
                 => fa_icon('phone')
               ' 联系方式
             p
-              = current_user.name
+              = current_user.full_or_nickname
               br
               = current_user.readable_phone_number
               br
