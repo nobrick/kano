@@ -5,21 +5,25 @@ namespace :db do
     data = YAML.load(File.read(config_file))['pricing']
     data.values.each do |strategy|
       strategy['cities'].each do |city_code|
-        traffic_price = strategy['base']['_traffic']
-        query = { city: city_code, code: '_traffic' }
-        TaxonItem.find_or_create_by!(query) { |e| e.price = traffic_price }
-
-        Taxon.taxon_codes.each do |code|
+        find_and_update = lambda do |code, new_price|
           query = { city: city_code, code: code }
-          TaxonItem.find_or_create_by!(query) do |item|
-            item.price = strategy['items'][code]
+          item = TaxonItem.find_by(query)
+          if item
+            item.update!(price: new_price)
+          else
+            TaxonItem.create!(query.merge(price: new_price))
           end
+        end
+
+        find_and_update.('_traffic', strategy['base']['_traffic'])
+        Taxon.taxon_codes.each do |code|
+          find_and_update.(code, strategy['items'][code])
         end
       end
     end
 
     puts TaxonItem.count
-    TaxonItem.all.each do |item|
+    TaxonItem.order(:city, :created_at).each do |item|
       city = ChinaCity.get(item.city)
       item_name = Taxon.taxon_name(item.code)
       category = Taxon.category_name(item.code)
