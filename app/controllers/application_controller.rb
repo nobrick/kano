@@ -41,7 +41,7 @@ class ApplicationController < ActionController::Base
   def authenticate_completed_handyman(options = {})
     return false unless authenticate_handyman!
     unless current_handyman.completed_info?
-      sign_up_uncompleted('handyman', options)
+      sign_up_uncompleted_handyman(options)
       return false
     end
     unless current_handyman.certified?
@@ -51,24 +51,13 @@ class ApplicationController < ActionController::Base
     true
   end
 
-  def complete_profile_url_for(scope)
-    case scope.to_s
-    when 'user'
-      complete_user_profile_url
-    when 'handyman'
-      complete_handyman_profile_url
-    else
-      nil
-    end
-  end
-
-  def sign_up_uncompleted(scope, options = {})
+  def sign_up_uncompleted_handyman(options = {})
     unless options[:notice] || options[:alert]
       options[:notice] = t('^should_complete_profile')
     end
 
     set_return_path
-    redirect_to complete_profile_url_for(scope), options
+    redirect_to complete_handyman_profile_url, options
     false
   end
 

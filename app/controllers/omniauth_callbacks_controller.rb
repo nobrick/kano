@@ -26,21 +26,25 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     auth = request.env['omniauth.auth']
     @account = Account.from_omniauth(auth, type)
     if @account.persisted?
-      omniauth_sign_in
+      omniauth_sign_in(type)
     else
       Rails.logger.debug "wechat persistence failed: #{@account.errors.full_messages}"
       redirect_to root_url, alert: t('.persist_failure')
     end
   end
 
-  def omniauth_sign_in
+  def omniauth_sign_in(type)
     scope = @account.type.underscore
     sign_in(scope, @account)
-    if @account.completed_info?
-      redirect_to root_url
-    else
-      redirect_to complete_profile_url_for(scope)
+    redirect_after_sign_in(type)
+  end
+
+  def redirect_after_sign_in(type)
+    if type == 'Handyman' && !@account.completed_info?
+      redirect_to complete_handyman_profile_url
+      return
     end
+    redirect_to root_url
   end
 
   # protected

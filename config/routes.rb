@@ -1,12 +1,6 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  concern :with_account_profile do
-    resource :profile, only: [ :show, :update ] do
-      get :complete
-    end
-  end
-
   authenticated :user do
     root 'users/orders#index', as: :user_root
     namespace :users, as: :user, path: '/' do
@@ -18,7 +12,6 @@ Rails.application.routes.draw do
         end
       end
       resources :phone_verifications, only: [ :create ]
-      concerns :with_account_profile
     end
   end
 
@@ -30,7 +23,9 @@ Rails.application.routes.draw do
       resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
       resources :taxons, only: [ :index ]
       resources :withdrawals, only: [ :index, :new, :create ]
-      concerns :with_account_profile
+      resource :profile, only: [ :show, :update ] do
+        get :complete
+      end
     end
   end
 
