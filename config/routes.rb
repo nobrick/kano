@@ -1,5 +1,16 @@
 require 'sidekiq/web'
 
+# Constraints class to determine scopes for users or handymen.
+class ScopeRecognizer
+  def initialize(scope)
+    @scope = scope.to_s
+  end
+
+  def matches?(request)
+    request.params[:sc] == @scope
+  end
+end
+
 Rails.application.routes.draw do
   authenticated :user do
     root 'users/orders#index', as: :user_root
@@ -79,8 +90,18 @@ Rails.application.routes.draw do
   root 'home#index'
   get 'home/index'
 
-  get 'orders/new', to: 'home#index'
-  get 'contracts', to: 'handymen/home#index'
+  with_options constraints: ScopeRecognizer.new(:user), to: 'home#index' do |v|
+    v.get 'orders/new'
+  end
+
+  with_options(
+    constraints: ScopeRecognizer.new(:handyman),
+    to: 'handymen/home#index') do |v|
+
+    v.get 'contracts'
+    v.get 'profile'
+    v.get 'withdrawals'
+  end
 
   mount ChinaCity::Engine => '/china_city'
   resource :user_wechat, only: [ :show, :create ]
