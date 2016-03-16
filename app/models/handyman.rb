@@ -1,6 +1,4 @@
 class Handyman < Account
-  include IdRandomizable
-
   has_many :orders
   has_many :taxons
   has_many :withdrawals

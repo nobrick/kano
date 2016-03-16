@@ -1,5 +1,6 @@
 class Account < ActiveRecord::Base
   include Redis::Objects
+  include IdRandomizable
 
   devise :database_authenticatable,
     :registerable,
@@ -47,8 +48,10 @@ class Account < ActiveRecord::Base
   def full_or_nickname
     if name.present?
       name
-    else
+    elsif nickname.present?
       nickname
+    else
+      "ID_#{id}"
     end
   end
 
