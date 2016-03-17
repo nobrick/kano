@@ -1,9 +1,14 @@
 - content_for :row
   - time = Time.now
-  - cache [ '1.3', @orders, @orders.map { |o| o.arrives_at_valid?(time) } ] do
+  - cache [ '1.4', @orders, @orders.map { |o| o.arrives_at_valid?(time) } ] do
     .order-index-page
       - if @orders.blank?
-        h3.text-center 您还没有任何订单。
+        .intro-container
+          .intro-pattern
+          .intro-logo
+          .text-center
+            = link_to '预约服务', new_user_order_path,
+              class: 'btn btn-blue btn-one-in-row'
       - else
         .order-cards-list
           = render partial: 'users/orders/order', collection: @orders
