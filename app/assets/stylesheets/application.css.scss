@@ -87,6 +87,15 @@ h4, .h4 {
   }
 }
 
+.jumbotron, .carousel {
+  background-color: #ffffff;
+}
+.carousel {
+  a.carousel-control {
+    background-image: none;
+  }
+}
+
 // Fixes bootstrap confliction with mdl textfields.
 .mdl-textfield__label {
   margin-bottom: 0px;
@@ -147,14 +156,14 @@ input[type=checkbox] {
   transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0s;
   border-radius: 25px;
   color: $alphaWhite;
-  background-color: #049cdb;
+  background-color: darken(#3dbcf5, 4%);
   border: none;
   font-size: 16px;
   letter-spacing: 2px;
   text-align: center;
   &:hover, &:focus {
     color: $alphaWhite;
-    background-color: #3dbcf5;
+    background-color: lighten(#3dbcf5, 4%);
   }
 }
 .btn.btn-one-in-row {
@@ -263,10 +272,8 @@ select.select-block.select-block-fullwidth {
 #brand_navbar {
   background-color: adjust-color(#b5b4b4, $lightness: -30%, $alpha: -0.4);
   a {
-    color: white;
-    /*color: $alphaWhite;*/
+    color: #ffffff;
     &:hover {
-      /*color: #36a1de;*/
     }
   }
   .navbar-right-btns {
@@ -292,23 +299,6 @@ select.select-block.select-block-fullwidth {
       margin-top: 0px;
       margin-left: 12px;
     }
-  }
-}
-
-.header-logo {
-  padding: 5px 0 0 0;
-  margin: 0;
-  background: white;
-  /*@include background-image(url("/images/logo.svg"));*/
-  background-position: center 0;
-  background-repeat: no-repeat;
-  p {
-    letter-spacing: 2px;
-    margin-bottom: 10px;
-  }
-  h1 {
-    color: $logoRed;
-    /*font-family: "orbitron-medium";*/
   }
 }
 
@@ -366,7 +356,29 @@ select.select-block.select-block-fullwidth {
   }
 }
 
-.home-index-page, .order-index-page {
+.intro-logo {
+  @include background-image(url("/images/intro_logo.svg"));
+  background-repeat: no-repeat;
+  background-position: center 0;
+  padding-top: 42%;
+  height: 0px;
+  width: 100%;
+  margin: 0px auto;
+}
+
+.header-logo {
+  @include background-image(url("/images/header_logo.svg"));
+  background-repeat: no-repeat;
+  background-position: center 0;
+  padding-top: 62px;
+  width: 100%;
+  margin: 20px auto 0px;
+}
+.header-logo.with-bottom-border {
+  border-bottom: 1px solid lighten(#3dbcf5, 4%)
+}
+
+.home-index-page, .order-index-page, .guides-index-page {
   .intro-container {
     max-width: 500px;
     margin: -20px auto 40px;
@@ -381,14 +393,52 @@ select.select-block.select-block-fullwidth {
       margin: 0 auto;
     }
     .intro-logo {
-      @include background-image(url("/images/intro_logo.svg"));
-      background-repeat: no-repeat;
       background-size: 38% auto;
-      background-position: center 0;
-      padding-top: 42%;
-      height: 0px;
-      width: 100%;
-      margin: 0 auto;
+    }
+  }
+}
+
+.guides-index-page {
+  #guides-carousel {
+    margin-bottom: 17px;
+    p {
+      font-size: 16px;
+    }
+  }
+  .guides-container {
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    .guides-image {
+      background-repeat: no-repeat;
+      margin: 0px auto;
+      padding: 150px 0px 20px;
+      background-size: auto 100%;
+      @media (min-width: $screen-sm-min) {
+        padding: 350px 0px 20px;
+      }
+    }
+    .guides-house {
+      @include background-image(url("/images/guides/house.svg"));
+      background-position: center -10px;
+    }
+    .guides-booking {
+      @include background-image(url("/images/guides/booking.svg"));
+      background-position: center -5px;
+    }
+    .guides-helicopter {
+      @include background-image(url("/images/guides/helicopter.svg"));
+      background-position: center -16px;
+    }
+    .guides-footer {
+      @include background-image(url("/images/guides/footer.svg"));
+      background-position: center 0px;
+      background-size: auto 86%;
+      padding: 50px 0px 20px;
+      margin: 20px auto 20px;
+    }
+    .intro-logo {
+      margin-top: 30px;
     }
   }
 }
