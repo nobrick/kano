@@ -13,7 +13,7 @@ module ApplicationHelper
 
   def display_navbar?
     if user_signed_in?
-      return true
+      return true if current_user.orders.present?
     elsif handyman_signed_in?
       account = current_handyman
       return account.completed_info? && account.certified?

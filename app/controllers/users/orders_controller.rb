@@ -1,13 +1,14 @@
 class Users::OrdersController < ApplicationController
   before_action :set_order, only: [ :show, :charge, :cancel ]
   before_action :set_phone_and_vcode, only: [ :new, :create ]
-  before_action :gray_background, only: [ :show, :index ]
+  before_action :gray_background, only: [ :show ]
 
   # GET /orders
   def index
     @orders = current_user.orders.includes(:handyman)
       .order(updated_at: :desc)
       .page(params[:page]).per(7)
+    gray_background if @orders.present?
   end
 
   # GET /orders/:id
