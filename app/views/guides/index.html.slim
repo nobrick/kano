@@ -1,0 +1,30 @@
+- content_for :row
+  .guides-index-page
+    .guides-container.text-center
+      .header-logo.with-bottom-border
+      #guides-carousel.carousel.slide data-ride="carousel" data-interval="2666"
+        .carousel-inner role="listbox"
+          .item.active
+            .guides-image.guides-house
+            p 轻松家修，一步搞定
+          .item
+            .guides-image.guides-booking
+            p 一键下单，简单高效
+          .item
+            .guides-image.guides-helicopter
+            p 专业服务，用心呵护
+      .text-center
+        - if user_signed_in?
+        - elsif handyman_signed_in?
+          p 您已以管家身份登录，请注销后重新访问
+          = link_to '注销', destroy_account_session_path, method: :delete,
+            class: 'btn btn-blue btn-one-in-row'
+        - elsif wechat_request?
+          = link_to '进入', account_omniauth_authorize_path(:wechat),
+            class: 'btn btn-blue btn-one-in-row'
+        - else
+          = link_to '登录', new_account_session_path,
+            class: 'btn btn-blue btn-two-in-row'
+          = link_to '注册', new_user_registration_path,
+            class: 'btn btn-blue btn-two-in-row'
+      .guides-image.guides-footer
