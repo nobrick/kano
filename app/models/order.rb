@@ -97,6 +97,14 @@ class Order < ActiveRecord::Base
   FINISHED_STATES = %w{ completed rated }
   validates :state, inclusion: { in: STATES }
 
+  def self.states
+    STATES.map{ |s| [I18n.t("order.state.#{s}"), s]}.to_h
+  end
+
+  def self.state_description(state)
+    I18n.translate "order.state.#{state}"
+  end
+
   aasm column: 'state', no_direct_assignment: true do
     # initial: The order has just been initialized, and currently invalid for
     # persistence.
@@ -171,7 +179,7 @@ class Order < ActiveRecord::Base
   end
 
   def state_description
-    I18n.translate "order.#{state}"
+    I18n.translate "order.state.#{state}"
   end
 
   def sync_from_user_total(options = {})
@@ -273,7 +281,80 @@ class Order < ActiveRecord::Base
     false
   end
 
+  def already_contracted?
+    !contracted_at.blank?
+  end
+
+  def already_completed?
+    !completed_at.blank?
+  end
+
+  def already_rated?
+    !rated_at.blank?
+  end
+
+  def already_reported?
+    !reported_at.blank?
+  end
+
+  def already_canceled?
+    !canceled_at.blank?
+  end
+
+  def history
+    if ["requested", "contracted", "payment", "completed", "rated"].include?(state)
+      normal_history
+    elsif canceled?
+      cancel_history
+    else
+      report_history
+    end
+  end
+
   private
+
+  def normal_history
+    {
+      "request" => created_at,
+      "contract" => contracted_at,
+      "complete" => completed_at,
+      "rate" => rated_at
+    }
+  end
+
+  def cancel_history
+    return unless canceled?
+
+    if already_contracted?
+      {
+        "request" => created_at,
+        "contract" => contracted_at,
+        "cancel" => canceled_at
+      }
+    else
+      {
+        "request" => created_at,
+        "cancel" => canceled_at
+      }
+    end
+  end
+
+  def report_history
+    return unless rated?
+
+    basic_history = {
+      "request" => created_at,
+      "contract" => contracted_at,
+    }
+    if already_rated?
+      basic_history["complete"] = completed_at
+      basic_history["rate"] = rated_at
+    elsif already_completed?
+      basic_history["complete"] = completed_at
+    end
+
+    basic_history
+  end
 
   def do_contract(*args)
     self.contracted_at = Time.now

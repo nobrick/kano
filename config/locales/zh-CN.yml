@@ -122,14 +122,21 @@ zh-CN:
     admin/users/addresses:
       update_success: '修改成功'
   order:
-    requested: '未接单'
-    contracted: '已接单'
-    payment: '支付中'
-    completed: '已支付'
-    rated: '已评价'
-    reported: '已投诉'
-    transferred: '已转单'
-    canceled: '已取消'
+    state:
+      requested: '未接单'
+      request: '创建订单'
+      contracted: '已接单'
+      contract: '接单'
+      payment: '支付中'
+      completed: '已支付'
+      complete: '支付'
+      rated: '已评价'
+      rate: '评价'
+      reported: '已投诉'
+      report: '投诉'
+      transferred: '已转单'
+      canceled: '已取消'
+      cancel: '取消'
   activerecord:
     models:
       account: '账户'
@@ -142,6 +149,8 @@ zh-CN:
       payment: '支付信息'
       withdrawal: '提现申请'
     attributes:
+      certified_by:
+        name: '认证人'
       account:
         username: '用户名'
         name: '称呼'
@@ -187,7 +196,7 @@ zh-CN:
         taxon_code: '服务类别'
         content: '维修内容'
         arrives_at: '预约到达时间'
-        established_at: '管家接单时间'
+        contracted_at: '管家接单时间'
         completed_at: '订单完成时间'
         user_total: '订单价格'
         payment_total: '实际支付价格'
