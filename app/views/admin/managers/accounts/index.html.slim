@@ -1,2 +1,2 @@
 .container
-  = render partial: 'shared/dashboard/index', locals: {resources: @managers, dashboard: dashboard, search: nil}
+  = render partial: 'admin/shared/dashboard/index', locals: { resources: @managers, dashboard: dashboard, instance: @search }

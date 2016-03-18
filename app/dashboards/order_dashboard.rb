@@ -10,10 +10,8 @@ class OrderDashboard < BaseDashboard
     "handyman.name" => :string,
     "handyman.id" => :string,
     "contracted_at" => :time,
-    "arrives_at" => :time,
     "completed_at" => :time,
     "canceled_at" => :time,
-    "payment_total" => :string
   }
 
   SEARCH_PATH_HELPER = "search_admin_orders_path"

@@ -3,7 +3,15 @@ class Admin::Managers::AccountsController < Admin::ApplicationController
   helper_method :dashboard
 
   def index
-    @managers = Account.where(admin: true).page(params[:page]).per(10)
+    q_params = dashboard.search_params(params)
+    @search = Account.where(admin: true).ransack(q_params)
+    @managers = @search.result.page(params[:page]).per(10)
+  end
+
+  private
+
+  def nav_links
+    {}
   end
 
   def dashboard

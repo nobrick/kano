@@ -42,7 +42,7 @@ Rails.application.routes.draw do
 
   authenticated :user, -> (u) { u.admin? } do
     namespace :admin, path: '/alpha' do
-      root 'dashbord#index', as: :root
+      root 'dashboard#index', as: :root
       namespace :handymen, as: :handyman do
         resources :certifications, only: [:update, :index, :show] do
           collection do
