@@ -23,7 +23,7 @@ class SessionsController < Devise::SessionsController
       sign_out
       redirect_to handymen_home_index_url and return if scope == 'handyman'
     end
-    redirect_to home_index_url
+    redirect_to guides_index_url
   end
 
   # protected

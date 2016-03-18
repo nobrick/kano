@@ -91,7 +91,7 @@ Rails.application.routes.draw do
   get 'home/index'
   get 'guides/index'
 
-  with_options constraints: ScopeRecognizer.new(:user), to: 'home#index' do |v|
+  with_options constraints: ScopeRecognizer.new(:user), to: 'guides#index' do |v|
     v.get 'orders/new'
   end
 
