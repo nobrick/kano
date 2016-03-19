@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/straydogstudio/acts_as_xlsx.git
+  revision: 74c00b5054ef96ced7bd55753015164f6aaf13ab
+  specs:
+    acts_as_xlsx (1.0.6)
+      activerecord (>= 2.3.9)
+      axlsx (>= 1.0.13)
+      i18n (>= 0.4.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -42,6 +51,13 @@ GEM
     autoprefixer-rails (6.1.0.1)
       execjs
       json
+    axlsx (2.0.1)
+      htmlentities (~> 4.3.1)
+      nokogiri (>= 1.4.1)
+      rubyzip (~> 1.0.0)
+    axlsx_rails (0.4.0)
+      axlsx (>= 2.0.1)
+      rails (>= 3.1)
     babel-source (5.8.34)
     babel-transpiler (0.7.0)
       babel-source (>= 4.0, < 6)
@@ -165,6 +181,7 @@ GEM
     hashdiff (0.3.0)
     hashie (3.4.2)
     hitimes (1.2.3)
+    htmlentities (4.3.4)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
     i18n (0.7.0)
@@ -341,6 +358,7 @@ GEM
       rspec-mocks (~> 3.3.0)
       rspec-support (~> 3.3.0)
     rspec-support (3.3.0)
+    rubyzip (1.0.0)
     safe_yaml (1.0.4)
     sass (3.4.19)
     sass-rails (5.0.4)
@@ -430,6 +448,8 @@ PLATFORMS
 
 DEPENDENCIES
   aasm (~> 4.2.0)
+  acts_as_xlsx!
+  axlsx_rails
   better_errors
   binding_of_caller
   bootstrap-sass (~> 3.3.3)
@@ -483,6 +503,3 @@ DEPENDENCIES
   unicorn
   webmock
   wechat (~> 0.6.1)
-
-BUNDLED WITH
-   1.10.6

@@ -10,6 +10,7 @@ end
 
 class BaseDashboard
 
+  EXCEL_EXPORT = false
   COLLECTION_ATTRIBUTES = {}
   COLLECTION_FILTER = {}
   SEARCH_PREDICATES = []
@@ -149,6 +150,10 @@ class BaseDashboard
   def self.value_translate(attr, value)
     resource = self::RESOURCE_CLASS.downcase
     I18n.t(resource + '.' + attr + '.' + value)
+  end
+
+  def export?
+    self.class::EXCEL_EXPORT
   end
 
   private

@@ -19,6 +19,8 @@ class Withdrawal::TransferDashboard < BaseDashboard
     "total" => { type: :range }
   }
 
+  EXCEL_EXPORT = true
+
   COLLECTION_FILTER_PATH_HELPER = "admin_finance_withdrawal_transfer_index_path"
 
   SEARCH_PREDICATES = [:handyman_name_cont, :id_or_handyman_id_eq]

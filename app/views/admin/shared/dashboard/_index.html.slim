@@ -40,5 +40,9 @@
               - else
                 | #{data}
 
+- if dashboard.export?
+  .row
+    = link_to "导出 Excel", send(dashboard.filter_path, request.query_parameters.merge(format: :xlsx)), class: "btn btn-primary btn-lg"
+
 .row.paginator
   = paginate resources

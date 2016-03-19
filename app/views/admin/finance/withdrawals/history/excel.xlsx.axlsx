@@ -1,0 +1,52 @@
+wb = xlsx_package.workbook
+
+["icbc"].each do |codes|
+  bank_name = Withdrawal::Banking.banks[codes]
+  styles = wb.styles
+  date_time = styles.add_style(:num_fmt => Axlsx::NUM_FMT_YYYYMMDDHHMMSS,
+                               :border => Axlsx::STYLE_THIN_BORDER,
+                               :locked => true,
+                               :alignment => { :horizontal => :right })
+  default = styles.add_style(:border => Axlsx::STYLE_THIN_BORDER,
+                             :locked => true,
+                             :num_fmt => 0,
+                             :alignment => { :horizontal => :right })
+  currency = styles.add_style(:border => Axlsx::STYLE_THIN_BORDER,
+                              :b => true,
+                              :num_fmt => 7,
+                              :locked => true,
+                              :alignment => { :horizontal => :right })
+  summary = styles.add_style(:border => Axlsx::STYLE_THIN_BORDER,
+                             :b => true,
+                             :locked => true,
+                             :alignment => { :horizontal => :right })
+  summary_currency = styles.add_style(:border => Axlsx::STYLE_THIN_BORDER,
+                                      :b => true,
+                                      :num_fmt => 7,
+                                      :locked => true,
+                                      :alignment => { :horizontal => :center })
+
+  wb.add_worksheet(name: bank_name) do |sheet|
+    bank_withdrawals = @withdrawals.where(bank_code: codes).order(:id)
+    sheet.add_row ['提现 ID', '管家姓名', '管家 ID', '开户银行', '卡号', '提现金额', '联系方式', '申请时间', '转账状态', '处理时间', '授权人']
+    bank_withdrawals.each do |w|
+      withdrawal_bank = Withdrawal::Banking.banks[w.bank_code]
+
+      sheet.add_row [w.id, w.handyman.name, w.handyman.id, withdrawal_bank, w.account_no, w.total, w.handyman.phone, w.created_at, w.state, w.declined_at_or_transferred_at, w.authorizer.name],
+                    :style => [default, default, default, default, default, currency, default, date_time, default, date_time, default],
+                    :types => [:string, :string, :string, :string, :string, :float, :string, :time, :string, :time, :string]
+    end
+
+    row_num = bank_withdrawals.count + 1
+    sheet.add_row ["总计", "=SUM(F2:F#{ row_num })"], :style => [summary, summary_currency]
+    sheet.merge_cells "B#{ row_num + 1 }:K#{ row_num + 1 }"
+
+    sheet.sheet_view.pane do |pane|
+      pane.top_left_cell = "B2"
+      pane.state = :frozen_split
+      pane.y_split = 1
+      pane.x_split = 1
+      pane.active_pane = :bottom_right
+    end
+  end
+end

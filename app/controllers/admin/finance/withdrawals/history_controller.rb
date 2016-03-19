@@ -5,7 +5,15 @@ class Admin::Finance::Withdrawals::HistoryController < Admin::ApplicationControl
   def index
     q_params = dashboard.filter_params(params)
     @search = Withdrawal.processed.ransack(q_params)
-    @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
+    respond_to do |format|
+      format.html do
+        @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
+      end
+      format.xlsx do
+        @withdrawals = @search.result.includes(:handyman)
+        render xlsx: 'excel'
+      end
+    end
   end
 
   def search

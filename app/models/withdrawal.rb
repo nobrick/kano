@@ -2,6 +2,8 @@ class Withdrawal < ActiveRecord::Base
   include AASM
   include AASM::Helper
 
+  acts_as_xlsx
+
   belongs_to :handyman
   belongs_to :authorizer, class_name: 'Account'
   belongs_to :unfrozen_record, class_name: 'BalanceRecord'
