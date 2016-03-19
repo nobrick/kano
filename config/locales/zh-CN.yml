@@ -36,7 +36,7 @@ zh-CN:
     state:
       declined: '转账失败'
       transferred: '转账成功'
-    bank_code:
+    bank_codes:
       icbc: '工商银行'
       abc: '农业银行'
       ccb: '建设银行'
