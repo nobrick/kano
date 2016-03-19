@@ -1,4 +1,5 @@
 class Admin::Finance::Withdrawals::HistoryController < Admin::ApplicationController
+  helper 'admin/orders/history'
   helper_method :dashboard
 
   def index

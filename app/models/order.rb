@@ -301,60 +301,7 @@ class Order < ActiveRecord::Base
     !!reported_at
   end
 
-  def history
-    if ["requested", "contracted", "payment", "completed", "rated"].include?(state)
-      normal_history
-    elsif canceled?
-      cancel_history
-    else
-      report_history
-    end
-  end
-
   private
-
-  def normal_history
-    {
-      "request" => created_at,
-      "contract" => contracted_at,
-      "complete" => completed_at,
-      "rate" => rated_at
-    }
-  end
-
-  def cancel_history
-    return unless canceled?
-
-    if did_contract?
-      {
-        "request" => created_at,
-        "contract" => contracted_at,
-        "cancel" => canceled_at
-      }
-    else
-      {
-        "request" => created_at,
-        "cancel" => canceled_at
-      }
-    end
-  end
-
-  def report_history
-    return unless rated?
-
-    basic_history = {
-      "request" => created_at,
-      "contract" => contracted_at,
-    }
-    if did_rate?
-      basic_history["complete"] = completed_at
-      basic_history["rate"] = rated_at
-    elsif did_complete?
-      basic_history["complete"] = completed_at
-    end
-
-    basic_history
-  end
 
   def do_contract(*args)
     self.contracted_at = Time.now

@@ -1,5 +1,5 @@
 div.col-md-10.col-md-offset-1 style="text-align: center"
-  = render partial: "history", locals: { history: @order.history }
+  = render partial: "history", locals: { history: order_history_for(@order) }
 
 
 .col-md-offset-1.col-md-10
