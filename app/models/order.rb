@@ -281,24 +281,24 @@ class Order < ActiveRecord::Base
     false
   end
 
-  def already_contracted?
-    !contracted_at.blank?
+  def did_contract?
+    !!contracted_at
   end
 
-  def already_completed?
-    !completed_at.blank?
+  def did_complete?
+    !!completed_at
   end
 
-  def already_rated?
-    !rated_at.blank?
+  def did_cancel?
+    !!canceled_at
   end
 
-  def already_reported?
-    !reported_at.blank?
+  def did_rate?
+    !!rated_at
   end
 
-  def already_canceled?
-    !canceled_at.blank?
+  def did_report?
+    !!reported_at
   end
 
   def history
@@ -325,7 +325,7 @@ class Order < ActiveRecord::Base
   def cancel_history
     return unless canceled?
 
-    if already_contracted?
+    if did_contract?
       {
         "request" => created_at,
         "contract" => contracted_at,
@@ -346,10 +346,10 @@ class Order < ActiveRecord::Base
       "request" => created_at,
       "contract" => contracted_at,
     }
-    if already_rated?
+    if did_rate?
       basic_history["complete"] = completed_at
       basic_history["rate"] = rated_at
-    elsif already_completed?
+    elsif did_complete?
       basic_history["complete"] = completed_at
     end
 

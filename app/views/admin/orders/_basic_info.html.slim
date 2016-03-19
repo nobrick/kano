@@ -9,7 +9,7 @@
         li
           | 维修地址:&nbsp;&nbsp; #{ order.address.try :full_content }
 
-- if order.already_contracted?
+- if order.did_contract?
   .col-md-6
     dl.order-info
       dt

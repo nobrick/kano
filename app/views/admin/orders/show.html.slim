@@ -11,10 +11,10 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
     .panel-body
       = render partial: "basic_info", locals: { order: @order }
 
-      - if @order.already_completed?
+      - if @order.did_complete?
         = render partial: 'payment_info', locals: { order: @order }
 
-      - if @order.already_rated?
+      - if @order.did_rate?
         .col-md-12
           dl.order-info
             dt
@@ -26,7 +26,7 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
                 li
                   | 评价: #{ @order.rating_content }
 
-      - if @order.already_reported?
+      - if @order.did_report?
         .col-md-12
           dl.order-info
             dt
@@ -37,7 +37,7 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
                   | 投诉类型: #{ @order.report_type }
                 li
                   | 投诉内容: #{ @order.report_content }
-      - if @order.already_canceled?
+      - if @order.did_cancel?
         .col-md-12
           dl.order-info
             dt
