@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160310150624) do
+ActiveRecord::Schema.define(version: 20160319135439) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,19 +194,19 @@ ActiveRecord::Schema.define(version: 20160310150624) do
   add_index "taxons", ["handyman_id"], name: "index_taxons_on_handyman_id", using: :btree
 
   create_table "withdrawals", force: :cascade do |t|
-    t.integer  "handyman_id",                                            null: false
-    t.integer  "unfrozen_record_id",                                     null: false
-    t.decimal  "total",                         precision: 12, scale: 2, null: false
-    t.string   "bank_code",          limit: 16,                          null: false
-    t.string   "account_no",         limit: 32,                          null: false
-    t.string   "state",              limit: 16,                          null: false
+    t.integer  "handyman_id",                                                                   null: false
+    t.integer  "unfrozen_record_id",                                                            null: false
+    t.decimal  "total",                         precision: 12, scale: 2,                        null: false
+    t.string   "bank_code",          limit: 16,                                                 null: false
+    t.string   "account_no",         limit: 32,                                                 null: false
+    t.string   "state",              limit: 16,                                                 null: false
     t.integer  "authorizer_id"
     t.string   "reason_message"
     t.datetime "transferred_at"
     t.datetime "declined_at"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.boolean  "verify_passed"
+    t.datetime "created_at",                                                                    null: false
+    t.datetime "updated_at",                                                                    null: false
+    t.string   "verify_passed",                                          default: "unverified"
   end
 
   add_index "withdrawals", ["account_no"], name: "index_withdrawals_on_account_no", using: :btree
