@@ -246,7 +246,7 @@ zh-CN:
         id: '提现 ID'
         state: '转账状态'
         reason_message: '失败原因'
-        declined_at_or_transferred_at: '处理时间'
+        transferred_or_declined_at: '处理时间'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'
