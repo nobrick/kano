@@ -5,13 +5,13 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
 
   def index
     q_params = dashboard.filter_params(params)
-    @search = Withdrawal.unprocessed.ransack(q_params)
+    @search = Withdrawal.audited.requested.ransack(q_params)
     @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
   end
 
   def search
     q_params = dashboard.search_params(params)
-    @search = Withdrawal.unprocessed.ransack(q_params)
+    @search = Withdrawal.audited.requested.ransack(q_params)
     @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
     render 'index'
   end
