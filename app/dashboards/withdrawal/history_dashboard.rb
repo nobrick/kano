@@ -11,13 +11,13 @@ class Withdrawal::HistoryDashboard < BaseDashboard
     "handyman.phone" => :string,
     "created_at" => :time,
     "state" => :i18n,
-    "transferred_or_declined_at" => :time,
+    "declined_at_or_transferred_at" => :time,
   }
 
   COLLECTION_FILTER = {
     "bank_code" => { type: :select, values: Withdrawal::Banking.invert_banks },
     "created_at" => { type: :time_range },
-    "transferred_or_declined_at" => { type: :time_range },
+    "declined_at_or_transferred_at" => { type: :time_range },
     "state" => { type: :radio, values: { I18n.t("withdrawal.state.declined") => "declined", I18n.t("withdrawal.state.transferred") => "transferred"} },
     "total" => { type: :range }
   }

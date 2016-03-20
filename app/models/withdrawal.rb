@@ -156,7 +156,7 @@ class Withdrawal < ActiveRecord::Base
     requested.blank?
   end
 
-  def transferred_or_declined_at
+  def declined_at_or_transferred_at
     transferred_at || declined_at
   end
 
