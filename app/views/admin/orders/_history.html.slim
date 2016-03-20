@@ -10,11 +10,11 @@
       i.fa.fa-long-arrow-right.fa-4x.order__history-completed
       ul.order__states.order__history-completed
         li
-          | #{ Order.state_description(t) }
+          | #{ order_event_name_for(t) }
         li
           | #{ l v, format: :long }
     - else
       i.fa.fa-long-arrow-right.fa-4x.order__history-uncompleted
       ul.order__states.order__process-uncompleted
         li
-          | #{ Order.state_description(t) }
+          | #{ order_event_name_for(t) }

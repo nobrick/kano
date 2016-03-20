@@ -19,7 +19,7 @@
           .form-group
             = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-4
-              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {}, {class: "form-control"}
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_codes"}), c ]}, {}, {class: "form-control"}
           .form-group
             = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-9

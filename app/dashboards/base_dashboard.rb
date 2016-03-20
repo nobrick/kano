@@ -223,11 +223,11 @@ class BaseDashboard
   def attr_data_i18n_scope(attr)
     scope = []
     if !(attr =~ /\./)
-      scope << resource_class.downcase.to_sym << attr
+      scope << resource_class.downcase << attr.pluralize
     else
       split_attr = attr.split('.')
-      scope << split_attr[-2].to_sym
-      scope << split_attr[-1].to_sym
+      scope << split_attr[-2]
+      scope << split_attr[-1].pluralize
     end
   end
 

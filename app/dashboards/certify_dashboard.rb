@@ -12,7 +12,7 @@ class CertifyDashboard < BaseDashboard
     "_self_expand.handyman_name" => nil,
     "name" => :string,
     "cert_requested_at" => :time,
-    "certified_status" => :i18n ,
+    "certified_status" => :i18n,
     "certified_at" => :time,
     "certified_by.name" => :string,
     "_self_expand.certify_buttons" => nil

@@ -7,7 +7,7 @@
   dd #{ cer_req_at }
 .col-md-5.col-md-offset-1
   dt 认证状态
-  - cert_status = taxon.certified_status ? i18n_t(taxon.certified_status, "D", model: :taxon, attr: :certified_status) : ""
+  - cert_status = taxon.certified_status ? i18n_t(taxon.certified_status, "D", model: :taxon, attr: :certified_statuses) : ""
   dd #{ cert_status }
 .col-md-5
   dt 认证时间
@@ -18,7 +18,7 @@
   dd #{ taxon.certified_by.try(:name) }
 .col-md-10.col-md-offset-1
   dt 失败类型
-  - fail_type = taxon.reason_code ? i18n_t(taxon.reason_code, 'D', model: :taxon, attr: :reason_code) : ""
+  - fail_type = taxon.reason_code ? i18n_t(taxon.reason_code, 'D', model: :taxon, attr: :reason_codes) : ""
   dd #{ fail_type }
 .col-md-10.col-md-offset-1
   dt 附加信息

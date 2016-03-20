@@ -9,6 +9,10 @@ module Admin::Orders::HistoryHelper
     end
   end
 
+  def order_event_name_for(event)
+    t("order.events.#{event}")
+  end
+
   private
 
   def normal_history_for(order)

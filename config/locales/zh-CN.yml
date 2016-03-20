@@ -25,15 +25,15 @@ zh-CN:
         lock: '门锁问题'
         other: '其它定制服务'
   taxon:
-    certified_status:
+    certified_statuses:
       under_review: '等待认证'
       failure: '认证失败'
       success: '认证成功'
-    reason_code:
+    reason_codes:
       missing_info: '资料不全'
       out_of_date: '资料过期'
   withdrawal:
-    state:
+    states:
       declined: '转账失败'
       transferred: '转账成功'
     bank_codes:
@@ -122,20 +122,21 @@ zh-CN:
     admin/users/addresses:
       update_success: '修改成功'
   order:
-    state:
+    states:
       requested: '未接单'
-      request: '创建订单'
       contracted: '已接单'
-      contract: '接单'
       payment: '支付中'
       completed: '已支付'
-      complete: '支付'
-      rated: '已评价'
-      rate: '评价'
-      reported: '已投诉'
-      report: '投诉'
       transferred: '已转单'
       canceled: '已取消'
+      rated: '已评价'
+      reported: '已投诉'
+    events:
+      request: '创建订单'
+      contract: '接单'
+      complete: '支付'
+      rate: '评价'
+      report: '投诉'
       cancel: '取消'
   activerecord:
     models:

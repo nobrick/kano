@@ -98,11 +98,11 @@ class Order < ActiveRecord::Base
   validates :state, inclusion: { in: STATES }
 
   def self.states
-    STATES.map{ |s| [I18n.t("order.state.#{s}"), s]}.to_h
+    STATES
   end
 
   def self.state_description(state)
-    I18n.translate "order.state.#{state}"
+    I18n.t "order.states.#{state}"
   end
 
   aasm column: 'state', no_direct_assignment: true do
@@ -179,7 +179,7 @@ class Order < ActiveRecord::Base
   end
 
   def state_description
-    I18n.translate "order.state.#{state}"
+    Order.state_description(state)
   end
 
   def sync_from_user_total(options = {})
