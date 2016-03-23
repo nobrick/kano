@@ -33,7 +33,7 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
   private
 
   def mark_as_invalid_withdrawal?
-    verify_params[:verify_passed] == 'failure'
+    verify_params[:verify_passed] == 'false'
   end
 
   def verify_params

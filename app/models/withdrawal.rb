@@ -6,10 +6,10 @@ class Withdrawal < ActiveRecord::Base
   belongs_to :authorizer, class_name: 'Account'
   belongs_to :unfrozen_record, class_name: 'BalanceRecord'
   has_one :balance_record, as: :adjustment_event
-  scope :unverified, -> { where(verify_passed: 'unverified') }
-  scope :verified_failure, -> { where(verify_passed: 'failure') }
-  scope :unprocessed, -> { where(verify_passed: 'success', state: 'requested') }
-  scope :processed, -> { where(state: %w(declined transferred)) }
+  scope :unaudited, -> { where('verify_passed IS NULL') }
+  scope :audited, -> { where(verify_passed: true) }
+  scope :abnormal, -> { where(verify_passed: false) }
+  scope :processed, -> { where.not(state: 'requested') }
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
   validates :account_no, presence: true
@@ -21,7 +21,6 @@ class Withdrawal < ActiveRecord::Base
     in: Withdrawal::Banking.bank_codes,
     message: '不能为空'
   }
-  validates :verify_passed, inclusion: { in: %w(unverified success failure) }
   accepts_nested_attributes_for :balance_record
 
   # @!visibility private

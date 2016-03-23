@@ -1,3 +1,8 @@
 = form_for :withdrawal, url: admin_finance_withdrawal_verification_path(resource), method: :put do |t|
-  = t.hidden_field :verify_passed, value: 'success'
+  = t.hidden_field :verify_passed, value: true
   = t.submit "审核通过", class: "btn btn-sm btn-success js-table-nolink"
+
+= form_for :withdrawal, url: admin_finance_withdrawal_verification_path(resource), method: :put do |t|
+  = t.hidden_field :verify_passed, value: false
+  = t.submit "异常标记", class: "btn btn-sm btn-danger js-table-nolink"
+
