@@ -5,8 +5,6 @@ ul.nav.nav-tabs.row
     = link_to "待完成提现", admin_finance_withdrawal_transfer_index_path
   li
     = link_to "已完成提现", admin_finance_withdrawal_history_index_path
-  li.active
-    = link_to "异常提现", admin_finance_withdrawal_exceptions_path
 
 .tabs__content
   = render partial: 'admin/shared/dashboard/index', locals: { resources: @withdrawals, dashboard: dashboard, instance: @search }
