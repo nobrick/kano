@@ -4,13 +4,13 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
 
   def index
     q_params = dashboard.filter_params(params)
-    @search = Withdrawal.unaudited.ransack(q_params)
+    @search = withdrawals.ransack(q_params)
     @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
   end
 
   def search
     q_params = dashboard.search_params(params)
-    @search = Withdrawal.unaudited.ransack(q_params)
+    @search = withdrawals.ransack(q_params)
     @withdrawals = @search.result.includes(:handyman).page(params[:page]).per(10)
     render 'index'
   end
@@ -38,6 +38,10 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
 
   def verify_params
     params.require(:withdrawal).permit(:audit_state)
+  end
+
+  def withdrawals
+    Withdrawal.requested.unaudited
   end
 
   def set_withdrawal
