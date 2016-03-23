@@ -18,7 +18,12 @@ class Withdrawal::HistoryDashboard < BaseDashboard
     "bank_code" => { type: :select, values: Withdrawal::Banking.invert_banks },
     "created_at" => { type: :time_range },
     "declined_at_or_transferred_at" => { type: :time_range },
-    "state" => { type: :radio, values: { I18n.t("withdrawal.state.declined") => "declined", I18n.t("withdrawal.state.transferred") => "transferred"} },
+    "state" => {
+      type: :radio,
+      values: {
+        I18n.t("withdrawal.states.declined") => "declined",
+        I18n.t("withdrawal.states.transferred") => "transferred"}
+    },
     "total" => { type: :range }
   }
 
