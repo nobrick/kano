@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160323045249) do
+ActiveRecord::Schema.define(version: 20160323144059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -206,7 +206,7 @@ ActiveRecord::Schema.define(version: 20160323045249) do
     t.datetime "declined_at"
     t.datetime "created_at",                                                                   null: false
     t.datetime "updated_at",                                                                   null: false
-    t.string   "audit_state",        limit: 20,                          default: "unaudited"
+    t.string   "audit_state",        limit: 20,                          default: "unaudited", null: false
   end
 
   add_index "withdrawals", ["account_no"], name: "index_withdrawals_on_account_no", using: :btree
