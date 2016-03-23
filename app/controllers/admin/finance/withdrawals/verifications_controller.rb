@@ -18,11 +18,11 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
   # params
   #  id: withdrawal id
   #  withdrawal:
-  #     verify_passed: true or false
+  #     audit_state: 'unaudited' or 'audited' or 'abnormal'
   def update
     @withdrawal.assign_attributes(verify_params)
     if @withdrawal.save
-      msg = mark_as_invalid_withdrawal? ? "标记成功" : "审核成功"
+      msg = mark_as_invalid_withdrawal? ? "已标记" : "已审核"
       flash[:success] = msg
     else
       flash[:alert] = @withdrawal.errors.full_messages
@@ -33,11 +33,11 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
   private
 
   def mark_as_invalid_withdrawal?
-    verify_params[:verify_passed] == 'false'
+    verify_params[:audit_state] == 'abnormal'
   end
 
   def verify_params
-    params.require(:withdrawal).permit(:verify_passed)
+    params.require(:withdrawal).permit(:audit_state)
   end
 
   def set_withdrawal
