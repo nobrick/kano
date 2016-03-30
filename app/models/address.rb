@@ -36,7 +36,8 @@ class Address < ActiveRecord::Base
   end
 
   def district_with_prefix
-    "#{province}#{city}#{district}"
+    district_revised = district == '市辖区' ? '' : district
+    "#{province}#{city}#{district_revised}"
   end
 
   def city_code

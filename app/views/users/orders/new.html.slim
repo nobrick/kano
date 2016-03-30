@@ -37,15 +37,13 @@
               br
               = f.select :taxon_code, Taxon.taxons_for_grouped_select,
                 { include_blank: true }, { class: 'select-block' }
-            .form-group.city-group
+            .form-group.city-group.hidden
               = label_tag '所在市区', nil, class: 'i-md-label'
               br
               select.city-select.select-block.select-for-city
-                option value="" - 城市 -
-                = options_for_select(ChinaCity.list('430000'), @city_code)
+                option value="431000" 郴州市
               select.city-select.select-block name="order[address_attributes][code]"
-                option value="" - 地区 -
-                = options_for_select(ChinaCity.list(@city_code), @district_code)
+                option value="431001" 市辖区
             = f.fields_for :address do |fields|
               .mdl-textfield.mdl-js-textfield.mdl-textfield--floating-label
                 = fields.text_field :content, class: 'mdl-textfield__input'

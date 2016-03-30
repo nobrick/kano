@@ -128,7 +128,7 @@ class Users::OrdersController < ApplicationController
       address = @order.build_address(opts)
     end
 
-    @city_code = address.try(:city_code) || '430100'
+    @city_code = address.try(:city_code) || '431000'
     @district_code = address.try(:code)
   end
 
