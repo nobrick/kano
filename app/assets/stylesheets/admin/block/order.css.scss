@@ -1,0 +1,63 @@
+.order-info {
+  border-top: 1px solid #EDEDED;
+  padding: 10px 5px;
+  margin: 0;
+}
+
+.order-info--first {
+  border-top: 0;
+}
+
+.order-info dt {
+  margin-bottom: 4px;
+  font-weight: 700;
+}
+
+.order-info ul {
+  list-style: none;
+  padding: 0;
+}
+
+.order__states {
+  text-align: center;
+  display: inline-block;
+  text-align: center;
+  list-style: none;
+  padding: 0px 10px;
+}
+
+.order__history-completed {
+  vertical-align: middle;
+  color: #5BB75B;
+}
+
+.order__history-uncompleted {
+  vertical-align: middle;
+  color: gray;
+}
+
+.order__price span {
+  text-align: right;
+  width: 200px;
+  display: inline-block;
+}
+
+.order__price--user {
+  margin-top: 23px;
+}
+
+.order__result {
+  text-align: center;
+  width: 200px;
+  margin-left: 80px;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 10px;
+  border-top: 1px solid #ccc;
+}
+
+span.order__result-number {
+  display: inline;
+  font-size: 18px;
+  color: red;
+}

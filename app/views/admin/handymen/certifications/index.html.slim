@@ -19,7 +19,7 @@
           .form-group
             = f.label :reason_code, i18n_t('reason_code', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-4
-              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_code"}), c ]}, {}, {class: "form-control"}
+              = f.select :reason_code, Taxon.reason_codes.map {|c| [i18n_t(c, "D", {model: "taxon", attr: "reason_codes"}), c ]}, {}, {class: "form-control"}
           .form-group
             = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'taxon' }), class: "control-label col-sm-2"
             .col-sm-9
@@ -29,8 +29,7 @@
           button type="button" data-dismiss="modal" class="btn btn-danger"
             | 关闭
 
-.container
-  = render partial: 'shared/tabs', locals: { tabs: tabs_info }
+= render partial: 'shared/tabs', locals: { tabs: tabs_info }
 
-  .tabs__content
-    = render partial: 'shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard, search: { instance: @search, url: admin_handyman_certifications_path, predicate: @predicate }}
+.tabs__content
+  = render partial: 'admin/shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard,  instance: @search }

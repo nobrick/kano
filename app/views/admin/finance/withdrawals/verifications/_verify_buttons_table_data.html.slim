@@ -1,0 +1,3 @@
+= form_for :withdrawal, url: admin_finance_withdrawal_verification_path(resource), method: :put do |t|
+  = t.hidden_field :audit_state, value: 'audited'
+  = t.submit "审核通过", class: "btn btn-sm btn-success js-table-nolink"

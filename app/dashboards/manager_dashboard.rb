@@ -1,5 +1,5 @@
 class ManagerDashboard < AccountDashboard
-  RESOURCE_CLASS = "Account"
+  RESOURCE_CLASS = "User"
 
   COLLECTION_ATTRIBUTES = AccountDashboard::COLLECTION_ATTRIBUTES.merge({
   })

@@ -25,19 +25,47 @@ zh-CN:
         lock: '门锁问题'
         other: '其它定制服务'
   taxon:
-    certified_status:
+    certified_statuses:
       under_review: '等待认证'
       failure: '认证失败'
       success: '认证成功'
-    reason_code:
+    reason_codes:
       missing_info: '资料不全'
       out_of_date: '资料过期'
+  withdrawal:
+    states:
+      declined: '转账失败'
+      transferred: '转账成功'
+    bank_codes:
+      icbc: '工商银行'
+      abc: '农业银行'
+      ccb: '建设银行'
+      bcm: '交通银行'
+      boc: '中国银行'
+      cmb: '招商银行'
+      bob: '北京银行'
+      dlcb: '大连银行'
+      cgb: '广发银行'
+      gzcb: '广州银行'
+      hxb: '华夏银行'
+      jlbk: '吉林银行'
+      spdb: '浦发银行'
+      bosh: '上海银行'
+      pab: '平安银行'
+      sjbc: '盛京银行'
+      cib: '兴业银行'
+      czb: '浙商银行'
+      ceb: '光大银行'
+      cmbc: '民生银行'
+      psbc: '中国邮储'
+      cncb: '中信银行'
+
   views:
     admin:
       handymen_admin: '师傅信息管理'
       users_admin: '用户信息管理'
       orders_admin: '订单信息管理'
-      balance_admin: '财会信息管理'
+      finance_admin: '财会信息管理'
     pagination:
       next: '下一页'
       last: '最后一页'
@@ -94,14 +122,22 @@ zh-CN:
     admin/users/addresses:
       update_success: '修改成功'
   order:
-    requested: '未接单'
-    contracted: '已接单'
-    payment: '支付中'
-    completed: '已支付'
-    rated: '已评价'
-    reported: '已投诉'
-    transferred: '已转单'
-    canceled: '已取消'
+    states:
+      requested: '未接单'
+      contracted: '已接单'
+      payment: '支付中'
+      completed: '已支付'
+      transferred: '已转单'
+      canceled: '已取消'
+      rated: '已评价'
+      reported: '已投诉'
+    events:
+      request: '创建订单'
+      contract: '接单'
+      complete: '支付'
+      rate: '评价'
+      report: '投诉'
+      cancel: '取消'
   activerecord:
     models:
       account: '账户'
@@ -114,6 +150,8 @@ zh-CN:
       payment: '支付信息'
       withdrawal: '提现申请'
     attributes:
+      certified_by:
+        name: '认证人'
       account:
         username: '用户名'
         name: '称呼'
@@ -133,16 +171,25 @@ zh-CN:
         code: '服务类别'
       handyman:
         id: '管家 ID'
+        nickname: '昵称'
         primary_address: '地址'
-        name: '姓名'
+        phone: '手机号码'
+        name: '管家姓名'
         created_at: '注册时间'
+        last_sign_in_at: '最近一次登陆时间'
         email: '邮箱'
+        balance: '现有余额'
+        unfrozen_balance: '现有解冻余额'
       user:
+        nickname: '昵称'
         id: '用户 ID'
         name: '用户姓名'
         created_at: '注册时间'
         email: '邮箱'
+        phone: '手机号码'
+        last_sign_in_at: '最近一次登陆时间'
       order:
+        id: '订单 ID'
         created_at: '订单时间'
         user: '用户'
         handyman: '管家'
@@ -150,7 +197,7 @@ zh-CN:
         taxon_code: '服务类别'
         content: '维修内容'
         arrives_at: '预约到达时间'
-        established_at: '管家接单时间'
+        contracted_at: '管家接单时间'
         completed_at: '订单完成时间'
         user_total: '订单价格'
         payment_total: '实际支付价格'
@@ -185,6 +232,7 @@ zh-CN:
         reason_code: '失败类型'
         certified_status: '认证状态'
         cert_requested_at: '申请时间'
+        certified_at: '认证时间'
         certified_by: '认证人'
       withdrawal:
         handyman: '提现人'
@@ -192,8 +240,13 @@ zh-CN:
         unfrozen_record: '未冻结提现的金额'
         balance_record: '提现纪录'
         total: '金额'
-        bank_code: '银行'
+        bank_code: '开户银行'
         account_no: '卡号'
+        created_at: '申请时间'
+        id: '提现 ID'
+        state: '转账状态'
+        reason_message: '失败原因'
+        declined_at_or_transferred_at: '处理时间'
   sign_in: '登录'
   sign_up: '新用户'
   sign_out: '注销'

@@ -1,19 +1,24 @@
-- if dashboard.new_resource_path
+- if dashboard.have_new_resource?
   .row.dashboard__new-item
     = link_to "新建", send(dashboard.new_resource_path), class: "btn btn-success btn-lg "
 
 .row.dashboard__filters
-  .dashboard__left-filter.col-md-4
-    - if dashboard.have_filters?
-      = link_to '全部', send(dashboard.filter_basepath), class: 'btn btn-sm btn-primary'
-      - dashboard.filter_status.each do |status|
-        = link_to i18n_t(status, "D", { model: dashboard.resource_class.downcase, attr: dashboard.filter_attribute }), send(dashboard.filter_basepath, certified_status: "#{status}"), class: 'btn btn-sm btn-primary'
+  - if dashboard.have_filters?
+    .dashboard__left-filter.col-md-4
+      = render partial: "admin/shared/dashboard/filters", locals: { instance: instance, dashboard: dashboard }
 
-  - if search
-    = search_form_for search[:instance], url: search[:url], class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
-      = f.text_field search[:predicate], placeholder: '你在寻找什么...', class: "form-control"
+  - if dashboard.have_search?
+    = search_form_for instance, url: send(dashboard.search_path), class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
+      = f.text_field dashboard.search_view_predicate, placeholder: '你在寻找什么...', class: "form-control"
       .input-group-btn
         = f.submit '搜索', class: 'btn btn-default'
+
+- if dashboard.have_filter_feedback?(instance)
+  .row.dashboard__filter-info
+    - feedback = dashboard.filter_feedback_info(instance)
+    - feedback.each do |text|
+      span.label.label-warning
+        | #{ text }
 
 .row
   table.table.table-bordered.table-hover.col-md-12.table--more-info.js-table

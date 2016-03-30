@@ -15,6 +15,7 @@
 
 .table__header {
   background-color: gray;
+  color: white;
   padding: 10px 0;
 }
 
@@ -37,6 +38,15 @@
 .dashboard__right-filter {
   padding-right: 0px;
   text-align: right;
+}
+
+.dashboard__filter-info {
+  margin-bottom: 5px;
+}
+
+.dashboard__filter-info > span {
+  display: inline-block;
+  margin-right: 5px;
 }
 
 .table__content form {

@@ -1,0 +1,41 @@
+.modal.fade id="js-transferFailModal"
+  .modal-dialog role="document"
+    .modal-content
+      .modal-header
+        button type="button" class="close" data-dismiss="modal" aria-label="Close"
+          span aria-hidden="true"
+            |&times;
+        h4.modal-title
+          | 转账失败
+      = form_for :withdrawal, method: :put, html: { class: "js-transferFail form-horizontal" } do |f|
+        .modal-body
+          .form-group
+            = label_tag i18n_t("id", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-transferFail-id
+          .form-group
+            = label_tag i18n_t("name", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-transferFail-name
+          .form-group
+            = label_tag i18n_t("total", "M", {model: "withdrawal" }), nil, class: "col-sm-2 control-label"
+            p.form-control-static.col-sm-9.js-transferFail-total
+          .form-group
+            = hidden_field_tag 'go', 'decline'
+            = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'withdrawal' }), class: "control-label col-sm-2"
+            .col-sm-9
+              = f.text_area :reason_message, class: "form-control", rows: 8
+        .modal-footer
+          = submit_tag "确认", { class: "btn btn-success" }
+          button type="button" data-dismiss="modal" class="btn btn-danger"
+            | 关闭
+
+ul.nav.nav-tabs.row
+  li
+    = link_to "提现审核", admin_finance_withdrawal_verifications_path
+  li.active
+    = link_to "待处理提现", admin_finance_withdrawal_transfer_index_path
+  li
+    = link_to "已处理提现", admin_finance_withdrawal_history_index_path
+
+.tabs__content
+  = render partial: 'admin/shared/dashboard/index', locals: { resources: @withdrawals, dashboard: dashboard, instance: @search }
+

@@ -129,7 +129,7 @@ class Taxon < ActiveRecord::Base
   end
 
   def reason_code_desc
-    I18n.t "taxon.reason_code.#{reason_code}", default: :missing_info
+    I18n.t "taxon.reason_codes.#{reason_code}", default: :missing_info
   end
 
   private

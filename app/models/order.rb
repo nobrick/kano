@@ -97,6 +97,14 @@ class Order < ActiveRecord::Base
   FINISHED_STATES = %w{ completed rated }
   validates :state, inclusion: { in: STATES }
 
+  def self.states
+    STATES
+  end
+
+  def self.state_description(state)
+    I18n.t "order.states.#{state}"
+  end
+
   aasm column: 'state', no_direct_assignment: true do
     # initial: The order has just been initialized, and currently invalid for
     # persistence.
@@ -171,7 +179,7 @@ class Order < ActiveRecord::Base
   end
 
   def state_description
-    I18n.translate "order.#{state}"
+    Order.state_description(state)
   end
 
   def sync_from_user_total(options = {})
@@ -271,6 +279,26 @@ class Order < ActiveRecord::Base
   rescue ActiveRecord::RecordInvalid
     user.errors.each { |a, e| errors.add a, e }
     false
+  end
+
+  def did_contract?
+    !!contracted_at
+  end
+
+  def did_complete?
+    !!completed_at
+  end
+
+  def did_cancel?
+    !!canceled_at
+  end
+
+  def did_rate?
+    !!rated_at
+  end
+
+  def did_report?
+    !!reported_at
   end
 
   private

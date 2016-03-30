@@ -6,6 +6,10 @@ class Withdrawal < ActiveRecord::Base
   belongs_to :authorizer, class_name: 'Account'
   belongs_to :unfrozen_record, class_name: 'BalanceRecord'
   has_one :balance_record, as: :adjustment_event
+  scope :unaudited, -> { where(audit_state: 'unaudited') }
+  scope :audited, -> { where(audit_state: 'audited') }
+  scope :abnormal, -> { where(audit_state: 'abnormal') }
+  scope :processed, -> { where.not(state: 'requested') }
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
   validates :account_no, presence: true
@@ -17,6 +21,7 @@ class Withdrawal < ActiveRecord::Base
     in: Withdrawal::Banking.bank_codes,
     message: '不能为空'
   }
+  validates :audit_state, inclusion: { in: %w{ unaudited audited abnormal } }
   accepts_nested_attributes_for :balance_record
 
   # @!visibility private
@@ -150,6 +155,10 @@ class Withdrawal < ActiveRecord::Base
     requested = handyman.withdrawals.requested
     requested = requested.where.not(id: id) if persisted?
     requested.blank?
+  end
+
+  def declined_at_or_transferred_at
+    transferred_at || declined_at
   end
 
   private

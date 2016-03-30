@@ -3,8 +3,23 @@ class Admin::OrdersController < Admin::ApplicationController
   helper_method :dashboard
 
   def index
-    @orders = Order.page(params[:page]).per(10)
+    q_params = dashboard.filter_params(params)
+    @search = Order.ransack(q_params)
+    @orders =  @search.result.includes(:handyman, :user).page(params[:page]).per(10)
   end
+
+  def search
+    q_params = dashboard.search_params(params)
+    @search = Order.ransack(q_params)
+    @orders = @search.result.includes(:handyman, :user).page(params[:page]).per(10)
+    render 'index'
+  end
+
+  def show
+    @order = Order.find params[:id]
+  end
+
+  private
 
   def dashboard
     @dashboard = ::OrderDashboard.new

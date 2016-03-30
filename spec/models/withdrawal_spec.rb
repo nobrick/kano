@@ -17,6 +17,12 @@ RSpec.describe Withdrawal, type: :model do
     permitted_days.flat_map { |n| m_days.map { |d| d.change(day: n) } }.sort
   end
 
+  describe 'audit_state' do
+    it 'is unaudited by default' do
+      expect(Withdrawal.new.audit_state).to eq 'unaudited'
+    end
+  end
+
   describe '#request' do
     before { withdrawal.handyman = handyman }
 
