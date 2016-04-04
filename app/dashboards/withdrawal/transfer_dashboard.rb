@@ -14,7 +14,7 @@ class Withdrawal::TransferDashboard < BaseDashboard
   }
 
   COLLECTION_FILTER = {
-    "bank_code" => { type: :select, values: Withdrawal::Banking.invert_banks },
+    "bank_code" => { type: :select, values: Withdrawal::Banking.bank_codes },
     "created_at" => { type: :time_range },
     "total" => { type: :range }
   }

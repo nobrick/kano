@@ -21,11 +21,7 @@ class CertifyDashboard < BaseDashboard
   COLLECTION_FILTER = {
     "certified_status" => {
       type: :radio,
-      values: {
-        self.value_translate("certified_statuses", "success")  => "success",
-        self.value_translate("certified_statuses", "failure") => "failure",
-        self.value_translate("certified_statuses", "under_review") => "under_review"
-      }
+      values: ["success", "failure", "under_review"]
     },
     "cert_requested_at" => { type: :time_range }
   }

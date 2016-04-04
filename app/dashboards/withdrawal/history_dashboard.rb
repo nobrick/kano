@@ -15,14 +15,12 @@ class Withdrawal::HistoryDashboard < BaseDashboard
   }
 
   COLLECTION_FILTER = {
-    "bank_code" => { type: :select, values: Withdrawal::Banking.invert_banks },
+    "bank_code" => { type: :select, values: Withdrawal::Banking.bank_codes },
     "created_at" => { type: :time_range },
     "declined_at_or_transferred_at" => { type: :time_range },
     "state" => {
       type: :radio,
-      values: {
-        I18n.t("withdrawal.states.declined") => "declined",
-        I18n.t("withdrawal.states.transferred") => "transferred"}
+      values: [ "declined", "transferred" ]
     },
     "total" => { type: :range }
   }

@@ -147,11 +147,6 @@ class BaseDashboard
     datas
   end
 
-  def self.value_translate(attr, value)
-    resource = self::RESOURCE_CLASS.downcase
-    I18n.t(resource + '.' + attr + '.' + value)
-  end
-
   def export?
     self.class::EXCEL_EXPORT
   end
@@ -195,7 +190,12 @@ class BaseDashboard
   end
 
   def filter_values(attr)
-    self.class::COLLECTION_FILTER[attr][:values]
+    result = {}
+    self.class::COLLECTION_FILTER[attr][:values].try(:each) do |value|
+      value_i18n = I18n.t(value, scope: attr_data_i18n_scope(attr))
+      result[value_i18n] = value
+    end
+    result
   end
 
   def attr_data(attr, original_data)

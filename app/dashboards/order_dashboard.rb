@@ -25,7 +25,7 @@ class OrderDashboard < BaseDashboard
     "contracted_at" => { type: :time_range },
     "state" => {
       type: :select,
-      values: Order.states.map { |s| [ Order.state_description(s), s ] }.to_h
+      values: Order.states
     }
   }
 
