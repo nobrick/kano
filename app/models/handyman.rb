@@ -40,10 +40,11 @@ class Handyman < Account
     taxons.map(&:name)
   end
 
-  def taxons_redux_state
+  def taxons_redux_state(options = {})
+    selected = options.fetch(:selected_taxons, :pending)
     {
       'result' => {
-        'selectedTaxons' => taxon_codes(:pending),
+        'selectedTaxons' => taxon_codes(selected),
         'taxons' => Taxon.taxon_codes - taxon_codes(:certified)
       },
       'entities' => Taxon.redux_entities
