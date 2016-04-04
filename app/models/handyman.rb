@@ -51,16 +51,6 @@ class Handyman < Account
     }
   end
 
-  def taxons_manage_redux_state
-    {
-      'result' => {
-        'selectedTaxons' => taxon_codes,
-        'taxons' => Taxon.taxon_codes - taxon_codes(:certified)
-      },
-      'entities' => Taxon.redux_entities
-    }
-  end
-
   def balance
     last_balance_record.try(:balance) || 0
   end
