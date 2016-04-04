@@ -4,6 +4,7 @@ require 'support/timecop'
 
 RSpec.describe Handyman, type: :model do
   let(:handyman) { create :handyman }
+  let(:admin) { create :admin }
 
   it 'creates a handyman' do
     expect(handyman).to be_a Handyman
@@ -12,12 +13,14 @@ RSpec.describe Handyman, type: :model do
 
   describe 'taxons' do
     let(:handyman_with_taxons) { create :handyman_with_taxons }
+    let(:taxon_one) { handyman.taxons.find_by(code: 'electronic/lighting') }
     let(:attributes) do
       [
         { code: 'electronic/lighting' },
         { code: 'water/faucet' }
       ]
     end
+    let(:codes) { attributes.map { |a| a[:code] } }
 
     it 'saves taxons' do
       handyman.taxons_attributes = attributes
@@ -28,10 +31,44 @@ RSpec.describe Handyman, type: :model do
     end
 
     it 'creates taxons from FactoryGirl' do
-      handyman = create :handyman_with_taxons
+      handyman = handyman_with_taxons
       expect(handyman.taxons.first).to be_persisted
       expect(handyman.taxons.count).to eq 2
       expect(handyman.taxons.certified.count).to eq 2
+    end
+
+    describe '#taxon_codes' do
+      let(:handyman) { handyman_with_taxons }
+
+      it 'with no arguments' do
+        expect(handyman.taxon_codes).to match_array(codes)
+      end
+
+      it 'with :pending argument' do
+        expect { taxon_one.pend.save! }
+          .to change { handyman.reload.taxon_codes(:pending) }
+          .from([]).to(%w{ electronic/lighting })
+      end
+    end
+
+    describe '#taxons_redux_state' do
+      let(:handyman) { handyman_with_taxons }
+
+      it 'selectedTaxons for :pending' do
+        expect { taxon_one.pend.save! }
+          .to change { handyman.reload.taxons_redux_state['result']['selectedTaxons'] }
+          .from([]).to(%w{ electronic/lighting })
+      end
+
+      it 'selectedTaxons for :all' do
+        select = lambda do
+          handyman
+            .reload
+            .taxons_redux_state(selected_taxons: :all)['result']['selectedTaxons']
+            .sort
+        end
+        expect { taxon_one.pend.save! }.not_to change(select, :call).from(codes.sort)
+      end
     end
   end
 
