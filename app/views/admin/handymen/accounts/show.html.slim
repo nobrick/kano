@@ -26,7 +26,7 @@
 
 = render layout: "admin/shared/modal", locals: { title: "技能管理(ID: #{@account.id})", id: "taxonEdit"} do
   = form_for @account, as: :profile, url: update_taxons_admin_handyman_profile_path(@account), method: :put, html: { class: "form-horizontal" } do |f|
-    = react_component('Taxons', initial: @account.taxons_redux_state)
+    = react_component('Taxons', initial: @account.taxons_redux_state(selected_taxons: :all))
     .form-group
       .col-md-offset-2.col-md-8
         .btn-toolbar.pull-right
