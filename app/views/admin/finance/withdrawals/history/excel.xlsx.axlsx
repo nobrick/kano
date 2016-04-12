@@ -32,7 +32,7 @@ wb = xlsx_package.workbook
     bank_withdrawals.each do |w|
       withdrawal_bank = Withdrawal::Banking.banks[w.bank_code]
 
-      sheet.add_row [w.id, w.handyman.name, w.handyman.id, withdrawal_bank, w.account_no, w.total, w.handyman.phone, w.created_at, w.state, w.declined_at_or_transferred_at, w.authorizer.name],
+      sheet.add_row [w.id, w.handyman.name, w.handyman.id, withdrawal_bank, w.account_no, w.total, w.handyman.phone, w.created_at, I18n.t(w.state, scope: "withdrawal.states"), w.declined_at_or_transferred_at, w.authorizer.name],
                     :style => [default, default, default, default, default, currency, default, date_time, default, date_time, default],
                     :types => [:string, :string, :string, :string, :string, :float, :string, :time, :string, :time, :string]
     end
