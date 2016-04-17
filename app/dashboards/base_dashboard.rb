@@ -9,40 +9,18 @@ class ExpandColumn
 end
 
 class BaseDashboard
+  include Searchable
 
   EXCEL_EXPORT = false
   COLLECTION_ATTRIBUTES = {}
   COLLECTION_FILTER = {}
-  SEARCH_PREDICATES = []
   EXPAND_PARTIAL_PATH = nil
   SHOW_PATH_HELPER = nil
   NEW_PATH_HELPER = nil
-  SEARCH_PATH_HELPER = nil
   COLLECTION_FILTER_PATH_HELPER = nil
 
   def self.expand_sign
     "_self_expand"
-  end
-
-
-  def search_view_predicate
-    'id_eq'
-  end
-
-  def search_params(param)
-    query = param.permit(q: search_view_predicate)[:q]
-    return unless query
-    value = query.values.first
-    combinator = search_predicates.map { |p| [ p, value ] }.to_h
-    combinator.merge(m: 'or')
-  end
-
-  def have_search?
-    !self.class::SEARCH_PREDICATES.empty?
-  end
-
-  def search_path
-    self.class::SEARCH_PATH_HELPER
   end
 
   def filter_params(param)
@@ -152,10 +130,6 @@ class BaseDashboard
   end
 
   private
-
-  def search_predicates
-    self.class::SEARCH_PREDICATES
-  end
 
   def resource_class
     self.class::RESOURCE_CLASS
