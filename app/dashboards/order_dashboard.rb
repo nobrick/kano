@@ -1,4 +1,4 @@
-class OrderDashboard < BaseDashboard
+class OrderDashboard < AdminScaffold::BaseDashboard
   RESOURCE_CLASS = "Order"
 
   COLLECTION_ATTRIBUTES = {

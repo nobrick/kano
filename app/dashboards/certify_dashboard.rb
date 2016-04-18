@@ -1,4 +1,4 @@
-class CertifyDashboard < BaseDashboard
+class CertifyDashboard < AdminScaffold::BaseDashboard
   RESOURCE_CLASS = "Taxon"
 
   # Hash

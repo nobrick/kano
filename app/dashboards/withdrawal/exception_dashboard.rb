@@ -1,4 +1,4 @@
-class Withdrawal::ExceptionDashboard < BaseDashboard
+class Withdrawal::ExceptionDashboard < AdminScaffold::BaseDashboard
   RESOURCE_CLASS = "Withdrawal"
 
   COLLECTION_ATTRIBUTES = {

@@ -1,4 +1,4 @@
-class Withdrawal::HistoryDashboard < BaseDashboard
+class Withdrawal::HistoryDashboard < AdminScaffold::BaseDashboard
   RESOURCE_CLASS = "Withdrawal"
 
   COLLECTION_ATTRIBUTES = {

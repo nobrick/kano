@@ -1,4 +1,4 @@
-class HandymanDashboard < AccountDashboard
+class HandymanDashboard < AdminScaffold::AccountDashboard
   RESOURCE_CLASS = "Handyman"
 
   COLLECTION_ATTRIBUTES = AccountDashboard::COLLECTION_ATTRIBUTES.merge({
