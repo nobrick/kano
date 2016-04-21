@@ -16,13 +16,10 @@ module AdminScaffold
       end
 
       def i18n_scope
-        if !!@options[:i18n_scope]
-          @options[:i18n_scope]
-        else
-          "#{@attribute}"
-        end
+        attr_owner = @options[:i18n][:attr_owner]
+        raise 'I18n scope not defined' if attr_owner.blank?
+        "#{attr_owner}.#{@attribute}"
       end
-
     end
   end
 end
