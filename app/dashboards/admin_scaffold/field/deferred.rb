@@ -11,6 +11,10 @@ module AdminScaffold
       def new(*args)
         deferred_class.new(*args, options)
       end
+
+      def ==(other)
+        deferred_class == other
+      end
     end
   end
 end
