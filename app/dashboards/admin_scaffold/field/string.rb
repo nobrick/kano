@@ -15,13 +15,8 @@ module AdminScaffold
         !!@options[:i18n]
       end
 
-      def attr_owner
-        @options[:owner]
-      end
-
       def i18n_scope
-        raise 'I18n scope not defined' if attr_owner.blank?
-        "#{attr_owner}.#{@attribute}"
+        "#{@attribute.owner.underscore}.#{@attribute.attr_text.pluralize}"
       end
     end
   end

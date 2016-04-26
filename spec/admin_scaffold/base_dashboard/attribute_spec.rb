@@ -15,14 +15,13 @@ RSpec.describe AdminScaffold::BaseDashboard::Attribute do
     context 'without options' do
       it 'returns the type that defined' do
         attr = AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::DateTime)
-        expect(attr.data).to eq(AdminScaffold::Field::DateTime)
+        expect(attr.data.deferred_class).to eq(AdminScaffold::Field::DateTime)
       end
     end
 
     context 'with options' do
       it 'returns the deferred with class is type that defined' do
         attr = AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::DateTime, { format: :long })
-        expect(attr.data.class).to eq(AdminScaffold::Field::Deferred)
         expect(attr.data.deferred_class).to eq(AdminScaffold::Field::DateTime)
       end
     end
@@ -58,7 +57,7 @@ RSpec.describe AdminScaffold::BaseDashboard::Attribute do
       context 'expand attr' do
         it 'returns the partial path that defiend' do
           attr = AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::Expand, { partial_path: partial_path })
-          expect(attr.partial_path).to eq(partial_path)
+          expect(attr.partial_path).to eq(partial_path + "/created_at_table_header")
         end
       end
     end

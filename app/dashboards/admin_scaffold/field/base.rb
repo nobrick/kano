@@ -3,13 +3,13 @@ module AdminScaffold
     class Base
       attr_reader :data, :attribute
 
-      def self.with_options(options = {})
-        Deferred.new(self, options)
+      def self.with_params(attribute, options = {})
+        Deferred.new(self, attribute, options)
       end
 
-      def initialize(attribute, data, options = {})
+      def initialize(attribute, resource, options = {})
         @attribute = attribute
-        @data = data
+        @data = @attribute.data_methods.inject(resource) { |result, method| result.try(method) }
         @options = options
       end
     end
