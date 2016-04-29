@@ -4,37 +4,36 @@
 
 = render layout: "admin/shared/modal", locals: { id: "filterModal", title: "筛选条件设置" } do
   = search_form_for instance, url: send(dashboard.filter_path), class: "form-horizontal" do |f|
-    - dashboard.filter_view_info.each_pair do |attr, info|
+    - dashboard.filters.each do |filter|
       .form-group
         label.col-md-3.control-label
-          | #{ info[:text] }
-        - case info[:filter_type]
+          | #{ filter.name }
+        - case filter.type
         - when :select
           .col-md-7 style="padding: 0px"
-            = f.select attr + "_eq", info[:values], { include_blank: true }, class: "form-control", style: "with: auto"
-
+            = f.select filter.predicate, filter.values, { include_blank: true }, class: "form-control"
         - when :radio
           label class="radio-inline"
-            = f.radio_button attr + "_eq", ""
+            = f.radio_button filter.predicate, ""
             | 全部
-          - info[:values].each_pair do |text, value|
+          - filter.values.each_pair do |text, value|
             label class="radio-inline"
-              = f.radio_button attr + "_eq", value
+              = f.radio_button filter.predicate, value
               | #{ text }
 
         - when :range
           .input-group.col-md-7
-            = f.search_field attr + "_gteq", class: "form-control"
+            = f.search_field filter.gt_predicate, class: "form-control"
             span.input-group-addon
               | ~
-            = f.search_field attr + "_lteq", class: "form-control"
+            = f.search_field filter.lt_predicate, class: "form-control"
 
         - when :time_range
           .input-group.col-md-7.js-datepicker-group
-            = f.search_field attr + "_date_gteq", class: "js-from-date form-control"
+            = f.search_field filter.gt_predicate, class: "js-from-date form-control"
             span.input-group-addon
               | ~
-            = f.search_field attr + "_date_lteq", class: "js-to-date form-control"
+            = f.search_field filter.lt_predicate, class: "js-to-date form-control"
     .form-group
       .col-md-offset-3.col-md-7 style="padding: 0px"
         .pull-right

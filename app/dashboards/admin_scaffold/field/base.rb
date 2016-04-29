@@ -1,15 +1,19 @@
 module AdminScaffold
   module Field
     class Base
-      attr_reader :data, :attribute
+      attr_reader :attribute
 
       def self.with_params(attribute, options = {})
         Deferred.new(self, attribute, options)
       end
 
-      def initialize(attribute, resource, options = {})
+      def initialize(attribute, data, options = {})
         @attribute = attribute
-        @data = @attribute.data_methods.inject(resource) { |result, method| result.try(method) }
+        if options[:original_data]
+          @data = data
+        else
+          @data = @attribute.data_methods.inject(data) { |result, method| result.try(method) }
+        end
         @options = options
       end
     end

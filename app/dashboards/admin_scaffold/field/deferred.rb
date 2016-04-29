@@ -10,7 +10,7 @@ module AdminScaffold
       end
 
       def new(*args)
-        deferred_class.new(@attribute, *args , @options)
+        deferred_class.new(@attribute, *args, @options)
       end
 
       def ==(other)

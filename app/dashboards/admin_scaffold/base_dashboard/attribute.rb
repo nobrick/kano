@@ -12,7 +12,7 @@ module AdminScaffold
 
       def partial_path
         if expand?
-          @options[:partial_path] + "/#{ @attr_text }_table_header"
+          @options[:partial_path] + "/#{ @owner.downcase }_" + "#{ @attr_text }_table_header"
         else
           ''
         end
@@ -26,7 +26,8 @@ module AdminScaffold
         @type == Field::Expand
       end
 
-      def data
+      def data(original_data = false)
+        @options[:original_data] = original_data
         @type.with_params(self, @options)
       end
 

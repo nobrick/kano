@@ -27,6 +27,14 @@ module AdminScaffold
         @attributes[attr_index].name
       end
 
+      def attribute(attr_index)
+        @attributes.fetch(attr_index)
+      end
+
+      def attr_defined?(attr_index)
+        @attributes.has_key?(attr_index)
+      end
+
       private
 
       def define_attribute(attr_index, type, options = {})
@@ -51,10 +59,6 @@ module AdminScaffold
         if attr_defined?(attr)
           raise "This attribute has been defiend"
         end
-      end
-
-      def attr_defined?(attr)
-        @attributes.has_key?(attr)
       end
     end
   end
