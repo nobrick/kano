@@ -14,7 +14,7 @@ module AdminScaffold
       end
 
       def filters
-        @filters ||= @filters.values
+        @filters.values
       end
 
       def select(attr_index, options = {})

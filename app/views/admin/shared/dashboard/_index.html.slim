@@ -7,7 +7,7 @@
     .dashboard__left-filter.col-md-4
       = render partial: "admin/shared/dashboard/filters", locals: { instance: instance, dashboard: dashboard }
 
-  /- if dashboard.have_search?
+  - if dashboard.has_search?
     = search_form_for instance, url: send(dashboard.search_path), class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
       = f.text_field dashboard.search_view_predicate, placeholder: '你在寻找什么...', class: "form-control"
       .input-group-btn
