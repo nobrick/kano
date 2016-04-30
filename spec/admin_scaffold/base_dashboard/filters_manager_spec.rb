@@ -70,21 +70,4 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
       end
     end
   end
-
-  context 'Filter info' do
-    describe '#filter_param' do
-      it 'returns the premit params' do
-      end
-    end
-
-    describe '#feedback_text' do
-      it 'returns filter feedback text' do
-      end
-    end
-
-    describe '#filter_form' do
-      it 'returns info for viewer to create form' do
-      end
-    end
-  end
 end

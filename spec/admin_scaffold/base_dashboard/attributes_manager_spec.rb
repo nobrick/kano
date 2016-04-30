@@ -3,7 +3,7 @@ require 'rails_helper'
 RSpec.describe AdminScaffold::BaseDashboard::AttributesManager do
   let(:attr_class) { "TestClass" }
   let(:attribute_manager) { AdminScaffold::BaseDashboard::AttributesManager.new(attr_class) }
-  context 'Attributes Define' do
+  context 'Define attributes' do
     let(:attr) { 'test_attr' }
     let(:other_class) { 'AnotherClass' }
     describe '#string' do

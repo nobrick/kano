@@ -57,7 +57,7 @@ RSpec.describe AdminScaffold::BaseDashboard::Attribute do
       context 'expand attr' do
         it 'returns the partial path that defiend' do
           attr = AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::Expand, { partial_path: partial_path })
-          expect(attr.partial_path).to eq(partial_path + "/created_at_table_header")
+          expect(attr.partial_path).to eq(partial_path + "/user_created_at_table_header")
         end
       end
     end
