@@ -1,31 +1,28 @@
 class Withdrawal::TransferDashboard < AdminScaffold::BaseDashboard
-  RESOURCE_CLASS = "Withdrawal"
 
-  COLLECTION_ATTRIBUTES = {
-    "id" => :string,
-    "handyman.name" => :string,
-    "handyman.id" => :string,
-    "bank_code" => :i18n,
-    "account_no" => :string,
-    "total" => :string,
-    "handyman.phone" => :string,
-    "created_at" => :time,
-    "_self_expand.transfer_buttons" => nil
-  }
+  attributes("Withdrawal") do |d|
+    d.string "id"
+    d.string "handyman.name", owner: "Handyman", methods: "handyman.name"
+    d.string "handyman.id", owner: "Handyman", mehtods: "handyman.id"
+    d.string "bank_code", i18n: true
+    d.string "account_no"
+    d.number "total"
+    d.string "handyman.phone", owner: 'Handyman', methods: "handyman.phone"
+    d.date_time "created_at"
+    d.expand "transfer_buttons", partial_path: "admin/finance/withdrawals/transfer"
+  end
 
-  COLLECTION_FILTER = {
-    "bank_code" => { type: :select, values: Withdrawal::Banking.bank_codes },
-    "created_at" => { type: :time_range },
-    "total" => { type: :range }
-  }
+  filters("admin_finance_withdrawal_transfer_index_path") do |f|
+    f.select "bank_code", values: Withdrawal::Banking.bank_codes
+    f.time_range "created_at"
+    f.range "total"
+  end
 
-  EXCEL_EXPORT = true
+  search("search_admin_finance_withdrawal_transfer_index_path") do |s|
+    s.cont "handyman.name"
+    s.eq   "id"
+    s.eq   "handyman.id"
+  end
 
-  COLLECTION_FILTER_PATH_HELPER = "admin_finance_withdrawal_transfer_index_path"
-
-  SEARCH_PREDICATES = [:handyman_name_cont, :id_or_handyman_id_eq]
-
-  SEARCH_PATH_HELPER = "search_admin_finance_withdrawal_transfer_index_path"
-
-  EXPAND_PARTIAL_PATH = "admin/finance/withdrawals/transfer"
+  excel_export
 end

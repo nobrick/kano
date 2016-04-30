@@ -1,33 +1,31 @@
 class OrderDashboard < AdminScaffold::BaseDashboard
-  RESOURCE_CLASS = "Order"
 
-  COLLECTION_ATTRIBUTES = {
-    "id" => :string,
-    "user.name" => :string,
-    "user.id" => :string,
-    "created_at" => :time,
-    "state" => :i18n,
-    "handyman.name" => :string,
-    "handyman.id" => :string,
-    "contracted_at" => :time,
-    "completed_at" => :time,
-    "canceled_at" => :time,
-  }
+  attributes("Order") do |d|
+    d.string "id"
+    d.string "user.name", owner: "User", methods: "user.name"
+    d.string "user.id", owner: "User", methods: "user.id"
+    d.date_time "created_at"
+    d.string "state", i18n: true
+    d.string "handyman.name", owner: "Handyman", methods: "handyman.name"
+    d.string "handyman.id", owner: "Handyman", methods: "handyman.id"
+    d.date_time "contracted_at"
+    d.date_time "completed_at"
+    d.date_time "canceled_at"
+  end
 
-  SEARCH_PATH_HELPER = "search_admin_orders_path"
+  filters("admin_orders_path") do |f|
+    f.time_range "created_at"
+    f.time_range "contracted_at"
+    f.select "state", values: Order.states
+  end
 
-  SEARCH_PREDICATES = [:handyman_name_cont, :handyman_id_eq, :id_eq, :user_id_eq, :user_name_cont]
+  search("search_admin_orders_path") do |s|
+    s.cont "handyman.name"
+    s.eq   "handyman.id"
+    s.eq   "id"
+    s.eq   "user.id"
+    s.cont "user.name"
+  end
 
-  SHOW_PATH_HELPER = "admin_order_path"
-
-  COLLECTION_FILTER = {
-    "created_at" => { type: :time_range },
-    "contracted_at" => { type: :time_range },
-    "state" => {
-      type: :select,
-      values: Order.states
-    }
-  }
-
-  COLLECTION_FILTER_PATH_HELPER = "admin_orders_path"
+  show_page "admin_order_path"
 end
