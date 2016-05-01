@@ -24,7 +24,7 @@ module AdminScaffold
       end
 
       def attr_name(attr_index)
-        @attributes[attr_index].name
+        attribute(attr_index).name
       end
 
       def attribute(attr_index)

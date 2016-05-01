@@ -7,7 +7,7 @@ module AdminScaffold
       end
 
       def partial_path
-        @options[:partial_path] + "/#{ @attribute.owner.downcase }_" +  "#{ @attribute.attr_text }_table_data"
+        @options[:partial_path] + "/#{ @attribute.owner.downcase }_" +  "#{ @attribute.attr }_table_data"
       end
     end
   end

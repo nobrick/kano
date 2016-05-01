@@ -14,9 +14,7 @@ module AdminScaffold
     @@new_pages = {}
 
     def self.attributes(resource_class)
-      @@resource_class ||= {}
-      @@resource_class[object_id] = resource_class
-      new_manager = AttributesManager.new(@@resource_class[object_id])
+      new_manager = AttributesManager.new(resource_class)
       @@attributes_managers[object_id] = new_manager
       yield new_manager
     end

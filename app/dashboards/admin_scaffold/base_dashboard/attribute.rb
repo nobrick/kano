@@ -1,9 +1,10 @@
 module AdminScaffold
   class BaseDashboard
     class Attribute
-      attr_reader :owner, :type, :attr_text
+      attr_reader :owner, :type, :attr
+
       def initialize(attr, owner, type, options = {})
-        @attr_text = attr
+        @attr = attr
         @owner = owner
         @type = type
         @options = options
@@ -12,14 +13,14 @@ module AdminScaffold
 
       def partial_path
         if expand?
-          @options[:partial_path] + "/#{ @owner.downcase }_" + "#{ @attr_text }_table_header"
+          @options[:partial_path] + "/#{ @owner.downcase }_" + "#{ @attr }_table_header"
         else
           ''
         end
       end
 
       def data_methods
-        (@options[:methods] || @attr_text).split('.')
+        (@options[:methods] || @attr).split('.')
       end
 
       def expand?
@@ -35,7 +36,7 @@ module AdminScaffold
         if expand?
           ''
         else
-          I18n.t @attr_text, scope: [:activerecord, :attributes, "#{ @owner.underscore }"]
+          I18n.t @attr, scope: [:activerecord, :attributes, "#{ @owner.underscore }"]
         end
       end
 

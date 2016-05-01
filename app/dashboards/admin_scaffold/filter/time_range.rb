@@ -6,17 +6,17 @@ module AdminScaffold
       end
 
       def predicate
-        attr_text = @attribute.attr_text
+        attr_text = @attribute.attr
         [(attr_text + "_date_gteq").to_sym, (attr_text + "_date_lteq").to_sym]
       end
 
       def gt_predicate
-        attr_text = @attribute.attr_text
+        attr_text = @attribute.attr
         (attr_text + "_date_gteq").to_sym
       end
 
       def lt_predicate
-        attr_text = @attribute.attr_text
+        attr_text = @attribute.attr
         (attr_text + "_date_lteq").to_sym
       end
 

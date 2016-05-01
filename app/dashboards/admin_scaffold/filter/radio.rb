@@ -6,5 +6,4 @@ module AdminScaffold
       end
     end
   end
-
 end

@@ -16,7 +16,7 @@ module AdminScaffold
       end
 
       def i18n_scope
-        "#{@attribute.owner.underscore}.#{@attribute.attr_text.pluralize}"
+        "#{@attribute.owner.underscore}.#{@attribute.attr.pluralize}"
       end
     end
   end

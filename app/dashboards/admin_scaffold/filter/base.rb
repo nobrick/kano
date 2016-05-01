@@ -16,7 +16,7 @@ module AdminScaffold
       end
 
       def predicate
-        "#{ @attribute.attr_text }_eq".to_sym
+        "#{ @attribute.attr }_eq".to_sym
       end
 
       def feedback(predicate_value_pair)

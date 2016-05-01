@@ -9,12 +9,18 @@ module AdminScaffold
 
       def initialize(attribute, data, options = {})
         @attribute = attribute
-        if options[:original_data]
+        @options = options
+        set_data(data)
+      end
+
+      private
+
+      def set_data(data)
+        if @options[:original_data]
           @data = data
         else
           @data = @attribute.data_methods.inject(data) { |result, method| result.try(method) }
         end
-        @options = options
       end
     end
   end
