@@ -1,6 +1,6 @@
-/- if dashboard.have_new_resource?
+- if dashboard.has_new_page?
   .row.dashboard__new-item
-    = link_to "新建", send(dashboard.new_resource_path), class: "btn btn-success btn-lg "
+    = link_to "新建", send(dashboard.new_page_path), class: "btn btn-success btn-lg "
 
 .row.dashboard__filters
   - if dashboard.has_filters?

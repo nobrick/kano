@@ -11,6 +11,7 @@ module AdminScaffold
     @@search_managers = {}
     @@excel_export = {}
     @@show_pages = {}
+    @@new_pages = {}
 
     def self.attributes(resource_class)
       @@resource_class ||= {}
@@ -42,6 +43,10 @@ module AdminScaffold
       @@show_pages[object_id] = path
     end
 
+    def self.new_page(path)
+      @@new_pages[object_id] = path
+    end
+
     def initialize
       class_id = self.class.object_id
       @attribute_manager = @@attributes_managers[class_id]
@@ -49,6 +54,7 @@ module AdminScaffold
       @search_manager = @@search_managers[class_id]
       @excel_export = @@excel_export[class_id]
       @show_page = @@show_pages[class_id]
+      @new_page = @@new_pages[class_id]
     end
 
     def has_filters?
@@ -67,19 +73,16 @@ module AdminScaffold
       end
     end
 
-    SHOW_PATH_HELPER = nil
-    NEW_PATH_HELPER = nil
-
     def resource_path
       @show_page
     end
 
-    def new_resource_path
-      self.class::NEW_PATH_HELPER
+    def new_page_path
+      @new_page
     end
 
-    def have_new_resource?
-      !self.class::NEW_PATH_HELPER.blank?
+    def has_new_page?
+      !@new_page.blank?
     end
 
     def attributes
