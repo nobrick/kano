@@ -37,7 +37,7 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
 
   def do_transfer
     if @withdrawal.transfer && @withdrawal.save
-      flash[:success] = "transfer success "
+      flash[:success] = "确认转账成功"
     else
       flash[:alert] = @withdrawal.errors.full_messages
     end
@@ -46,7 +46,7 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
   def do_decline
     @withdrawal.assign_attributes(reason_params)
     if @withdrawal.decline && @withdrawal.save
-      flash[:success] = "decline success"
+      flash[:success] = "确认转账失败"
     else
       flash[:alert] = @withdrawal.errors.full_messages
     end
