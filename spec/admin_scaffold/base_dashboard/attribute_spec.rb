@@ -5,7 +5,8 @@ RSpec.describe AdminScaffold::BaseDashboard::Attribute do
     context 'invalid params' do
       context 'Expand type' do
         it 'raises error when does not define the partial_path' do
-          expect{ AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::Expand) }.to raise_error
+          expect{ AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::Expand) }
+            .to raise_error /partial_path should be defined/
         end
       end
     end
@@ -55,7 +56,7 @@ RSpec.describe AdminScaffold::BaseDashboard::Attribute do
       end
 
       context 'expand attr' do
-        it 'returns the partial path that defiend' do
+        it 'returns the partial path that defined' do
           attr = AdminScaffold::BaseDashboard::Attribute.new("created_at", "User", AdminScaffold::Field::Expand, { partial_path: partial_path })
           expect(attr.partial_path).to eq(partial_path + "/user_created_at_table_header")
         end

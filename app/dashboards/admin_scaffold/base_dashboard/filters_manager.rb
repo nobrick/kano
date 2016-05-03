@@ -3,7 +3,7 @@ module AdminScaffold
     class FiltersManager
       attr_reader :filter_path, :attributes_manager
 
-      def initialize(attributes_manager ,filter_path)
+      def initialize(attributes_manager, filter_path)
         @attributes_manager = attributes_manager
         @filter_path = filter_path
         @filters = {}
