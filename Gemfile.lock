@@ -182,8 +182,15 @@ GEM
     hashie (3.4.2)
     hitimes (1.2.3)
     htmlentities (4.3.4)
+    http (1.0.4)
+      addressable (~> 2.3)
+      http-cookie (~> 1.0)
+      http-form_data (~> 1.0.1)
+      http_parser.rb (~> 0.6.0)
     http-cookie (1.0.2)
       domain_name (~> 0.5)
+    http-form_data (1.0.1)
+    http_parser.rb (0.6.0)
     i18n (0.7.0)
     jasmine (2.3.1)
       jasmine-core (~> 2.3)
@@ -436,10 +443,11 @@ GEM
     websocket-driver (0.6.2)
       websocket-extensions (>= 0.1.0)
     websocket-extensions (0.1.2)
-    wechat (0.6.1)
-      activesupport (>= 3.2)
+    wechat (0.7.11)
+      activesupport (>= 3.2, < 5.1.x)
+      http (~> 1.0, >= 1.0.1)
       nokogiri (>= 1.6.0)
-      rest-client
+      thor
     xpath (2.0.0)
       nokogiri (~> 1.3)
 
@@ -502,4 +510,7 @@ DEPENDENCIES
   uglifier (>= 1.3.0)
   unicorn
   webmock
-  wechat (~> 0.6.1)
+  wechat (~> 0.7.11)
+
+BUNDLED WITH
+   1.10.6
