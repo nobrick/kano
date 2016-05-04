@@ -7,4 +7,8 @@ class HandymanWechatsController < ApplicationController
     jsapi_ticket: ENV['HANDYMAN_WECHAT_JSAPI_TICKET']
   }
   wechat_responder WECHAT_OPTIONS
+
+  on :event, with: 'subscribe' do |request|
+    request.reply.text '欢迎您关注大象管家'
+  end
 end
