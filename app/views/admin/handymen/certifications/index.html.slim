@@ -10,7 +10,7 @@
       = form_for :taxon, method: :put, html: { class: "js-certifyFail form-horizontal" } do |f|
         .modal-body
           .form-group
-            = label_tag i18n_t("name", "M", {model: "handyman" }), nil, class: "col-sm-2 control-label"
+            = label_tag i18n_t("name", "M", { model: "handyman" }), nil, class: "col-sm-2 control-label"
             p.form-control-static.col-sm-9.js-certifyFail-name
           .form-group
             = label_tag i18n_t("name", "M", { model: "taxon" }), nil, class: "col-sm-2 control-label"
@@ -32,4 +32,4 @@
 = render partial: 'shared/tabs', locals: { tabs: tabs_info }
 
 .tabs__content
-  = render partial: 'admin/shared/dashboard/index', locals: {resources: @taxons, dashboard: dashboard,  instance: @search }
+  = render partial: 'admin/shared/dashboard/index', locals: { resources: @taxons, dashboard: dashboard, instance: @search }
