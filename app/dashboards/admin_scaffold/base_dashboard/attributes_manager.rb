@@ -57,7 +57,7 @@ module AdminScaffold
 
       def validate!(attr)
         if attr_defined?(attr)
-          raise "This attribute has been defined"
+          raise AdminScaffold::ArgumentError, "#{ attr }: has been defined"
         end
       end
     end

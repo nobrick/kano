@@ -44,7 +44,7 @@ module AdminScaffold
 
       def validate!
         if expand? && @options[:partial_path].blank?
-          raise "partial_path should be defined"
+          raise AdminScaffold::ArgumentError, "partial_path should be defined"
         end
       end
     end
