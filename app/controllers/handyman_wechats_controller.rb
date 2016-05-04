@@ -1,4 +1,5 @@
 class HandymanWechatsController < ApplicationController
+  skip_before_action :verify_authenticity_token
   WECHAT_OPTIONS = {
     appid: ENV['HANDYMAN_WECHAT_APPID'],
     secret: ENV['HANDYMAN_WECHAT_SECRET'],
