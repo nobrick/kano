@@ -31,7 +31,7 @@ html
           - when :notice then style = :warning
           - else style = type
 
-          = content_tag :div, class: "alert alert-#{style} alert-dismissible" do
+          = content_tag :div, class: "alert alert-#{style} alert-dismissible row" do
             button.close[type="button" data-dismiss="alert" aria-label="Close"]
               span[aria-hidden="true"]
                 | ×

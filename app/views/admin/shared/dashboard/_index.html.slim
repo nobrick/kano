@@ -1,44 +1,45 @@
-- if dashboard.have_new_resource?
+- if dashboard.has_new_page?
   .row.dashboard__new-item
-    = link_to "新建", send(dashboard.new_resource_path), class: "btn btn-success btn-lg "
+    = link_to "新建", send(dashboard.new_page_path), class: "btn btn-success btn-lg "
 
 .row.dashboard__filters
-  - if dashboard.have_filters?
+  - if dashboard.has_filters?
     .dashboard__left-filter.col-md-4
       = render partial: "admin/shared/dashboard/filters", locals: { instance: instance, dashboard: dashboard }
 
-  - if dashboard.have_search?
+  - if dashboard.has_search?
     = search_form_for instance, url: send(dashboard.search_path), class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
       = f.text_field dashboard.search_view_predicate, placeholder: '你在寻找什么...', class: "form-control"
       .input-group-btn
         = f.submit '搜索', class: 'btn btn-default'
 
-- if dashboard.have_filter_feedback?(instance)
+- if dashboard.has_feedback?(instance)
   .row.dashboard__filter-info
-    - feedback = dashboard.filter_feedback_info(instance)
+    - feedback = dashboard.feedback(instance)
     - feedback.each do |text|
       span.label.label-warning
         | #{ text }
 
 .row
-  table.table.table-bordered.table-hover.col-md-12.table--more-info.js-table
+  table.table.table-striped.table-hover.col-md-12.table--more-info.js-table
     thead.table__header
       tr
-        - dashboard.table_headers.each do |t|
+        - dashboard.attributes.each do |attr|
           th
-            - if dashboard.expand_column?(t)
-              = render partial: t.expand_header_partial
+            - if attr.expand?
+              = render partial: attr.partial_path
             - else
-              | #{t}
+              | #{ attr.name }
     tbody.table__content
       - resources.each do |r|
         tr data-url="#{dashboard.resource_path.nil? ? "" : send(dashboard.resource_path, r)}"
-          - dashboard.row_datas(r).each do |data|
+          - dashboard.attributes.each do |attr|
             td
-              - if dashboard.expand_column?(data)
-                = render partial: data.expand_data_partial, locals: {resource: r}
+              - if attr.expand?
+                = render partial: attr.data.new.partial_path, locals: { resource: r }
               - else
-                | #{data}
+                - data = attr.data.new(r)
+                | #{ data.to_s }
 
 - if dashboard.export?
   .row

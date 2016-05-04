@@ -1,4 +1,4 @@
-class AccountDashboard < BaseDashboard
+class AccountDashboard < AdminScaffold::BaseDashboard
 
   COLLECTION_ATTRIBUTES = {
     "id" => :string,
