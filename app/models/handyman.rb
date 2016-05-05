@@ -23,6 +23,10 @@ class Handyman < Account
     true
   end
 
+  def on_wechat?
+    provider == 'handyman_wechat'
+  end
+
   def certified?
     taxons.certified.any?
   end
