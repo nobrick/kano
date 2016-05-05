@@ -21,6 +21,7 @@ class Users::CheckoutsController < ApplicationController
     when :expired
       redirect_to [ :user, @order ], notice: t('.payment_expired')
     when :completed
+      notify_wechat_accounts
       redirect_to [ :user, @order ], notice: t('.payment_success')
     else
       redirect_to [ :user, @order ], alert: t('.no_payment_result')
@@ -39,9 +40,14 @@ class Users::CheckoutsController < ApplicationController
     params[:p_method] == 'cash'
   end
 
+  def notify_wechat_accounts
+    Payment::UserTemplateWorker.perform_async(:complete_order, @payment.id)
+  end
+
   def pay_in_cash
     set_payment('cash')
     if @payment.complete && @payment.save
+      notify_wechat_accounts
       redirect_to [ :user, @order ], notice: t('.payment_success')
     else
       redirect_to [ :user, @order ], alert: failure_message
