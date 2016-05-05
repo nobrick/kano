@@ -41,7 +41,9 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def notify_wechat_accounts
-    Payment::UserTemplateWorker.perform_async(:complete_order, @payment.id)
+    id = @payment.id
+    Payment::UserTemplateWorker.perform_async(:complete_order, id)
+    Payment::HandymanTemplateWorker.perform_async(:complete_order, id)
   end
 
   def pay_in_cash
