@@ -241,10 +241,14 @@ Devise.setup do |config|
   # Add a new OmniAuth provider. Check the wiki for more information on setting
   # up on your models and hooks.
   # config.omniauth :github, 'APP_ID', 'APP_SECRET', scope: 'user,public_repo'
-  config.omniauth :wechat, Wechat.config[:appid], Wechat.config[:secret],
+  config.omniauth :wechat,
+    Wechat.config[:appid],
+    Wechat.config[:secret],
     authorize_params: { :scope => 'snsapi_userinfo' }
 
-  config.omniauth :handyman_wechat, ENV['HANDYMAN_WECHAT_APPID'], ENV['HANDYMAN_WECHAT_SECRET'],
+  config.omniauth :handyman_wechat,
+    HandymanWechatApi.config.appid,
+    HandymanWechatApi.config.secret,
     authorize_params: { :scope => 'snsapi_userinfo' }
 
   # ==> Warden configuration
