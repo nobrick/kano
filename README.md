@@ -16,6 +16,7 @@ cp database.yml{.example,}
 cp secrets.yml{.example,}
 cp redis.yml{.example,}
 cp wechat.yml{.example,}
+cp handyman_wechat.yml{.example,}
 cp sms.yml{.example,}
 ```
 
