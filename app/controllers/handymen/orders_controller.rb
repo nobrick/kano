@@ -23,6 +23,7 @@ class Handymen::OrdersController < ApplicationController
   # POST /orders
   def update
     if @order.contract && @order.save
+      notify_wechat_accounts
       redirect_to handyman_contract_url(@order), notice: t('.update_success')
     else
       redirect_to handyman_orders_url,
@@ -39,6 +40,10 @@ class Handymen::OrdersController < ApplicationController
   def set_handyman_and_bonus
     @order.handyman = current_handyman
     Order::HandymanBonusAgent.set_handyman_bonus(@order)
+  end
+
+  def notify_wechat_accounts
+    Payment::UserTemplates::AfterContractWorker.perform_async(@order.id)
   end
 
   def check_order_permission
