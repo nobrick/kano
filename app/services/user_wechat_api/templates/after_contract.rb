@@ -14,12 +14,12 @@ module UserWechatApi
         data = payload(order.id,
                        order.taxon_name,
                        order.handyman.full_or_nickname,
-                       order.contracted_at)
+                       order.handyman.phone)
         data = with_url(data, order)
         with_openid(data, order.user)
       end
 
-      def self.payload(id, taxon_name, handyman_name, contracted_at)
+      def self.payload(id, taxon_name, handyman_name, phone)
         {
           template_id: template_id,
           topcolor: "#FF0000",
@@ -41,7 +41,7 @@ module UserWechatApi
               color: '#173177'
             },
             keyword4: {
-              value: I18n.localize(contracted_at),
+              value: phone,
               color: '#173177'
             },
             remark: {
