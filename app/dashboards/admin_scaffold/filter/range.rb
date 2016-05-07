@@ -1,6 +1,10 @@
 module AdminScaffold
   module Filter
     class Range < Filter::Base
+      def self.index_suffix
+        "_range"
+      end
+
       def type
         :range
       end

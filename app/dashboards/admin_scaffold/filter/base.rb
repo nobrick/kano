@@ -4,6 +4,10 @@ module AdminScaffold
       extend Forwardable
       def_delegators :@attribute, :name
 
+      def self.index_suffix
+        "_eq"
+      end
+
       def initialize(attribute, options = {})
         @attribute = attribute
         @options = options
@@ -13,6 +17,10 @@ module AdminScaffold
         @options[:values].map do |value|
           [@attribute.data(true).new(value).to_s, value]
         end.to_h
+      end
+
+      def default_value
+        @options[:default_value]
       end
 
       def predicate
