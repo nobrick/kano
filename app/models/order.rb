@@ -10,6 +10,8 @@ class Order < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   has_many :payments
 
+  default_scope { order(updated_at: :desc) }
+
   with_options class_name: 'Payment' do |v|
     v.has_one :valid_payment,
       -> { where("state not in ('void', 'failed')") }
