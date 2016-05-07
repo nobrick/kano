@@ -9,11 +9,11 @@ module AdminScaffold
       def initialize(attributes_manager, filter_path)
         @attributes_manager = attributes_manager
         @filter_path = filter_path
-        @filter_groups = { default: FilterGroup.new(@attributes_manager) }
+        @filter_groups = { default: FiltersGroup.new(@attributes_manager) }
       end
 
       def filter_group(group_index, options = {})
-        new_group = FilterGroup.new(@attributes_manager, options)
+        new_group = FiltersGroup.new(@attributes_manager, options)
         @filter_groups[group_index] = new_group
         yield new_group
       end
