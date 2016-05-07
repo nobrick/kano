@@ -1,4 +1,4 @@
-class ManagerDashboard < AccountDashboard
+class ManagerDashboard < AdminScaffold::BaseDashboard
 
   attributes("User") do |d|
     d.string "id"
@@ -8,5 +8,12 @@ class ManagerDashboard < AccountDashboard
     d.string "email"
     d.date_time "created_at"
     d.date_time "last_sign_in_at"
+  end
+
+  search("admin_manager_accounts_path") do |s|
+    s.cont "name"
+    s.cont "email"
+    s.eq   "id"
+    s.eq   "phone"
   end
 end
