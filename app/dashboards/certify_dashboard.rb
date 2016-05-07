@@ -12,7 +12,7 @@ class CertifyDashboard < AdminScaffold::BaseDashboard
   end
 
   filters("admin_handyman_certifications_path") do |f|
-    f.radio "certified_status", values: ["success", "failure", "under_review"]
+    f.eq "certified_status", display: :radio, values: ["success", "failure", "under_review"]
     f.time_range "cert_requested_at"
   end
 
