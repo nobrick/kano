@@ -17,6 +17,8 @@ class OrderDashboard < AdminScaffold::BaseDashboard
     f.time_range "created_at"
     f.time_range "contracted_at"
     f.select "state", values: Order.states
+    f.select "state", default_value: "requested", group: :link
+    f.time_interval_gt "created_at", default_value: 15, group: :link
   end
 
   search("search_admin_orders_path") do |s|
