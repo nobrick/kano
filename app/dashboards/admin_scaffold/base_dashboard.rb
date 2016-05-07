@@ -3,7 +3,7 @@ module AdminScaffold
 
   class BaseDashboard
     extend Forwardable
-    def_delegators :@filters_manager, :filter_params, :filter_path, :filters, :feedback
+    def_delegators :@filters_manager, :filter_params, :filter_path, :filter_groups, :feedback, :seperate_filter_params
     def_delegators :@search_manager, :search_path, :search_params, :search_view_predicate
 
     @@attributes_managers = {}

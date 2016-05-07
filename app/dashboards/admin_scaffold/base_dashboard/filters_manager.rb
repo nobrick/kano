@@ -1,20 +1,17 @@
 module AdminScaffold
   class BaseDashboard
     class FiltersManager
-      attr_reader :filter_path, :attributes_manager
+      attr_reader :filter_path, :attributes_manager, :filter_groups
 
       def initialize(attributes_manager, filter_path)
         @attributes_manager = attributes_manager
         @filter_path = filter_path
         @filters = {}
+        @filter_groups = { default: {} }
       end
 
-      def filter(attr_index)
-        @filters[attr_index]
-      end
-
-      def filters
-        @filters.values
+      def filter(filter_index)
+        @filters[filter_index]
       end
 
       def select(attr_index, options = {})
@@ -33,6 +30,10 @@ module AdminScaffold
         define_filter(attr_index, Filter::Radio, options)
       end
 
+      def time_interval_gt(attr_index, options = {})
+        define_filter(attr_index, Filter::TimeIntervalGt, options)
+      end
+
       def has_feedback?(ransack_search)
         ransack_search.conditions.any? do |c|
           filter_predicates.include?(c.key.to_sym)
@@ -48,8 +49,8 @@ module AdminScaffold
       def feedback(ransack_search)
         conditions = ransack_search.conditions
         feedback_info = []
-        predicates_from_user(conditions).each_pair do |attr_index, predicates|
-          feedback_info << @filters[attr_index].feedback(predicates)
+        predicates_from_user(conditions).each_pair do |filter_index, predicates|
+          feedback_info << @filters[filter_index].feedback(predicates)
         end
         feedback_info
       end
@@ -57,7 +58,9 @@ module AdminScaffold
       private
 
       def define_filter(attr_index, type, options = {})
-        validate!(attr_index)
+        group = options[:group] || :default
+        @filter_groups[group] ||= {}
+        validate!(attr_index, type, group)
         attribute = @attributes_manager.attribute(attr_index)
         if type == Filter::TimeRange
           if attribute.type != Field::DateTime
@@ -69,15 +72,32 @@ module AdminScaffold
             raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be number"
           end
         end
-        @filters[attr_index] = type.new(attribute, options)
+        filter = type.new(attribute, options)
+        filter_index = attr_index + type.index_suffix
+        @filters[filter_index] = filter
+        @filter_groups[group][filter_index] = filter
       end
 
-      def validate!(attr_index)
+      def validate!(attr_index, type, group)
         if !attr_exist?(attr_index)
           raise AdminScaffold::ArgumentError, "#{attr_index}: The Attribute is not defined"
         end
-        if @filters.has_key?(attr_index)
-          raise AdminScaffold::ArgumentError, "#{attr_index}: You have defined a filter for this attribute"
+        filter_index = attr_index + type.index_suffix
+        if @filter_groups[group].has_key?(filter_index)
+          raise AdminScaffold::ArgumentError, "#{attr_index}: You have defined a same type of filter for this attribute"
+        end
+      end
+
+      def filter_index_suffix(predicate)
+        case predicate
+        when "gteq", "lteq"
+          "_range"
+        when "date_gteq", "date_lteq"
+          "_time_range"
+        when "eq"
+          "_eq"
+        when "time_interval_gt"
+          "_time_interval_gt"
         end
       end
 
@@ -99,9 +119,10 @@ module AdminScaffold
             names = c.attributes.map { |attr| attr.name }
             attr_name = names.join("_or_")
             predicate = c.predicate_name
-            value = c.value
-            result[attr_name] ||= {}
-            result[attr_name][predicate] = value
+            filter_index = attr_name + filter_index_suffix(predicate)
+            value = c.formatted_values_for_attribute(c.attributes.first)
+            result[filter_index] ||= {}
+            result[filter_index][predicate] = value
           end
         end
         result
@@ -112,7 +133,7 @@ module AdminScaffold
       end
 
       def filter_predicates
-        @filter_predicates ||= filters.map { |filter| filter.predicate }.flatten
+        @filter_predicates ||= @filters.values.map { |filter| filter.predicate }.flatten.uniq
       end
     end
   end

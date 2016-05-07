@@ -1,40 +1,55 @@
 .btn-toolbar
-  = button_tag "筛选", class: "btn btn-primary", data: { toggle: "modal", target: "#filterModal" }
+  - dashboard.filter_groups.each_pair do |group_type, filters|
+    - case group_type
+    - when :default
+      = button_tag "筛选", class: "btn btn-primary", data: { toggle: "modal", target: "#filterModal" }
+      = render layout: "admin/shared/modal", locals: { id: "filterModal", title: "筛选条件设置" } do
+        = search_form_for instance, url: send(dashboard.filter_path), class: "form-horizontal" do |f|
+          - filters.values.each do |filter|
+            .form-group
+              label.col-md-3.control-label
+                | #{ filter.name }
+              - case filter.type
+              - when :select
+                .col-md-7 style="padding: 0px"
+                  = f.select filter.predicate, filter.values, { include_blank: true }, class: "form-control"
+              - when :radio
+                label class="radio-inline"
+                  = f.radio_button filter.predicate, ""
+                  | 全部
+                - filter.values.each_pair do |text, value|
+                  label class="radio-inline"
+                    = f.radio_button filter.predicate, value
+                    | #{ text }
+
+              - when :time_interval_gt
+                .input-group.col-md-7
+                  = f.select filter.predicate, [[1,1]], class: "form-control"
+
+              - when :range
+                .input-group.col-md-7
+                  = f.search_field filter.gt_predicate, class: "form-control"
+                  span.input-group-addon
+                    | ~
+                  = f.search_field filter.lt_predicate, class: "form-control"
+
+              - when :time_range
+                .input-group.col-md-7.js-datepicker-group
+                  = f.search_field filter.gt_predicate, class: "js-from-date form-control"
+                  span.input-group-addon
+                    | ~
+                  = f.search_field filter.lt_predicate, class: "js-to-date form-control"
+          .form-group
+            .col-md-offset-3.col-md-7 style="padding: 0px"
+              .pull-right
+                = f.submit "确定", class: "btn btn-primary"
+
+    - when :link
+      - link_params = {}
+      - filters.values.each do |filter|
+        - link_params[filter.predicate] = filter.default_value
+
+      = link_to "待推送订单", send(dashboard.filter_path, q: link_params), class: "btn btn-default"
+
   = link_to "重置", send(dashboard.filter_path), class: "btn btn-default"
 
-= render layout: "admin/shared/modal", locals: { id: "filterModal", title: "筛选条件设置" } do
-  = search_form_for instance, url: send(dashboard.filter_path), class: "form-horizontal" do |f|
-    - dashboard.filters.each do |filter|
-      .form-group
-        label.col-md-3.control-label
-          | #{ filter.name }
-        - case filter.type
-        - when :select
-          .col-md-7 style="padding: 0px"
-            = f.select filter.predicate, filter.values, { include_blank: true }, class: "form-control"
-        - when :radio
-          label class="radio-inline"
-            = f.radio_button filter.predicate, ""
-            | 全部
-          - filter.values.each_pair do |text, value|
-            label class="radio-inline"
-              = f.radio_button filter.predicate, value
-              | #{ text }
-
-        - when :range
-          .input-group.col-md-7
-            = f.search_field filter.gt_predicate, class: "form-control"
-            span.input-group-addon
-              | ~
-            = f.search_field filter.lt_predicate, class: "form-control"
-
-        - when :time_range
-          .input-group.col-md-7.js-datepicker-group
-            = f.search_field filter.gt_predicate, class: "js-from-date form-control"
-            span.input-group-addon
-              | ~
-            = f.search_field filter.lt_predicate, class: "js-to-date form-control"
-    .form-group
-      .col-md-offset-3.col-md-7 style="padding: 0px"
-        .pull-right
-          = f.submit "确定", class: "btn btn-primary"

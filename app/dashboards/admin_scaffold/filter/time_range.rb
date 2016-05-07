@@ -1,6 +1,10 @@
 module AdminScaffold
   module Filter
     class TimeRange < Filter::Base
+      def self.index_suffix
+        "_time_range"
+      end
+
       def type
         :time_range
       end

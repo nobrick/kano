@@ -8,6 +8,19 @@ Ransack.configure do |config|
     valid
   end
 
+  config.add_predicate 'time_interval_gt', # Name your predicate
+    # What non-compound ARel predicate will it use? (eq, matches, etc)
+    arel_predicate: 'lteq',
+    # Format incoming values as you see fit. (Default: Don't do formatting)
+    formatter: proc { |v| Time.now - v.to_i * 60 },
+    # Should compounds be created? Will use the compound (any/all) version
+    # of the arel_predicate to create a corresponding any/all version of
+    # your predicate. (Default: true)
+    compounds: false,
+    # Force a specific column type for type-casting of supplied values.
+    # (Default: use type from DB column)
+    type: :string
+
   config.add_predicate 'date_gteq', # Name your predicate
     # What non-compound ARel predicate will it use? (eq, matches, etc)
     arel_predicate: 'gteq',

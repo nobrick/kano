@@ -16,8 +16,8 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
 
   context 'Define filters' do
     it 'raises error if the attr is not defined' do
-      expect{ filters_manager.select("invalid", ["a"])}.to raise_error(AdminScaffold::ArgumentError)
-      expect{ filters_manager.radio("invalid", ["a"])}.to raise_error(AdminScaffold::ArgumentError)
+      expect{ filters_manager.select("invalid", values: ["a"])}.to raise_error(AdminScaffold::ArgumentError)
+      expect{ filters_manager.radio("invalid", values: ["a"])}.to raise_error(AdminScaffold::ArgumentError)
       expect{ filters_manager.time_range("invalid")}.to raise_error(AdminScaffold::ArgumentError)
       expect{ filters_manager.range("invalid")}.to raise_error(AdminScaffold::ArgumentError)
     end
@@ -25,7 +25,7 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
       context 'valid params' do
         it 'defines a select filter' do
           filters_manager.select("bank_code", values: ["a", "b", "c"])
-          expect(filters_manager.filter("bank_code").class).to eq(AdminScaffold::Filter::Select)
+          expect(filters_manager.filter("bank_code_eq").class).to eq(AdminScaffold::Filter::Select)
         end
       end
     end
@@ -34,7 +34,7 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
       context 'valid params' do
         it 'defines a time range filter' do
           filters_manager.time_range("created_at")
-          expect(filters_manager.filter("created_at").class).to eq(AdminScaffold::Filter::TimeRange)
+          expect(filters_manager.filter("created_at_time_range").class).to eq(AdminScaffold::Filter::TimeRange)
         end
       end
 
@@ -49,7 +49,7 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
       context 'valid params' do
         it 'defines a range filter' do
           filters_manager.range("total")
-          expect(filters_manager.filter("total").class).to eq(AdminScaffold::Filter::Range)
+          expect(filters_manager.filter("total_range").class).to eq(AdminScaffold::Filter::Range)
         end
       end
 
@@ -65,7 +65,7 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersManager do
       context 'valid params' do
         it 'defines a radio filter' do
           filters_manager.radio("total")
-          expect(filters_manager.filter("total").class).to eq(AdminScaffold::Filter::Radio)
+          expect(filters_manager.filter("total_eq").class).to eq(AdminScaffold::Filter::Radio)
         end
       end
     end
