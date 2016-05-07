@@ -2,7 +2,7 @@ module Admin::Orders::HistoryHelper
   def order_history_for(order)
     if %{ requested contracted payment completed rated }.include?(order.state)
       normal_history_for(order)
-    elsif canceled?
+    elsif order.canceled?
       cancel_history_for(order)
     else
       report_history_for(order)
