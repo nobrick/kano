@@ -14,10 +14,10 @@ class Withdrawal::HistoryDashboard < AdminScaffold::BaseDashboard
   end
 
   filters("admin_finance_withdrawal_history_index_path") do |f|
-    f.eq "bank_code", display: :select, values: Withdrawal::Banking.bank_codes
+    f.select "bank_code", values: Withdrawal::Banking.bank_codes
     f.time_range "created_at"
     f.time_range "declined_at_or_transferred_at"
-    f.eq "state", display: "radio", values: [ "declined", "transferred" ]
+    f.radio "state", values: [ "declined", "transferred" ]
     f.range "total"
   end
 

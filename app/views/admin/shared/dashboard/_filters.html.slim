@@ -1,28 +1,26 @@
 .btn-toolbar
-  - dashboard.filter_groups.each do |group|
-    - case group.type
-    - when :modal
-      = button_tag group.name, class: "btn btn-primary", data: { toggle: "modal", target: "#filterModal" }
+  - dashboard.filter_groups.each_pair do |group_type, filters|
+    - case group_type
+    - when :default
+      = button_tag "筛选", class: "btn btn-primary", data: { toggle: "modal", target: "#filterModal" }
       = render layout: "admin/shared/modal", locals: { id: "filterModal", title: "筛选条件设置" } do
         = search_form_for instance, url: send(dashboard.filter_path), class: "form-horizontal" do |f|
-          - group.filters.each do |filter|
+          - filters.values.each do |filter|
             .form-group
               label.col-md-3.control-label
                 | #{ filter.name }
               - case filter.type
-              - when :eq
-                - case filter.view_display
-                - when :select
-                  .col-md-7 style="padding: 0px"
-                    = f.select filter.predicate, filter.values, { include_blank: true }, class: "form-control"
-                - when :radio
+              - when :select
+                .col-md-7 style="padding: 0px"
+                  = f.select filter.predicate, filter.values, { include_blank: true }, class: "form-control"
+              - when :radio
+                label class="radio-inline"
+                  = f.radio_button filter.predicate, ""
+                  | 全部
+                - filter.values.each_pair do |text, value|
                   label class="radio-inline"
-                    = f.radio_button filter.predicate, ""
-                    | 全部
-                  - filter.values.each_pair do |text, value|
-                    label class="radio-inline"
-                      = f.radio_button filter.predicate, value
-                      | #{ text }
+                    = f.radio_button filter.predicate, value
+                    | #{ text }
 
               - when :time_interval_gt
                 .input-group.col-md-7
@@ -48,7 +46,7 @@
 
     - when :link
       - link_params = {}
-      - group.filters.each do |filter|
+      - filters.values.each do |filter|
         - link_params[filter.predicate] = filter.default_value
 
       = link_to "待推送订单", send(dashboard.filter_path, q: link_params), class: "btn btn-default"

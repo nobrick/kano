@@ -1,25 +1,37 @@
 module AdminScaffold
   class BaseDashboard
     class FiltersManager
-      extend Forwardable
-      def_delegators "@filter_groups[:default]", :time_range, :range, :eq, :time_interval_gt
-
       attr_reader :filter_path, :attributes_manager, :filter_groups
 
       def initialize(attributes_manager, filter_path)
         @attributes_manager = attributes_manager
         @filter_path = filter_path
-        @filter_groups = { default: FiltersGroup.new(@attributes_manager) }
+        @filters = {}
+        @filter_groups = { default: {} }
       end
 
-      def filter_group(group_index, options = {})
-        new_group = FiltersGroup.new(@attributes_manager, options)
-        @filter_groups[group_index] = new_group
-        yield new_group
+      def filter(filter_index)
+        @filters[filter_index]
       end
 
-      def filter_groups
-        @filter_group_values ||= @filter_groups.values
+      def select(attr_index, options = {})
+        define_filter(attr_index, Filter::Select, options)
+      end
+
+      def time_range(attr_index, options = {})
+        define_filter(attr_index, Filter::TimeRange, options)
+      end
+
+      def range(attr_index, options = {})
+        define_filter(attr_index, Filter::Range, options)
+      end
+
+      def radio(attr_index, options = {})
+        define_filter(attr_index, Filter::Radio, options)
+      end
+
+      def time_interval_gt(attr_index, options = {})
+        define_filter(attr_index, Filter::TimeIntervalGt, options)
       end
 
       def has_feedback?(ransack_search)
@@ -38,13 +50,43 @@ module AdminScaffold
         conditions = ransack_search.conditions
         feedback_info = []
         predicates_from_user(conditions).each_pair do |filter_index, predicates|
-          group = filter_groups.find { |group| group.has_filter?(filter_index) }
-          feedback_info << group.filter(filter_index).feedback(predicates)
+          feedback_info << @filters[filter_index].feedback(predicates)
         end
         feedback_info
       end
 
       private
+
+      def define_filter(attr_index, type, options = {})
+        group = options[:group] || :default
+        @filter_groups[group] ||= {}
+        validate!(attr_index, type, group)
+        attribute = @attributes_manager.attribute(attr_index)
+        if type == Filter::TimeRange
+          if attribute.type != Field::DateTime
+            raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be DateTime"
+          end
+        end
+        if type == Filter::Range
+          if attribute.type != Field::Number
+            raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be number"
+          end
+        end
+        filter = type.new(attribute, options)
+        filter_index = attr_index + type.index_suffix
+        @filters[filter_index] = filter
+        @filter_groups[group][filter_index] = filter
+      end
+
+      def validate!(attr_index, type, group)
+        if !attr_exist?(attr_index)
+          raise AdminScaffold::ArgumentError, "#{attr_index}: The Attribute is not defined"
+        end
+        filter_index = attr_index + type.index_suffix
+        if @filter_groups[group].has_key?(filter_index)
+          raise AdminScaffold::ArgumentError, "#{attr_index}: You have defined a same type of filter for this attribute"
+        end
+      end
 
       def filter_index_suffix(predicate)
         case predicate
@@ -57,6 +99,10 @@ module AdminScaffold
         when "time_interval_gt"
           "_time_interval_gt"
         end
+      end
+
+      def attr_exist?(attr_index)
+        @attributes_manager.attr_defined?(attr_index)
       end
 
       # only the filter predicate is allowed to return
@@ -87,7 +133,7 @@ module AdminScaffold
       end
 
       def filter_predicates
-        @filter_predicates ||= @filter_groups.values.map { |group| group.predicates }.flatten.uniq
+        @filter_predicates ||= @filters.values.map { |filter| filter.predicate }.flatten.uniq
       end
     end
   end
