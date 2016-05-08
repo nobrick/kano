@@ -13,7 +13,7 @@ class Withdrawal::VerificationDashboard < AdminScaffold::BaseDashboard
   end
 
   filters("admin_finance_withdrawal_verifications_path") do |f|
-    f.eq "bank_code", display: :select, values: Withdrawal::Banking.bank_codes
+    f.select "bank_code", values: Withdrawal::Banking.bank_codes
     f.time_range "created_at"
     f.range "total"
   end
