@@ -1,4 +1,4 @@
-class UserDashboard < AccountDashboard
+class UserDashboard < AdminScaffold::BaseDashboard
 
   attributes("User") do |d|
     d.string "id"
