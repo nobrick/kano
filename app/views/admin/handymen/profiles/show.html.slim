@@ -1,0 +1,68 @@
+= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{@account.id})", id: "addressEdit"} do
+  = form_for @account, as: :profile, url: admin_handyman_profile_path, html: { class: "form-horizontal" } do |f|
+    .alert.alert-warning.col-md-offset-2.col-md-8
+      strong 注意:
+      | 修改地址会影响管家接收订单
+    .city-group
+      .form-group
+        .col-md-offset-2.col-md-8
+          select.city-select.form-control
+            option value="" - 城市 -
+            = options_for_select(ChinaCity.list('430000'), @city_code )
+      .form-group
+        .col-md-offset-2.col-md-8
+          select.city-select.form-control name="profile[primary_address_attributes][code]"
+            option value="" - 地区 -
+            = options_for_select(ChinaCity.list(@city_code), @district_code)
+    = f.fields_for :primary_address do |fields|
+      .form-group
+        .col-md-offset-2.col-md-8
+          = fields.text_area :content, placeholder: '详细地址', class: "form-control"
+    .form-group
+      .col-md-offset-2.col-md-8
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+= render layout: "admin/shared/modal", locals: { title: "技能管理(ID: #{@account.id})", id: "taxonEdit"} do
+  = form_for @account, as: :profile, url: update_taxons_admin_handyman_profile_path(@account), method: :put, html: { class: "form-horizontal" } do |f|
+    = react_component('Taxons', initial: @account.taxons_redux_state(selected_taxons: :all))
+    .form-group
+      .col-md-offset-2.col-md-8
+        .btn-toolbar.pull-right
+          = f.submit "确定", class: "btn btn-primary"
+          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+
+.tabs.row
+  .col-md-12
+    ul.nav.nav-tabs
+      li.active
+        a href="#"
+          | 个人信息
+      li
+        a href="#"
+          | 订单信息
+      li
+        a href="#"
+          | 财务信息
+
+
+.tabs__content.row
+  .col-md-7
+    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account,  path: admin_handyman_profile_path, attrs: { id: nil, name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit", primary_address: "#addressEdit" }}
+
+
+  .col-md-5
+    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_handyman_account_path }
+
+    .panel.panel-primary
+      .panel-heading
+        | 技能
+      .panel-body
+        - i = 0
+        - @account.taxons.order(:id).each do |t|
+          - i += 1
+          = render partial: "taxon", locals: { taxon: t, index: i, backurl: admin_handyman_account_path(@account) }
+        .col-md-offset-10.col-md-2
+          .pull-right
+            = button_tag "管理技能", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#taxonEdit" }

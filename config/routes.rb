@@ -55,7 +55,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :profiles, only: [:update] do
+        resources :profiles, only: [:update, :show] do
           member do
             put :update_taxons
           end

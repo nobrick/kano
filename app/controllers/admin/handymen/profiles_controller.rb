@@ -1,5 +1,8 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
 
+  def show
+  end
+
   # params:
   #   id: handyman id
   #   profile:
@@ -28,7 +31,7 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     @account.taxons.where(code: codes_to_destroy).destroy_all
     @account.taxons.create(codes_to_create.map { |e| { code: e } })
 
-    redirect_to admin_handyman_account_path(@account), flash: { success: i18n_t('update_success', 'C') }
+    redirect_to admin_handyman_profile_path(@account), flash: { success: i18n_t('update_success', 'C') }
   end
 
   private
