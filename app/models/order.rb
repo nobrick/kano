@@ -10,8 +10,6 @@ class Order < ActiveRecord::Base
   has_one :address, as: :addressable, dependent: :destroy
   has_many :payments
 
-  default_scope { order(updated_at: :desc) }
-
   with_options class_name: 'Payment' do |v|
     v.has_one :valid_payment,
       -> { where("state not in ('void', 'failed')") }
@@ -21,6 +19,8 @@ class Order < ActiveRecord::Base
 
     v.has_one :completed_payment, -> { where(state: 'completed') }
   end
+
+  scope :by_latest_updates, -> { order(updated_at: :desc) }
 
   scope :completed_in_month,
     -> { where('completed_at > ?', Time.now.beginning_of_month) }
