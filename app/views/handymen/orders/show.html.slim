@@ -4,10 +4,7 @@
       .order-details-header-card.mdl-card.mdl-shadow--2dp
         .mdl-card__supporting-text.text-center
           span.h2 = @order.user.full_or_nickname
-          h3 = phone_link_for @order.user,
-              class: 'mdl-button mdl-js-button mdl-button--accent phone-link'
-      .order-details-attributes-card.mdl-card.mdl-shadow--2dp
-        .mdl-card__supporting-text
+        .mdl-card__supporting-text.card-divider
           .card-attr-title
             span.fa-icon
               => fa_icon('location-arrow')
