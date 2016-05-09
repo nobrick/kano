@@ -17,7 +17,7 @@ class OrderDashboard < AdminScaffold::BaseDashboard
     f.time_range "created_at"
     f.time_range "contracted_at"
     f.eq "state", display: :select, values: Order.states
-    f.filter_group("order_for_notify", name: "待推送订单", type: :link) do |g|
+    f.filter_group("order_for_notify", name: "未及时接单", type: :link) do |g|
       g.eq "state", default_value: "requested"
       g.time_interval_gt "created_at", default_value: 15
     end
