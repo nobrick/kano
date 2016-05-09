@@ -20,6 +20,8 @@ class Order < ActiveRecord::Base
     v.has_one :completed_payment, -> { where(state: 'completed') }
   end
 
+  scope :by_latest_updates, -> { order(updated_at: :desc) }
+
   scope :completed_in_month,
     -> { where('completed_at > ?', Time.now.beginning_of_month) }
 

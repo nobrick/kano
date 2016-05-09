@@ -5,7 +5,7 @@ class Admin::OrdersController < Admin::ApplicationController
   def index
     q_params = dashboard.filter_params(params)
     @search = Order.ransack(q_params)
-    @orders =  @search.result.includes(:handyman, :user).page(params[:page]).per(10)
+    @orders =  @search.result.includes(:handyman, :user).page(params[:page]).per(10).by_latest_updates
   end
 
   def search
