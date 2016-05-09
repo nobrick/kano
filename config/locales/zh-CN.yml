@@ -184,6 +184,7 @@ zh-CN:
         nickname: '昵称'
         id: '用户 ID'
         name: '用户姓名'
+        full_or_nickname: '姓名'
         created_at: '注册时间'
         email: '邮箱'
         phone: '手机号码'

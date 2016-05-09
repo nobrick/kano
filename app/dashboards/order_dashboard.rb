@@ -2,7 +2,7 @@ class OrderDashboard < AdminScaffold::BaseDashboard
 
   attributes("Order") do |d|
     d.string "id"
-    d.string "user.name", owner: "User", methods: "user.name"
+    d.string "user.full_or_nickname", owner: "User", methods: "user.full_or_nickname"
     d.string "user.id", owner: "User", methods: "user.id"
     d.date_time "created_at"
     d.string "state", i18n: true
@@ -24,11 +24,18 @@ class OrderDashboard < AdminScaffold::BaseDashboard
   end
 
   search("search_admin_orders_path") do |s|
-    s.cont "handyman.name"
-    s.eq   "handyman.id"
-    s.eq   "id"
-    s.eq   "user.id"
-    s.cont "user.name"
+    s.eq "id"
+    s.eq "user.id"
+    s.eq "handyman.id"
+
+    # FIXME: There is no need to ensure the searching attributes are defined in
+    # the `attributes("Order")` fields, since the latter is only used for
+    # visually displaying explicit columns in the table of the index page.
+    # Therefore we should allow the attributes not explicitly demonstrated in
+    # the model attribute fields for searching purposes.
+
+    # s.eq "user.phone"
+    # s.eq "handyman.phone"
   end
 
   show_page "admin_order_path"
