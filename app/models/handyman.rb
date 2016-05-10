@@ -1,13 +1,11 @@
 class Handyman < Account
-  has_many :orders
+  include OrdersAssociation
+
   has_many :taxons
   has_many :withdrawals
   has_many :balance_records, as: :owner
 
   with_options class_name: 'Order' do |v|
-    v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
-    v.has_many :canceled_orders, -> { where(state: "canceled") }
-    v.has_many :orders_under_processing, -> { where(state: Order::UNDER_PROCESSING_STATES) }
     v.has_many :orders_paid_by_pingpp, -> { paid_by_pingpp }
     v.has_many :orders_paid_in_cash, -> { paid_in_cash }
   end
