@@ -1,5 +1,8 @@
 class Admin::ProfilesController < Admin::ApplicationController
-  before_action :set_account, only: [:update, :show]
+  before_action :set_account
+
+  def show
+  end
 
   # params:
   #   id: account id

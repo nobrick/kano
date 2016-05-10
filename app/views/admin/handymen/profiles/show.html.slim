@@ -57,7 +57,7 @@
         - i = 0
         - @account.taxons.order(:id).each do |t|
           - i += 1
-          = render partial: "taxon", locals: { taxon: t, index: i, backurl: admin_handyman_account_path(@account) }
+          = render partial: "taxon", locals: { taxon: t, index: i, backurl: admin_handyman_profile_path(@account) }
         .col-md-offset-10.col-md-2
           .pull-right
             = button_tag "管理技能", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#taxonEdit" }

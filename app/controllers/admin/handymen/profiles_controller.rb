@@ -1,7 +1,6 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
-
-  def show
-  end
+  before_action :set_account, only: [:update, :show, :update_taxons]
+  before_action :set_address, only: [:show]
 
   # params:
   #   id: handyman id
@@ -44,5 +43,12 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
         :content
       ]
     )
+  end
+
+  def set_address
+    address = @account.primary_address
+    @account.build_primary_address(addressable: @account) if address.blank?
+    @city_code = address.try(:city_code) || '430100'
+    @district_code = address.try(:code)
   end
 end

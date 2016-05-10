@@ -1,4 +1,5 @@
 class Admin::Users::ProfilesController < Admin::ProfilesController
+  before_action :set_account, only: [:update, :show, :set_primary_address]
 
   # params:
   #   id: user id
@@ -29,7 +30,7 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
     else
       flash[:alert] = @account.errors.full_messages
     end
-    redirect_to admin_user_account_path(@account)
+    redirect_to admin_user_profile_path(@account)
   end
 
   private
