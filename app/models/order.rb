@@ -20,6 +20,14 @@ class Order < ActiveRecord::Base
     v.has_one :completed_payment, -> { where(state: 'completed') }
   end
 
+  STATES = %w{ requested contracted payment completed canceled rated reported }
+  ONGOING_STATES = %w{ requested contracted payment }
+  ONGOING_CONTRACTED_STATES = %w{ contracted payment }
+  FINISHED_STATES = %w{ completed rated }
+
+  scope :ongoing, -> { where(state: ONGOING_STATES) }
+  scope :ongoing_contracted, -> { where(state: ONGOING_CONTRACTED_STATES) }
+  scope :finished, -> { where(state: FINISHED_STATES) }
   scope :by_latest_updates, -> { order(updated_at: :desc) }
 
   scope :completed_in_month,
@@ -95,9 +103,6 @@ class Order < ActiveRecord::Base
     v.validate :check_payment_totals
   end
 
-  STATES = %w{ requested contracted payment completed canceled rated reported }
-  FINISHED_STATES = %w{ completed rated }
-  UNDER_PROCESSING_STATES = %w{ contracted payment }
   validates :state, inclusion: { in: STATES }
 
   def self.states
