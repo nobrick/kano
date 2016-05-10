@@ -1,5 +1,4 @@
 class Admin::ProfilesController < Admin::ApplicationController
-  before_action :set_account
 
   def show
   end
