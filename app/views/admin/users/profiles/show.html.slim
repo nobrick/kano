@@ -24,16 +24,11 @@
 
 .tabs.row
   .col-md-12
-    ul.nav.nav-tabs
+    ol.breadcrumb
+      li
+        =link_to "主页", admin_user_account_path(@account)
       li.active
-        a href="#"
-          | 个人信息
-      li
-        a href="#"
-          | 订单信息
-      li
-        a href="#"
-          | 财务信息
+        | 个人资料
 
 
 .tabs__content.row
