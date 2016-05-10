@@ -1,5 +1,5 @@
 class User < Account
-  include OrdersAssociation
+  has_many :orders
 
   def on_wechat?
     provider == 'wechat'

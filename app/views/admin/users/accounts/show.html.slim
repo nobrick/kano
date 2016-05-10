@@ -48,17 +48,17 @@
           .col-md-4
             span.statistics__content-label
               |已完成:
-            |#{ @account.finished_orders.count }
+            |#{ @account.orders.finished.count }
 
           .col-md-4
             span.statistics__content-label
               | 正在进行:
-            |#{ @account.orders_under_processing.count }
+            |#{ @account.orders.ongoing_contracted.count }
 
           .col-md-4
             span.statistics__content-label
               | 已取消:
-            |#{ @account.canceled_orders.count }
+            |#{ @account.orders.canceled.count }
         .statistics__content-row.row
     .row.statistics__more-info
       .col-md-12

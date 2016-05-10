@@ -1,6 +1,5 @@
 class Handyman < Account
-  include OrdersAssociation
-
+  has_many :orders
   has_many :taxons
   has_many :withdrawals
   has_many :balance_records, as: :owner
@@ -86,7 +85,7 @@ class Handyman < Account
 
   def finished_rate
     return "0%" if orders_total == 0
-    "#{ Float(finished_orders.count) / orders_total * 100 }%"
+    "#{ Float(orders.finished.count) / orders_total * 100 }%"
   end
 
   def finished_orders_count_per_day
