@@ -1,1 +1,105 @@
-Statistical Page
+.col-md-10.col-md-offset-1
+  .statistics__element.statistics__element--first
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--green
+          span.glyphicon.glyphicon-user  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{ @account.name }
+          .statistics__footnote
+            | 最近登录时间: 2012-12-12
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |ID:
+            |#{ @account.id }
+          .col-md-5
+            span.statistics__content-label
+              | 手机号码:
+            |#{ @account.phone }
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              | Email:
+            |#{ @account.email }
+    .row.statistics__more-info
+      .col-md-12
+        =link_to "更多信息 》", admin_handyman_profile_path(@account), class: "pull-right"
+
+.col-md-10.col-md-offset-1
+  .statistics__element
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--blue
+          span.glyphicon.glyphicon-wrench  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{@account.orders_total}
+          .statistics__footnote
+            | 订单总数
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |已完成:
+            |#{ @account.finished_orders.count }
+
+          .col-md-4
+            span.statistics__content-label
+              | 正在进行:
+            |#{ @account.orders_under_processing.count }
+
+          .col-md-4
+            span.statistics__content-label
+              | 已取消:
+            |#{ @account.canceled_orders.count }
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              | 完成率:
+            |#{ @account.finished_rate }
+          .col-md-4
+            span.statistics__content-label
+              | 日均完成量:
+            |#{ @account.finished_orders_count_per_day }
+    .row.statistics__more-info
+      .col-md-12
+        a.pull-right href="#"
+          | 更多信息 》
+
+.col-md-10.col-md-offset-1
+  .statistics__element
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--yellow
+          span.glyphicon.glyphicon-yen  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{ @account.balance }
+          .statistics__footnote
+            | 总收益
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              | 现金收益:
+            |#{ @account.cash_total }
+          .col-md-8
+            span.statistics__content-label
+              | 网络支付收益(不含补贴):
+            |#{ @account.online_income_total_without_bonus }
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |补贴收益:
+            |#{ @account.bonus_sum_total }
+          .col-md-4
+            span.statistics__content-label
+              |平均每单收益:
+            |#{ @account.profit_per_order }
+    .row.statistics__more-info
+      .col-md-12
+        a.pull-right href="#"
+          | 更多信息 》

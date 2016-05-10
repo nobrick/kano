@@ -6,6 +6,8 @@ class Handyman < Account
 
   with_options class_name: 'Order' do |v|
     v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
+    v.has_many :canceled_orders, -> { where(state: "canceled") }
+    v.has_many :orders_under_processing, -> { where(state: Order::UNDER_PROCESSING_STATES) }
     v.has_many :orders_paid_by_pingpp, -> { paid_by_pingpp }
     v.has_many :orders_paid_in_cash, -> { paid_in_cash }
   end
@@ -59,12 +61,44 @@ class Handyman < Account
     last_balance_record.try(:balance) || 0
   end
 
+  def bonus_sum_total
+    last_balance_record.try(:bonus_sum_total) || 0
+  end
+
+  def online_income_total
+    last_balance_record.try(:online_income_total)
+  end
+
+  def online_income_total_without_bonus
+    online_income_total - bonus_sum_total
+  end
+
   def cash_total
     last_balance_record.try(:cash_total) || 0
   end
 
   def unfrozen_balance
     Withdrawal.unfrozen_balance_for(self)
+  end
+
+  def profit_per_order
+    return 0 if orders_total == 0
+    balance / orders_total
+  end
+
+  def finished_rate
+    return "0%" if orders_total == 0
+    "#{ Float(finished_orders.count) / orders_total * 100 }%"
+  end
+
+  def finished_orders_count_per_day
+    time_interval = Date.current - created_at.to_date
+    return 0 if time_interval == 0
+    (Float(orders_total) / time_interval).round(3)
+  end
+
+  def orders_total
+    orders.count
   end
 
   private

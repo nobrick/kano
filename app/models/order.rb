@@ -97,6 +97,7 @@ class Order < ActiveRecord::Base
 
   STATES = %w{ requested contracted payment completed canceled rated reported }
   FINISHED_STATES = %w{ completed rated }
+  UNDER_PROCESSING_STATES = %w{ contracted payment }
   validates :state, inclusion: { in: STATES }
 
   def self.states
