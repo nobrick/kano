@@ -63,7 +63,7 @@ class Handyman < Account
   end
 
   def online_income_total
-    last_balance_record.try(:online_income_total)
+    last_balance_record.try(:online_income_total) || 0
   end
 
   def online_income_total_without_bonus
