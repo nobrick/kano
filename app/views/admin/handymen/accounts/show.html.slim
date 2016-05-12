@@ -70,8 +70,7 @@
             |#{ finished_orders_count_per_day(@account) }
     .row.statistics__more-info
       .col-md-12
-        a.pull-right href="#"
-          | 更多信息 》
+        = link_to "更多信息 》", admin_handyman_orders_path(handyman_id: @account), class: "pull-right"
 
 .col-md-10.col-md-offset-1
   .statistics__element

@@ -60,6 +60,8 @@ Rails.application.routes.draw do
             put :update_taxons
           end
         end
+
+        resources :orders, only: [:index]
       end
 
       namespace :users, as: :user do
