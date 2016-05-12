@@ -150,7 +150,7 @@ zh-CN:
       payment: '支付信息'
       withdrawal: '提现申请'
     attributes:
-      certified_by:
+      admin:
         name: '认证人'
       account:
         username: '用户名'

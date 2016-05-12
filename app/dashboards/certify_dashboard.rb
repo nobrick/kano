@@ -7,7 +7,7 @@ class CertifyDashboard < AdminScaffold::BaseDashboard
     d.date_time "cert_requested_at"
     d.string "certified_status", i18n: true
     d.date_time "certified_at"
-    d.string "certified_by.name", owner: "Certified_by", methods: "certified_by.name"
+    d.string "certified_by.name", owner: "Admin", methods: "certified_by.name"
     d.expand "certify_buttons", partial_path: "admin/handymen/certifications"
   end
 
