@@ -5,8 +5,8 @@ class User::OrderDashboard < AdminScaffold::BaseDashboard
     d.date_time "created_at"
     d.string "state", i18n: true
     d.date_time "contracted_at"
-    d.string "user.full_or_nickname", owner: "User", methods: "user.full_or_nickname"
-    d.string "user.id", owner: "User", methods: "user.id"
+    d.string "handyman.name", owner: "Handyman", methods: "handyman.name"
+    d.string "handyman.id", owner: "Handyman", methods: "handyman.id"
     d.date_time "completed_at"
     d.date_time "canceled_at"
   end
