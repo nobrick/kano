@@ -4,4 +4,3 @@ ol.breadcrumb.row
   li.active
     | 订单信息
 = render partial: 'admin/shared/dashboard/index', locals: { resources: @orders, dashboard: dashboard, instance: @search, filter_path_query: { handyman_id: @handyman.id }}
-

@@ -77,6 +77,8 @@ Rails.application.routes.draw do
             post :set_primary_address
           end
         end
+
+        resources :orders, only: [:index]
       end
 
       namespace :managers, as: :manager do

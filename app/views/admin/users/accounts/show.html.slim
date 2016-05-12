@@ -62,7 +62,4 @@
         .statistics__content-row.row
     .row.statistics__more-info
       .col-md-12
-        a.pull-right href="#"
-          | 更多信息 》
-
-
+        = link_to "更多信息 》", admin_user_orders_path(user_id: @account), class: "pull-right"
