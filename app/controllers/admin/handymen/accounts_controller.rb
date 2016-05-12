@@ -1,5 +1,5 @@
 class Admin::Handymen::AccountsController < Admin::AccountsController
-
+  helper "admin/handymen/accounts"
   helper_method :dashboard, :tabs_info
 
   private

@@ -78,26 +78,6 @@ class Handyman < Account
     Withdrawal.unfrozen_balance_for(self)
   end
 
-  def profit_per_order
-    return 0 if orders_total == 0
-    balance / orders_total
-  end
-
-  def finished_rate
-    return "0%" if orders_total == 0
-    "#{ Float(orders.finished.count) / orders_total * 100 }%"
-  end
-
-  def finished_orders_count_per_day
-    time_interval = Date.current - created_at.to_date
-    return 0 if time_interval == 0
-    (Float(orders_total) / time_interval).round(3)
-  end
-
-  def orders_total
-    orders.count
-  end
-
   private
 
   def taxons_presence

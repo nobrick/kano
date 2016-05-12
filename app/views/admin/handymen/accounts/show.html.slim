@@ -40,7 +40,7 @@
           span.glyphicon.glyphicon-wrench  aria-hidden="true"
         .statistics__title
           .statistics__text
-            |#{@account.orders_total}
+            |#{@account.orders.count}
           .statistics__footnote
             | 订单总数
       .col-md-7
@@ -63,11 +63,11 @@
           .col-md-4
             span.statistics__content-label
               | 完成率:
-            |#{ @account.finished_rate }
+            |#{ finished_rate(@account) }
           .col-md-4
             span.statistics__content-label
               | 日均完成量:
-            |#{ @account.finished_orders_count_per_day }
+            |#{ finished_orders_count_per_day(@account) }
     .row.statistics__more-info
       .col-md-12
         a.pull-right href="#"
@@ -102,7 +102,7 @@
           .col-md-4
             span.statistics__content-label
               |平均每单收益:
-            |#{ @account.profit_per_order }
+            |#{ profit_per_order(@account) }
     .row.statistics__more-info
       .col-md-12
         a.pull-right href="#"
