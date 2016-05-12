@@ -5,6 +5,8 @@
       = button_tag group.name, class: "btn btn-primary", data: { toggle: "modal", target: "#filterModal" }
       = render layout: "admin/shared/modal", locals: { id: "filterModal", title: "筛选条件设置" } do
         = search_form_for instance, url: send(dashboard.filter_path), class: "form-horizontal" do |f|
+          - filter_path_query.each_pair do |param_name, param_value|
+            = hidden_field_tag(param_name, param_value)
           - group.filters.each do |filter|
             .form-group
               label.col-md-3.control-label
