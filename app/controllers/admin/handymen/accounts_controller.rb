@@ -1,17 +1,8 @@
 class Admin::Handymen::AccountsController < Admin::AccountsController
-
+  helper "admin/handymen/accounts"
   helper_method :dashboard, :tabs_info
 
-  before_action :set_address, only: [:show]
-
   private
-
-  def set_address
-    address = @account.primary_address
-    @account.build_primary_address(addressable: @account) if address.blank?
-    @city_code = address.try(:city_code) || '430100'
-    @district_code = address.try(:code)
-  end
 
   def dashboard
     @dashboard ||= HandymanDashboard.new
@@ -29,5 +20,4 @@ class Admin::Handymen::AccountsController < Admin::AccountsController
       }
     ]
   end
-
 end

@@ -1,75 +1,68 @@
-= render layout: "admin/shared/modal", locals: { title: "创建新地址", id: "addressCreate"} do
-  = form_for :address, url: admin_user_profile_addresses_path(@account), html: { class: "form-horizontal" } do |f|
-    .city-group
-      .form-group
-        .col-md-offset-2.col-md-8
-          select.city-select.form-control
-            option value="" - 城市 -
-            = options_for_select(ChinaCity.list('430000'), '430100' )
-      .form-group
-        .col-md-offset-2.col-md-8
-          select.city-select.form-control name="address[code]"
-            option value="" - 地区 -
-            = options_for_select(ChinaCity.list('430100'))
-    .form-group
-      .col-md-offset-2.col-md-8
-        = f.text_area :content, placeholder: '详细地址', class: "form-control"
-    .form-group
-      .col-md-offset-2.col-md-8
-        .btn-toolbar.pull-right
-          = f.submit "确定", class: "btn btn-primary"
-          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+.col-md-10.col-md-offset-1
+  .statistics__element.statistics__element--first
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--green
+          span.glyphicon.glyphicon-user  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{ @account.full_or_nickname }
+          .statistics__footnote
+            - current_sign_in_at = @account.current_sign_in_at
+            - text = '未登录过'
+            - if current_sign_in_at
+              - text = l(current_sign_in_at, format: :long)
+            | 最近登录时间: #{ text }
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |用户 ID:
+            |#{ @account.id }
+          .col-md-5
+            span.statistics__content-label
+              | 手机号码:
+            |#{ @account.phone }
+        .statistics__content-row.row
+          .col-md-6
+            span.statistics__content-label
+              | Email:
+            |#{ @account.email }
+    .row.statistics__more-info
+      .col-md-12
+        =link_to "更多信息 》", admin_user_profile_path(@account), class: "pull-right"
 
-= render partial: 'admin/shared/accounts/address_modal', locals: { title: "编辑地址" }
+.col-md-10.col-md-offset-1
+  .statistics__element
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--blue
+          span.glyphicon.glyphicon-wrench  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{@account.orders.count}
+          .statistics__footnote
+            | 下单总数
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |已完成:
+            |#{ @account.orders.finished.count }
 
-.tabs.row
-  .col-md-12
-    ul.nav.nav-tabs
-      li.active
-        a href="#"
-          | 个人信息
-      li
-        a href="#"
-          | 订单信息
-      li
-        a href="#"
-          | 财务信息
+          .col-md-4
+            span.statistics__content-label
+              | 正在进行:
+            |#{ @account.orders.ongoing_contracted.count }
 
+          .col-md-4
+            span.statistics__content-label
+              | 已取消:
+            |#{ @account.orders.canceled.count }
+        .statistics__content-row.row
+    .row.statistics__more-info
+      .col-md-12
+        a.pull-right href="#"
+          | 更多信息 》
 
-.tabs__content.row
-  .col-md-7
-    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account, path: admin_user_profile_path, attrs: { name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit" }}
-
-
-  .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_user_account_path }
-
-    .panel.panel-primary
-      .panel-heading
-        | 地址管理
-      .panel-body
-        - i = 0
-        - @account.addresses.order(:id).each do |address|
-          dl.address
-            dt
-              | 地址 #{ i += 1 }
-              - if address.primary?
-                span.label.label-warning.address__label
-                  | 默认地址
-            dd.col-md-8
-              | #{address}
-            .col-md-4
-              .btn-toolbar.pull-right
-                = button_tag "编辑", class: "btn btn-primary btn-xs", data: { toggle: "modal", target: "#js-addressEdit", city_code: address.city_code, district_code: address.code, content: address.content, url: admin_user_address_path(address) }
-                = link_to "删除", admin_user_address_path(address),
-                class: "btn btn-danger btn-xs",
-                method: :delete,
-                data: { confirm: "你是否确认删除该地址" }
-            = form_tag set_primary_address_admin_user_profile_path(@account), class: "col-md-12"
-              = hidden_field_tag 'address_id', address.id
-              = button_tag "设为默认", class: " address__link"
-
-        .col-md-offset-10.col-md-2
-          .pull-right
-            = button_tag "创建地址", class: "btn btn-primary", data: { toggle: "modal", target: "#addressCreate" }
 

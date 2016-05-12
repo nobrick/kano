@@ -1,68 +1,109 @@
-= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{@account.id})", id: "addressEdit"} do
-  = form_for @account, as: :profile, url: admin_handyman_profile_path, html: { class: "form-horizontal" } do |f|
-    .alert.alert-warning.col-md-offset-2.col-md-8
-      strong 注意:
-      | 修改地址会影响管家接收订单
-    .city-group
-      .form-group
-        .col-md-offset-2.col-md-8
-          select.city-select.form-control
-            option value="" - 城市 -
-            = options_for_select(ChinaCity.list('430000'), @city_code )
-      .form-group
-        .col-md-offset-2.col-md-8
-          select.city-select.form-control name="profile[primary_address_attributes][code]"
-            option value="" - 地区 -
-            = options_for_select(ChinaCity.list(@city_code), @district_code)
-    = f.fields_for :primary_address do |fields|
-      .form-group
-        .col-md-offset-2.col-md-8
-          = fields.text_area :content, placeholder: '详细地址', class: "form-control"
-    .form-group
-      .col-md-offset-2.col-md-8
-        .btn-toolbar.pull-right
-          = f.submit "确定", class: "btn btn-primary"
-          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+.col-md-10.col-md-offset-1
+  .statistics__element.statistics__element--first
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--green
+          span.glyphicon.glyphicon-user  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{ @account.name }
+          .statistics__footnote
+            - current_sign_in_at = @account.current_sign_in_at
+            - text = '未登录过'
+            - if current_sign_in_at
+              - text = l(current_sign_in_at, format: :long)
+            | 最近登录时间: #{ text }
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |ID:
+            |#{ @account.id }
+          .col-md-5
+            span.statistics__content-label
+              | 手机号码:
+            |#{ @account.phone }
+        .statistics__content-row.row
+          .col-md-6
+            span.statistics__content-label
+              | Email:
+            |#{ @account.email }
+    .row.statistics__more-info
+      .col-md-12
+        =link_to "更多信息 》", admin_handyman_profile_path(@account), class: "pull-right"
 
-= render layout: "admin/shared/modal", locals: { title: "技能管理(ID: #{@account.id})", id: "taxonEdit"} do
-  = form_for @account, as: :profile, url: update_taxons_admin_handyman_profile_path(@account), method: :put, html: { class: "form-horizontal" } do |f|
-    = react_component('Taxons', initial: @account.taxons_redux_state(selected_taxons: :all))
-    .form-group
-      .col-md-offset-2.col-md-8
-        .btn-toolbar.pull-right
-          = f.submit "确定", class: "btn btn-primary"
-          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
+.col-md-10.col-md-offset-1
+  .statistics__element
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--blue
+          span.glyphicon.glyphicon-wrench  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{@account.orders.count}
+          .statistics__footnote
+            | 订单总数
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |已完成:
+            |#{ @account.orders.finished.count }
 
-.tabs.row
-  .col-md-12
-    ul.nav.nav-tabs
-      li.active
-        a href="#"
-          | 个人信息
-      li
-        a href="#"
-          | 订单信息
-      li
-        a href="#"
-          | 财务信息
+          .col-md-4
+            span.statistics__content-label
+              | 正在进行:
+            |#{ @account.orders.ongoing_contracted.count }
 
+          .col-md-4
+            span.statistics__content-label
+              | 已取消:
+            |#{ @account.orders.canceled.count }
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              | 完成率:
+            |#{ finished_rate(@account) }
+          .col-md-4
+            span.statistics__content-label
+              | 日均完成量:
+            |#{ finished_orders_count_per_day(@account) }
+    .row.statistics__more-info
+      .col-md-12
+        a.pull-right href="#"
+          | 更多信息 》
 
-.tabs__content.row
-  .col-md-7
-    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account,  path: admin_handyman_profile_path, attrs: { id: nil, name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit", primary_address: "#addressEdit" }}
-
-
-  .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_handyman_account_path }
-
-    .panel.panel-primary
-      .panel-heading
-        | 技能
-      .panel-body
-        - i = 0
-        - @account.taxons.order(:id).each do |t|
-          - i += 1
-          = render partial: "taxon", locals: { taxon: t, index: i, backurl: admin_handyman_account_path(@account) }
-        .col-md-offset-10.col-md-2
-          .pull-right
-            = button_tag "管理技能", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#taxonEdit" }
+.col-md-10.col-md-offset-1
+  .statistics__element
+    .row
+      .col-md-5
+        .statistics__icon.statistics__icon--yellow
+          span.glyphicon.glyphicon-yen  aria-hidden="true"
+        .statistics__title
+          .statistics__text
+            |#{ @account.balance }
+          .statistics__footnote
+            | 总收益
+      .col-md-7
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              | 现金收益:
+            |#{ @account.cash_total }
+          .col-md-8
+            span.statistics__content-label
+              | 网络支付收益(不含补贴):
+            |#{ @account.online_income_total_without_bonus }
+        .statistics__content-row.row
+          .col-md-4
+            span.statistics__content-label
+              |补贴收益:
+            |#{ @account.bonus_sum_total }
+          .col-md-4
+            span.statistics__content-label
+              |平均每单收益:
+            |#{ profit_per_order(@account) }
+    .row.statistics__more-info
+      .col-md-12
+        a.pull-right href="#"
+          | 更多信息 》

@@ -55,7 +55,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :profiles, only: [:update] do
+        resources :profiles, only: [:update, :show] do
           member do
             put :update_taxons
           end
@@ -69,7 +69,7 @@ Rails.application.routes.draw do
           end
         end
 
-        resources :profiles, only: [:update], shallow: true do
+        resources :profiles, only: [:update, :show], shallow: true do
           resources :addresses, only: [:create, :update, :destroy]
           member do
             post :set_primary_address

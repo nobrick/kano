@@ -36,7 +36,7 @@ class Admin::AccountsController < Admin::ApplicationController
 
   def redirect_path
     account_type = @account.type.downcase
-    send("admin_#{account_type}_account_path", @account)
+    send("admin_#{account_type}_profile_path", @account)
   end
 
   def set_account

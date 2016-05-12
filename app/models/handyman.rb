@@ -5,7 +5,6 @@ class Handyman < Account
   has_many :balance_records, as: :owner
 
   with_options class_name: 'Order' do |v|
-    v.has_many :finished_orders, -> { where(state: Order::FINISHED_STATES) }
     v.has_many :orders_paid_by_pingpp, -> { paid_by_pingpp }
     v.has_many :orders_paid_in_cash, -> { paid_in_cash }
   end
@@ -57,6 +56,18 @@ class Handyman < Account
 
   def balance
     last_balance_record.try(:balance) || 0
+  end
+
+  def bonus_sum_total
+    last_balance_record.try(:bonus_sum_total) || 0
+  end
+
+  def online_income_total
+    last_balance_record.try(:online_income_total) || 0
+  end
+
+  def online_income_total_without_bonus
+    online_income_total - bonus_sum_total
   end
 
   def cash_total

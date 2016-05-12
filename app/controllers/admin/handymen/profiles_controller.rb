@@ -1,4 +1,6 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
+  before_action :set_account, only: [:update, :show, :update_taxons]
+  before_action :set_address, only: [:show]
 
   # params:
   #   id: handyman id
@@ -28,7 +30,7 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     @account.taxons.where(code: codes_to_destroy).destroy_all
     @account.taxons.create(codes_to_create.map { |e| { code: e } })
 
-    redirect_to admin_handyman_account_path(@account), flash: { success: i18n_t('update_success', 'C') }
+    redirect_to admin_handyman_profile_path(@account), flash: { success: i18n_t('update_success', 'C') }
   end
 
   private
@@ -41,5 +43,12 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
         :content
       ]
     )
+  end
+
+  def set_address
+    address = @account.primary_address
+    @account.build_primary_address(addressable: @account) if address.blank?
+    @city_code = address.try(:city_code) || '430100'
+    @district_code = address.try(:code)
   end
 end

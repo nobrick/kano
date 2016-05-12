@@ -13,7 +13,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
       flash[:alert] = address.errors.full_messages
     end
 
-    redirect_to admin_user_account_path(user)
+    redirect_to admin_user_profile_path(user)
   end
 
   def update
@@ -24,7 +24,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
       flash[:alert] = @address.errors.full_messages
     end
 
-    redirect_to admin_user_account_path(@address.addressable)
+    redirect_to admin_user_profile_path(@address.addressable)
   end
 
   def destroy
@@ -34,7 +34,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
       flash[:alert] = @address.errors.full_messages
     end
 
-    redirect_to admin_user_account_path(@address.addressable)
+    redirect_to admin_user_profile_path(@address.addressable)
   end
 
   private
