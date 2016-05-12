@@ -55,5 +55,5 @@
 
       = link_to "未及时接单", send(dashboard.filter_path, q: link_params), class: "btn btn-default"
 
-  = link_to "重置", send(dashboard.filter_path), class: "btn btn-default"
+  = link_to "重置", send(dashboard.filter_path, filter_path_query), class: "btn btn-default"
 
