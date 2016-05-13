@@ -60,6 +60,8 @@ Rails.application.routes.draw do
             put :update_taxons
           end
         end
+
+        resources :orders, only: [:index]
       end
 
       namespace :users, as: :user do
@@ -75,6 +77,8 @@ Rails.application.routes.draw do
             post :set_primary_address
           end
         end
+
+        resources :orders, only: [:index]
       end
 
       namespace :managers, as: :manager do
