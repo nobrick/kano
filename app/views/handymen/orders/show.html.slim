@@ -32,6 +32,12 @@
               => fa_icon('tag')
               ' 维修项目
           p = @order.taxon_name
+        .mdl-card__supporting-text.card-divider
+          .card-attr-title
+            span.fa-icon
+              => fa_icon('bars')
+            ' 订单编号
+          p = @order.id
         = link_to [ :handyman, @order ], method: :put,
           id: 'contract-order-btn',
           class: 'mdl-button mdl-js-button mdl-button--accent' do
