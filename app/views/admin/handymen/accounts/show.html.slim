@@ -6,7 +6,7 @@
           span.glyphicon.glyphicon-user  aria-hidden="true"
         .statistics__title
           .statistics__text
-            |#{ @account.name }
+            |#{ @account.full_or_nickname }
           .statistics__footnote
             - current_sign_in_at = @account.current_sign_in_at
             - text = '未登录过'
