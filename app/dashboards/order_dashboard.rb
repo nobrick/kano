@@ -2,20 +2,20 @@ class OrderDashboard < AdminScaffold::BaseDashboard
 
   attributes("Order") do |d|
     d.string "id"
+    d.string "taxon_code", methods: "taxon_name"
     d.string "user.full_or_nickname", owner: "User", methods: "user.full_or_nickname"
     d.string "user.id", owner: "User", methods: "user.id"
     d.date_time "created_at"
+    d.date_time "arrives_at"
     d.string "state", i18n: true
     d.string "handyman.name", owner: "Handyman", methods: "handyman.name"
     d.string "handyman.id", owner: "Handyman", methods: "handyman.id"
-    d.date_time "contracted_at"
     d.date_time "completed_at"
-    d.date_time "canceled_at"
   end
 
   filters("admin_orders_path") do |f|
     f.time_range "created_at"
-    f.time_range "contracted_at"
+    f.time_range "arrives_at"
     f.eq "state", display: :select, values: Order.states
     f.filter_group("order_for_notify", name: "未及时接单", type: :link) do |g|
       g.eq "state", default_value: "requested"
