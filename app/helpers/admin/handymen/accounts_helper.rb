@@ -3,7 +3,7 @@ module Admin::Handymen::AccountsHelper
     orders_total = handyman.orders.count
     return "0%" if orders_total == 0
     finished_orders_total = handyman.orders.finished.count
-    "#{ Float(finished_orders_total) / orders_total * 100 }%"
+    "#{ (Float(finished_orders_total) / orders_total * 100).round(3) }%"
   end
 
   def finished_orders_count_per_day(handyman)
@@ -14,6 +14,6 @@ module Admin::Handymen::AccountsHelper
 
   def profit_per_order(handyman)
     return 0 if handyman.orders.count == 0
-    handyman.balance / handyman.orders.count
+    (handyman.balance / handyman.orders.count).round(3)
   end
 end
