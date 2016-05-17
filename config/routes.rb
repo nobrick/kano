@@ -126,6 +126,7 @@ Rails.application.routes.draw do
 
   root 'guides#index'
   get 'home/index'
+  get 'home/terms'
   get 'guides/index'
 
   with_options constraints: ScopeRecognizer.new(:user), to: 'guides#index' do |v|
