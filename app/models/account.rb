@@ -1,5 +1,5 @@
 class Account < ActiveRecord::Base
-  include Redis::Objects
+  include WithRedisObjects
   include IdRandomizable
 
   devise :database_authenticatable,

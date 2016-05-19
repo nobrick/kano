@@ -1,6 +1,6 @@
 class Payment < ActiveRecord::Base
   include AASM
-  include Redis::Objects
+  include WithRedisObjects
   include IdRandomizable
 
   belongs_to :order, touch: true

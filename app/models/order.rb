@@ -1,7 +1,7 @@
 class Order < ActiveRecord::Base
   include AASM
   include AASM::Helper
-  include Redis::Objects
+  include WithRedisObjects
   include IdRandomizable
 
   belongs_to :user
