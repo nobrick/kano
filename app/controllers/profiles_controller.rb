@@ -37,8 +37,8 @@ class ProfilesController < ApplicationController
   def set_address
     address = @account.primary_address
     @account.build_primary_address(addressable: @account) if address.blank?
-    @city_code = address.try(:city_code) || '430100'
-    @district_code = address.try(:code)
+    @city_code = address.try(:city_code) || '431000'
+    @district_code = address.try(:code) || '431001'
   end
 
   def profile_params

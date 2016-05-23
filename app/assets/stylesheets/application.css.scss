@@ -325,6 +325,12 @@ select.select-block.select-block-fullwidth {
 }
 
 .login-page, .signup-page {
+  .divider {
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 10px;
+    margin-bottom: 30px;
+  }
+
   text-align: center;
   padding: 1px 0 45px;
   form {

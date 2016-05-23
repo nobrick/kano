@@ -5,6 +5,12 @@
       span 完善个人资料
     = render 'shared/error_messages', model: @account
     = form_for(@account, as: :profile, url: handyman_profile_path, class: 'form-horizontal') do |f|
+      p.notie 您可直接联系我们并告知您的ID
+      p.notie
+        span ID：
+        span
+          strong = @account.id
+      .divider
       - if @account.name_was.blank?
         .form-group
           = f.text_field :name, placeholder: '您的姓名',
@@ -23,4 +29,4 @@
       = react_component('Taxons', initial: @account.taxons_redux_state)
       = hidden_field_tag 'view_action', @view_action
       div
-        = f.submit '完成', class: 'btn btn-blue t-input'
+        = f.submit '提交', class: 'btn btn-blue t-input'
