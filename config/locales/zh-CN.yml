@@ -104,6 +104,7 @@ zh-CN:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
+      request_failure: '请求失败'
     handymen/withdrawals:
       requested: '提现已申请'
     handymen/registrations:
