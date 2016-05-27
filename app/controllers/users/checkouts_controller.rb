@@ -1,14 +1,10 @@
 class Users::CheckoutsController < ApplicationController
+  around_action :serializable, only: [ :create, :update ]
   before_action :set_order, only: [ :create, :update ]
   before_action :check_order_permission, only: [ :create, :update ]
 
   # POST /orders/:id/checkout
   def create
-    @order.assign_attributes(order_params)
-    unless sync_from_user_total
-      redirect_to [ :user, @order ],
-        notice: t('.total_incorrect') and return false
-    end
     in_cash? ? pay_in_cash : pay_in_wechat
   end
 
@@ -30,6 +26,19 @@ class Users::CheckoutsController < ApplicationController
 
   private
 
+  def changeset
+    @order.assign_attributes(order_params)
+    unless sync_from_user_total
+      redirect_to [ :user, @order ], notice: t('.total_incorrect')
+      return false
+    end
+    true
+  end
+
+  def serializable
+    Order.serializable(max_retries: 2) { yield }
+  end
+
   def sync_from_user_total
     options = {}
     options[:reset_bonus] = true if in_cash?
@@ -47,8 +56,9 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def pay_in_cash
+    return unless changeset
     set_payment('cash')
-    if @payment.complete && @payment.save
+    if @payment.may_complete? && @payment.complete && @payment.save
       notify_wechat_accounts
       redirect_to [ :user, @order ], notice: t('.payment_success')
     else
@@ -57,13 +67,14 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def pay_in_wechat
+    return unless changeset
     unless wechat_request? || debug_wechat?
       message = t('.should_pay_in_wechat_client')
       redirect_to [ :user, @order ], notice: message and return false
     end
 
     set_payment('pingpp_wx_pub')
-    if @payment.checkout && @payment.save
+    if @payment.may_checkout? && @payment.checkout && @payment.save
       redirect_to [ :user, @order ]
     else
       redirect_to [ :user, @order ], alert: failure_message
