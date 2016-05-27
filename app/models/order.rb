@@ -3,6 +3,7 @@ class Order < ActiveRecord::Base
   include AASM::Helper
   include WithRedisObjects
   include IdRandomizable
+  include Serializable
 
   belongs_to :user
   belongs_to :handyman
@@ -282,8 +283,11 @@ class Order < ActiveRecord::Base
   end
 
   def save_with_user_phone(phone)
+    return false if phone.nil?
     return save if user.phone == phone && user.phone_verified?
-    transaction { user.update!(phone: phone) if save }
+    serializable(nested_behaviour: :transaction) do
+      user.update!(phone: phone) if save
+    end
   rescue ActiveRecord::RecordInvalid
     user.errors.each { |a, e| errors.add a, e }
     false
