@@ -102,13 +102,13 @@ class Users::OrdersController < ApplicationController
     sent_times = current_user.phone_vcode_sent_times_in_hour
     case
     when @phone.blank?
-      errors.add(:base, '手机号码为空')
+      errors.add(:base, t('.phone.blank'))
     when vcode_sent.nil? && sent_times < 3
-      errors.add(:base, '请您重新发送手机验证码')
+      errors.add(:base, t('.phone.resend'))
     when vcode_sent.nil?
-      errors.add(:base, '暂时无法发送验证码，请稍后再试')
+      errors.add(:base, t('.phone.unavailable'))
     when @vcode != vcode_sent
-      errors.add(:base, '手机验证码错误')
+      errors.add(:base, t('.phone.invalid'))
     end
   end
 

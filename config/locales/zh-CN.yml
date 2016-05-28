@@ -85,6 +85,11 @@ zh-CN:
       order_success: '下单成功'
       cancel_order_success: '订单已取消'
       cancel_order_failure: '取消订单失败'
+      phone:
+        blank: '手机号码为空'
+        resend: '请您重新发送手机验证码'
+        unavailable: '暂时无法发送验证码，请稍后再试'
+        invalid: '手机验证码无效'
     users/checkouts:
       total_incorrect: '请您输入正确的金额'
       payment_success: '支付成功'
