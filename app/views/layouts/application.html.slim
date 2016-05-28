@@ -37,8 +37,6 @@ html
                 - elsif user_signed_in?
                   = link_to t(:sign_out), destroy_account_session_path, method: :delete
                 - else
-                  li = link_to '加盟管家', new_handyman_registration_path
-                  li = link_to t(:sign_up), new_user_registration_path
                   li = link_to t(:sign_in), new_account_session_path
     .main
       - if content_for?(:container)
