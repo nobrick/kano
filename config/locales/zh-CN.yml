@@ -95,6 +95,8 @@ zh-CN:
       should_pay_in_wechat_client: '请在微信客户端中完成支付'
       unknown_failure: '未知错误'
       request_failure: '请求失败'
+    users/registrations:
+      closed:  '当前未开放网站注册，请您关注大象管家微信公众号'
     handymen/order_contracts:
       order_not_exist: '订单不存在'
     handymen/orders:
@@ -103,6 +105,8 @@ zh-CN:
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
     handymen/withdrawals:
       requested: '提现已申请'
+    handymen/registrations:
+      closed:  '当前未开放网站注册，请您关注大象管家师傅端微信公众号'
     admin/handymen/certifications:
       certify_success: '审核成功'
       certify_failure: '审核失败: %{reasons}'
