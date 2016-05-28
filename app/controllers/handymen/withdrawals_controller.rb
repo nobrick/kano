@@ -23,7 +23,7 @@ class Handymen::WithdrawalsController < ApplicationController
   # POST /withdrawals
   def create
     @withdrawal = current_handyman.withdrawals.build(withdrawal_params)
-    if @withdrawal.request && @withdrawal.save
+    if @withdrawal.serializable_trigger(:request, :save, {})
       redirect_to handyman_withdrawals_url, notice: t('.requested')
     else
       set_withdrwal_info

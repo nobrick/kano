@@ -1,7 +1,7 @@
 class Withdrawal < ActiveRecord::Base
   include AASM
   include AASM::Helper
-
+  include Serializable
   acts_as_xlsx
 
   belongs_to :handyman
