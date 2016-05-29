@@ -8,6 +8,7 @@ module HandymanWechatApi
                     :access_token,
                     :token,
                     :jsapi_ticket,
+                    :host,
                     :timeout
 
     def initialize
@@ -18,6 +19,7 @@ module HandymanWechatApi
       config.access_token = data['access_token']
       config.token = data['token']
       config.jsapi_ticket = data['jsapi_ticket']
+      config.host = 'benxiangguanjia.com'
       config.timeout = 20
     end
   end
