@@ -75,9 +75,10 @@ class ApplicationController < ActionController::Base
   end
 
   def set_return_path
-    unless devise_controller? || request.xhr? || !request.get?
-      session['return_to'] = request.url
-    end
+    return if devise_controller? || request.xhr? || !request.get?
+    excluding_paths = [ root_path, guides_index_path, handymen_path ]
+    return if excluding_paths.include? request.path
+    session['return_to'] = request.url
   end
 
   def set_gon_data
