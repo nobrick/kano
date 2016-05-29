@@ -11,7 +11,8 @@ module UserWechatApi
 
       def with_url(payload, order)
         helpers = Rails.application.routes.url_helpers
-        url = helpers.user_order_url(order, host: 'daxiangguanjia.com')
+        host = 'daxiangguanjia.com'
+        url = helpers.user_order_url(order, host: host, sc: 'user')
         payload.merge(url: url)
       end
     end

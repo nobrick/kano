@@ -73,7 +73,8 @@ module HandymanWechatApi
 
       def with_url(payload, order)
         helpers = Rails.application.routes.url_helpers
-        url = helpers.handyman_contract_url(order, host: config.host)
+        opts = { host: config.host, sc: 'handyman' }
+        url = helpers.handyman_contract_url(order, opts)
         payload.merge(url: url)
       end
     end
