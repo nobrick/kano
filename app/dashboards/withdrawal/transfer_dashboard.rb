@@ -3,7 +3,7 @@ class Withdrawal::TransferDashboard < AdminScaffold::BaseDashboard
   attributes("Withdrawal") do |d|
     d.string "id"
     d.string "handyman.name", owner: "Handyman", methods: "handyman.name"
-    d.string "handyman.id", owner: "Handyman", mehtods: "handyman.id"
+    d.string "handyman.id", owner: "Handyman", methods: "handyman.id"
     d.string "bank_code", i18n: true
     d.string "account_no"
     d.number "total"

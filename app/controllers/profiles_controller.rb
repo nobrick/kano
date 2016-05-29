@@ -1,5 +1,5 @@
 class ProfilesController < ApplicationController
-  # For filling up additional necessary account infomation after sign up.
+  around_action :serializable, only: [ :update ]
   before_action :set_account
   before_action :set_address, only: [ :complete ]
 
@@ -39,6 +39,10 @@ class ProfilesController < ApplicationController
     @account.build_primary_address(addressable: @account) if address.blank?
     @city_code = address.try(:city_code) || '431000'
     @district_code = address.try(:code) || '431001'
+  end
+
+  def serializable
+    Account.serializable { yield }
   end
 
   def profile_params

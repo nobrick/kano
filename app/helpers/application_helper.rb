@@ -13,7 +13,9 @@ module ApplicationHelper
 
   def display_navbar?
     if user_signed_in?
-      return true if current_user.orders.present?
+      return true if @order.try(:user) == current_user
+      orders = @orders || current_user.orders
+      return true if orders.present?
     elsif handyman_signed_in?
       account = current_handyman
       return account.completed_info? && account.certified?

@@ -1,6 +1,4 @@
 class Users::OrdersController < ApplicationController
-  before_action :set_order, only: [ :show, :charge, :cancel ]
-  before_action :set_phone_and_vcode, only: [ :new, :create ]
   before_action :gray_background, only: [ :show ]
 
   # GET /orders
@@ -13,7 +11,7 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id
   def show
-    fallback_redirect and return unless @order
+    fallback_redirect and return unless set_order
     if wechat_request? || debug_wechat?
       url = request.original_url
       gon.push(auth_client(url))
@@ -24,6 +22,7 @@ class Users::OrdersController < ApplicationController
   # GET /orders/new
   def new
     gray_background
+    set_phone_and_vcode
     set_sms_zone_hidden_class
     @order ||= current_user.orders.build(arrives_at: 1.hour.from_now)
     set_arrives_at_shift
@@ -33,10 +32,7 @@ class Users::OrdersController < ApplicationController
 
   # POST /orders
   def create
-    @order = current_user.orders.build(order_params)
-    set_arrives_at_shift
-    verify_vcode
-    if @order.request && @order.save_with_user_phone(@phone)
+    if request_order_and_save_phone(@phone)
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       new
@@ -46,9 +42,13 @@ class Users::OrdersController < ApplicationController
 
   # PUT /orders/:id/cancel
   def cancel
-    fallback_redirect and return unless @order
-    @order.canceler = current_user
-    if @order.cancel && @order.save
+    opts = { whiny_transition: false }
+    transition = Order.serializable_trigger(:cancel, :save, opts) do
+      fallback_redirect and return unless set_order
+      @order.tap { |o| o.canceler = current_user }
+    end
+
+    if transition
       redirect_to [ :user, @order ], notice: t('.cancel_order_success')
     else
       redirect_to [ :user, @order ], notice: t('.cancel_order_failure')
@@ -57,7 +57,7 @@ class Users::OrdersController < ApplicationController
 
   # GET /orders/:id/charge
   def charge
-    if @order.valid_pingpp_charge? && !@order.payment_expired?
+    if set_order && @order.valid_pingpp_charge? && !@order.payment_expired?
       render json: @order.pingpp_charge_json
     else
       render json: nil
@@ -79,6 +79,16 @@ class Users::OrdersController < ApplicationController
         signature: signature_options.fetch(:signature)
       }
     }
+  end
+
+  def request_order_and_save_phone(phone)
+    @order = current_user.orders.new(order_params)
+    set_phone_and_vcode
+    args = [ :save_with_user_phone, @phone ]
+    @order.serializable_trigger(:request, args, {}) do
+      set_arrives_at_shift
+      verify_vcode
+    end
   end
 
   def set_phone_and_vcode
@@ -117,8 +127,12 @@ class Users::OrdersController < ApplicationController
   end
 
   def set_order
-    @order = Order.find(params[:id])
-    @order = nil unless @order.user == current_user
+    @order = Order.find_by(id: params[:id])
+    if @order.try(:user) == current_user
+      @order
+    else
+      @order = nil
+    end
   end
 
   def set_address

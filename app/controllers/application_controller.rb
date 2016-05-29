@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
     :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?,
     :wechat_request?, :debug_wechat?, :wechat_request_or_debug?
   before_action :set_gon_data
+  rescue_from ActiveRecord::StatementInvalid, with: :handle_statement_invalid
 
   private
 
@@ -100,6 +101,13 @@ class ApplicationController < ActionController::Base
       I18n.t("controllers.root.#{key[1..-1]}", options)
     else
       I18n.t(key, options)
+    end
+  end
+
+  def handle_statement_invalid
+    home = handyman_signed_in? ? handymen_home_index_url : home_index_url
+    respond_to do |type|
+      type.html { redirect_to home, alert: t('^statement_invalid') }
     end
   end
 end
