@@ -40,7 +40,11 @@
                 = render partial: attr.data.new.partial_path, locals: { resource: r }
               - else
                 - data = attr.data.new(r)
-                | #{ data.to_s }
+                - if data.set_style?
+                  span class="label label-#{data.style}"
+                    | #{ data.to_s }
+                - else
+                  | #{ data.to_s }
 
 - if dashboard.export?
   .row

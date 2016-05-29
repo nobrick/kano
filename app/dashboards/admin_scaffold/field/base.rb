@@ -13,7 +13,24 @@ module AdminScaffold
         set_data(data)
       end
 
+      def style
+        style = @options[:style][@data]
+        if valid_style?(style)
+          style
+        else
+          :default
+        end
+      end
+
+      def set_style?
+        !!@options[:style]
+      end
+
       private
+
+      def valid_style?(style)
+        %i{default primary success info warning danger}.include?(style)
+      end
 
       def set_data(data)
         if @options[:original_data]
