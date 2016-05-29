@@ -77,6 +77,7 @@ zh-CN:
       should_complete_profile: '继续操作前请您完善个人资料'
       profiles:
         complete_success: '申请已提交'
+      statement_invalid: '系统繁忙，请稍后重试'
     omniauth_callbacks:
       failure: '获取您的微信资料失败，请稍后重试'
       persist_failure: '暂时无法微信登录。如需帮助，请联系客服'
@@ -103,6 +104,7 @@ zh-CN:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'
       order_unauthorized: 'Sorry，订单可能已被别人抢走'
+      request_failure: '请求失败'
     handymen/withdrawals:
       requested: '提现已申请'
     handymen/registrations:

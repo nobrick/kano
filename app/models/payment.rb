@@ -2,6 +2,7 @@ class Payment < ActiveRecord::Base
   include AASM
   include WithRedisObjects
   include IdRandomizable
+  include Serializable
 
   belongs_to :order, touch: true
   belongs_to :payment_profile, polymorphic: true
@@ -169,14 +170,18 @@ class Payment < ActiveRecord::Base
     payment_method == 'wechat'
   end
 
+  SERIALIZABLE_OPTS = {reload: true, max_retries: 2}
+
   # Fetches pre-payment data from gateway and transition into +:pending+ state
   # with persistence.
   #
   # This method will be called asynchronously by +Payment::PrepareEventWorker+.
   def save_with_prepare!
-    return unless processing?
-    with_lock { prepare && save! }
-    true
+    serializable(SERIALIZABLE_OPTS) do
+      return false unless may_prepare?
+      prepare && save!
+      true
+    end
   end
 
   # Checks and fails the +processing+ or +pending+ payment if it is invalid.
@@ -188,54 +193,57 @@ class Payment < ActiveRecord::Base
   # @option options [Boolean] :retry Retry +prepare+ once if invalid when true.
   # @see valid_pingpp_charge?
   def check_and_fail!(options = {})
-    return false unless processing? || pending?
-    if pingpp_wx_pub?
-      return false if valid_pingpp_charge?
-      if options.fetch(:retry, true)
+    serializable(SERIALIZABLE_OPTS) do
+      return false unless pingpp_wx_pub?
+      if !valid_pingpp_charge? && options.fetch(:retry, true)
         reset_pingpp_charge
-        return false if valid_pingpp_charge?
       end
-      # Fails the payment if it remains invalid.
+      return false if valid_pingpp_charge?
+      return false unless may_flunk?
       flunk && save!
-      return true
+      true
     end
-    false
   end
 
   # Checks and expires the payment transitioning into +:void+ state with
   # persistence if necessary.
   def check_and_expire!
-    return false unless expired?
-
-    # Retrieves and checks the latest charge object in case the payment has
-    # been paid before the +expire+ event.
-    return false if check_and_complete!(fetch_latest: true)
-    expire && save!
-    true
+    serializable(SERIALIZABLE_OPTS) do
+      return false unless expired?
+      return false if check_and_complete!(fetch_latest: true)
+      return false unless may_expire?
+      expire && save!
+      true
+    end
   end
 
   # Cancels the payment and reverts order to +:contracted+ state unless user
   # has already paid, in which the payment will be transitioned into :completed
   # state instead by +check_and_complete!+.
   def check_and_cancel!
-    return false if check_and_complete!(fetch_latest: true)
-    cancel && save!
-    true
+    serializable(SERIALIZABLE_OPTS) do
+      return false if check_and_complete!(fetch_latest: true)
+      return false unless may_cancel?
+      cancel && save!
+      true
+    end
   end
 
   # Checks (and fetches if necessary) the payment state, and marks the payment
   # and the associated order as +:completed+ state with persistence if paid.
   def check_and_complete!(options = {})
-    case aasm.current_state
-    when :completed
-      return true
-    when :pending
-      if pingpp_wx_pub? && valid_pingpp_charge? && pingpp_paid?(options)
-        complete && save!
+    serializable(SERIALIZABLE_OPTS) do
+      case aasm.current_state
+      when :completed
         return true
+      when :pending
+        if pingpp_wx_pub? && valid_pingpp_charge? && pingpp_paid?(options)
+          complete && save!
+          return true
+        end
       end
+      false
     end
-    false
   end
 
   # Triggers +flunk+ or +expire+ or +complete+ transition with persistence by
@@ -259,7 +267,7 @@ class Payment < ActiveRecord::Base
   # @return +false+ for non-pending states.
   def expired?
     return false unless pending?
-    return true if Time.now > expires_at
+    return true if expires_at && Time.now > expires_at
     if pingpp_wx_pub?
       time = Time.at(pingpp_charge['time_expire'])
       return true if Time.now > time
