@@ -54,7 +54,7 @@ RSpec.describe Withdrawal, type: :model do
           new_withdrawal.request
           expect {
             new_withdrawal.save(validate: false)
-          }.to raise_error  ActiveRecord::RecordNotUnique, /index_requested_wi/
+          }.to raise_error ActiveRecord::RecordNotUnique, /index_requested_wi/
         end
       end
 
