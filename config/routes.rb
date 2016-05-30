@@ -18,6 +18,7 @@ Rails.application.routes.draw do
       resources :orders, only: [ :new, :create, :index, :show ] do
         member do
           resource :checkout, only: [ :create, :update ]
+          resource :resend, only: [ :update ], module: 'orders', as: 'order_resend'
           get :charge
           put :cancel
         end
