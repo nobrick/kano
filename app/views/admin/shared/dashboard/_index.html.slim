@@ -18,7 +18,7 @@
   .row.dashboard__filter-info
     - feedback = dashboard.feedback(instance)
     - feedback.each do |text|
-      span.label.label-warning
+      span.label.label-info
         | #{ text }
 
 .row
@@ -40,7 +40,11 @@
                 = render partial: attr.data.new.partial_path, locals: { resource: r }
               - else
                 - data = attr.data.new(r)
-                | #{ data.to_s }
+                - if data.set_style?
+                  span class="label label-#{data.style}"
+                    | #{ data.to_s }
+                - else
+                  | #{ data.to_s }
 
 - if dashboard.export?
   .row
