@@ -8,8 +8,8 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   #   page: page num
   #   certified_status:  certify state
   def index
-    q_params = dashboard.filter_params(params)
-    @search = Taxon.ransack(q_params)
+    @q_params = dashboard.filter_params(params)
+    @search = Taxon.ransack(@q_params)
     @taxons = @search.result.includes(:handyman).order(cert_requested_at: :desc).
       page(params[:page]).per(10)
   end
@@ -35,7 +35,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       flash[:alert] = i18n_t('certify_failure', 'C', reasons: @taxon.errors.full_messages)
     end
 
-    redirect_to back_url || admin_handyman_certifications_path
+    redirect_to back_url || admin_handyman_certifications_path(q: params[:q])
   end
 
   # params
