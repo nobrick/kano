@@ -646,6 +646,13 @@ p.small-text {
   }
 }
 
+.order-requested-view .order-details-header-card {
+  min-height: 135px;
+  h2 {
+    margin-top: 26px;
+  }
+}
+
 .order-details-attributes-card {
   .card-attr-title {
     color: #0688cc;

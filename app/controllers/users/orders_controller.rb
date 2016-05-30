@@ -24,7 +24,7 @@ class Users::OrdersController < ApplicationController
     gray_background
     set_phone_and_vcode
     set_sms_zone_hidden_class
-    @order ||= current_user.orders.build(arrives_at: 1.hour.from_now)
+    build_order
     set_arrives_at_shift
     set_pricing_for_new
     set_address
@@ -79,6 +79,12 @@ class Users::OrdersController < ApplicationController
         signature: signature_options.fetch(:signature)
       }
     }
+  end
+
+  def build_order
+    @order ||= current_user.orders.build(arrives_at: 1.hour.from_now)
+    resend = resend_params[:resend]
+    @order.assign_attributes(resend) if resend
   end
 
   def request_order_and_save_phone(phone)
@@ -174,5 +180,9 @@ class Users::OrdersController < ApplicationController
       :taxon_code,
       address_attributes: [ :code, :content ]
     )
+  end
+
+  def resend_params
+    params.permit({ resend: [ :content, :taxon_code ] })
   end
 end

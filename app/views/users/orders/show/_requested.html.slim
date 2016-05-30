@@ -9,3 +9,6 @@
       = link_to cancel_user_order_path(@order), method: :put, data: { confirm: '您确定要取消订单吗？' } do
         li.mdl-menu__item
           div.text-center 取消订单
+      = link_to user_order_resend_path(@order), method: :put, data: { confirm: '您确定要取消并重发订单吗？' } do
+        li.mdl-menu__item
+          div.text-center 重发订单
