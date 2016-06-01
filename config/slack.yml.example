@@ -1,0 +1,5 @@
+exception_notification:
+  webhook_url: ''
+  channel: '#exceptions'
+  additional_parameters:
+    mrkdwn: true

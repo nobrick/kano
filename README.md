@@ -18,6 +18,7 @@ cp redis.yml{.example,}
 cp wechat.yml{.example,}
 cp handyman_wechat.yml{.example,}
 cp sms.yml{.example,}
+cp slack.yml{.example,}
 ```
 
 Configure `database.yml` with database authentication for PostgreSQL.
