@@ -9,6 +9,7 @@ checkout:
     - cp config/wechat.yml{.example,}
     - cp config/handyman_wechat.yml{.example,}
     - cp config/sms.yml{.example,}
+    - cp config/slack.yml{.example,}
 test:
   override:
     - bundle exec rake spec

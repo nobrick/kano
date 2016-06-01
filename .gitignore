@@ -41,6 +41,9 @@ coverage
 # Ignore SMS config
 /config/sms.yml
 
+# Ignore Slack config
+/config/slack.yml
+
 # Miscellaneous.
 public/assets
 /vendor/cache

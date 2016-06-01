@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
     :current_user, :current_handyman, :user_signed_in?, :handyman_signed_in?,
     :wechat_request?, :debug_wechat?, :wechat_request_or_debug?
   before_action :set_gon_data
+  before_action :set_exception_data
   rescue_from ActiveRecord::StatementInvalid, with: :handle_statement_invalid
 
   private
@@ -84,6 +85,12 @@ class ApplicationController < ActionController::Base
   def set_gon_data
     token = current_account.try(:access_token) || ''
     gon.push(account_access_token: token)
+  end
+
+  def set_exception_data
+    data = { params: params }
+    data.merge!(account_id: current_account.id) if current_account
+    request.env['exception_notifier.exception_data'] = data
   end
 
   def debug_wechat?
