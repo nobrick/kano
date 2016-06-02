@@ -62,12 +62,13 @@ class Order < ActiveRecord::Base
   validates :arrives_at, inclusion: {
     in: ->(o) { (10.minute.from_now)..(30.days.from_now) },
     message: '无效'
-  }, if: 'to? :requested'
+  }, if: :ignores_arrives_at_validation?
   validate :service_must_be_available, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
   validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
   validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
 
+  attr_accessor :ignores_arrives_at_validation
   attr_reader :retained_errors
   validate :add_retained_errors
 
@@ -379,5 +380,9 @@ class Order < ActiveRecord::Base
     elsif TaxonItem.prices[taxon_code]
       errors.add(:base, '您所在的城市暂未开通该服务')
     end
+  end
+
+  def ignores_arrives_at_validation?
+    to?(:requested) && !ignores_arrives_at_validation
   end
 end

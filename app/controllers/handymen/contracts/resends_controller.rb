@@ -24,6 +24,7 @@ class Handymen::Contracts::ResendsController < ApplicationController
     end
     @new_order = order.user.orders.build(attributes)
     @new_order.address_attributes = @order.address.attribute_hash
+    @new_order.ignores_arrives_at_validation = true
     @new_order
   end
 

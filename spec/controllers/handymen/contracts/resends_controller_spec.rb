@@ -5,7 +5,13 @@ RSpec.describe Handymen::Contracts::ResendsController, type: :controller do
   let(:handyman) { create :handyman }
 
   describe '#update' do
-    let!(:order) { create :contracted_order, handyman: handyman }
+    let!(:order) do
+      create :contracted_order,
+        handyman: handyman,
+        arrives_at: 1.hour.ago,
+        ignores_arrives_at_validation: true
+    end
+
     let(:id) { order.id }
     let(:new_order) { Order.order(created_at: :desc).first }
 
