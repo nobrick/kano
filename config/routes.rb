@@ -32,7 +32,11 @@ Rails.application.routes.draw do
     get '/handymen', to: 'handymen/orders#index'
     namespace :handymen, as: :handyman, path: '/' do
       resources :orders, only: [ :update, :index, :show ]
-      resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts'
+      resources :order_contracts, only: [ :index, :show ], path: 'contracts', as: 'contracts' do
+        member do
+          resource :resend, only: [ :update ], module: 'contracts', as: 'contract_resend'
+        end
+      end
       resources :taxons, only: [ :index ]
       resources :withdrawals, only: [ :index, :new, :create ]
       resource :profile, only: [ :show, :update ] do

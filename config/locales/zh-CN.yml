@@ -109,6 +109,9 @@ zh-CN:
       resend_order_failure: '取消订单失败'
     handymen/order_contracts:
       order_not_exist: '订单不存在'
+    handymen/contracts/resends:
+      resend_order_success: '已取消并转发订单'
+      resend_order_failure: '取消订单失败'
     handymen/orders:
       update_success: '接单成功'
       update_failure: '接单失败：%{reasons}'

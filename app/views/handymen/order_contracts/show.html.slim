@@ -17,6 +17,15 @@
             h3
               ' 已支付
               b =< number_to_currency @order.handyman_total, unit: '￥'
+        - if @order.contracted?
+          .mdl-card__menu
+            button#order-header-menu.mdl-button.mdl-js-button.mdl-button--icon
+              i.material-icons.less-color more_vert
+            ul.mdl-menu.mdl-menu--bottom-right.mdl-js-menu.mdl-js-ripple-effect for="order-header-menu"
+              li.mdl-menu__item
+                = link_to handyman_contract_resend_path(@order), method: :put,
+                  data: { confirm: "您确定要取消订单吗？取消后别的师傅可以接单" } do
+                    div.text-center 取消订单
       .order-details-attributes-card.mdl-card.mdl-shadow--2dp
         - if @order.completed?
           - record = @order.handyman.last_balance_record

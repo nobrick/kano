@@ -17,12 +17,12 @@ RSpec.describe Users::Orders::ResendsController, type: :controller do
       } }
 
       it 'redirects to order new page with :resend_id param' do
-        post :update, id: id
+        put :update, id: id
         expect(response).to redirect_to new_user_order_path(expected_params)
       end
 
       it 'cancels order' do
-        post :update, id: id
+        put :update, id: id
         expect(order.reload.canceled?).to eq true
       end
     end
