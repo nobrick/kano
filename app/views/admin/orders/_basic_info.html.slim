@@ -21,10 +21,13 @@
           li
             | 编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:&nbsp;&nbsp;#{ order.user.id }
           li
-            | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;
-            = link_to "#{ order.user.name }", admin_user_account_path(order.user)
+            | 昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp;
+            - user_nickname = order.user.nickname
+            - if user_nickname.blank?
+              - user_nickname = "(查看详情)"
+            = link_to "#{ user_nickname }", admin_user_account_path(order.user)
           li
-            | 昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp;#{ order.user.nickname }
+            | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;#{ order.user.name }
           li
             | 联系方式:&nbsp;&nbsp;#{ order.user.readable_phone_number }
   .col-md-6
@@ -36,10 +39,13 @@
           li
             | 编&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;号:&nbsp;&nbsp;#{ order.handyman.id }
           li
-            | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;
-            = link_to "#{ order.handyman.try :name }", admin_user_account_path(order.user)
+            | 昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp;
+            - handyman_nickname = order.handyman.nickname
+            - if handyman_nickname.blank?
+              -handyman_nickname = "(查看详情)"
+            = link_to "#{ handyman_nickname }", admin_handyman_account_path(order.handyman)
           li
-            | 昵&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp;#{ order.handyman.try :nickname }
+            | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;#{ order.handyman.name }
           li
             | 联系方式:&nbsp;&nbsp;#{ order.handyman.try :readable_phone_number }
 - else
