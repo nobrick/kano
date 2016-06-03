@@ -3,11 +3,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   helper_method :tabs_info, :dashboard
 
   before_action :set_taxon, only: [:show]
-  rescue_from ActiveRecord::RecordNotFound do
-    flash[:alert] = "数据不存在"
-    redirect_to params[:backurl] || admin_handyman_certifications_path(q: params[:q])
-
-  end
 
   # params
   #   page: page num
@@ -34,7 +29,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   def update
     back_url = params[:backurl]
 
-    transaction = Taxon.serializable(isolation: :repeatable_read) do
+    transaction = Taxon.serializable do
       set_taxon
       certify_taxon
     end
