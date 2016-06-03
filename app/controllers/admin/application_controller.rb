@@ -54,6 +54,8 @@ class Admin::ApplicationController < ActionController::Base
 
   def i18n_t(key, type, options = {})
     case type
+    when "RC"
+      I18n.t("controllers.root.#{key}", options)
     when "C"
       I18n.t("controllers.#{controller_path}.#{key}", options)
     when "M"

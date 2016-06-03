@@ -1,6 +1,10 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
+  around_action :serializable, only: [:update, :update_taxons]
   before_action :set_account, only: [:update, :show, :update_taxons]
   before_action :set_address, only: [:show]
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_handyman_accounts_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
 
   # params:
   #   id: handyman id
