@@ -3,6 +3,10 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
   around_action :serializable, only: [:update]
   before_action :set_withdrawal, only: [:update]
   before_action :set_authorizer, only: [:update]
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_finance_withdrawal_transfer_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
+
 
   def index
     q_params = dashboard.filter_params(params)

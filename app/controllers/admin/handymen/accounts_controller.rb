@@ -1,6 +1,10 @@
 class Admin::Handymen::AccountsController < Admin::AccountsController
   helper "admin/handymen/accounts"
   helper_method :dashboard, :tabs_info
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_handyman_accounts_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
+
 
   private
 

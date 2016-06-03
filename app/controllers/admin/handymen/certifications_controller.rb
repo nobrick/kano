@@ -3,6 +3,10 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   helper_method :tabs_info, :dashboard
 
   before_action :set_taxon, only: [:show]
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_handyman_certifications_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
+
 
   # params
   #   page: page num

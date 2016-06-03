@@ -1,5 +1,8 @@
 class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationController
   helper_method :dashboard
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_finance_withdrawal_verifications_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
 
   def index
     q_params = dashboard.filter_params(params)
