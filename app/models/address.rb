@@ -1,4 +1,6 @@
 class Address < ActiveRecord::Base
+  include Serializable
+
   belongs_to :addressable, polymorphic: true
   before_validation :set_from_code, if: 'code.present?'
   before_destroy :nullify_primary_address, if: 'primary?'

@@ -1,5 +1,5 @@
 class Admin::Users::AddressesController < Admin::ApplicationController
-
+  around_action :serializable, only: [:update, :destroy]
   before_action :set_address, only: [:update, :destroy]
 
   def create
@@ -38,6 +38,10 @@ class Admin::Users::AddressesController < Admin::ApplicationController
   end
 
   private
+
+  def serializable
+    Address.serializable { yield }
+  end
 
   def set_address
     @address = Address.find params[:id]
