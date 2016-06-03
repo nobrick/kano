@@ -19,7 +19,7 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
   #  withdrawal:
   #     audit_state: 'unaudited' or 'audited' or 'abnormal'
   def update
-    Withdrawal.transaction do
+    Withdrawal.serializable do
       set_withdrawal
       @withdrawal.assign_attributes(verify_params)
       if @withdrawal.save

@@ -37,7 +37,7 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
   private
 
   def serializable
-    Withdrawal.transaction { yield }
+    Withdrawal.serializable { yield }
   end
 
   def do_transfer
