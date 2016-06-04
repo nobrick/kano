@@ -19,6 +19,10 @@ module AdminScaffold
         end
       end
 
+      def data_partial_path
+        @options[:partial_path] + "/#{ @owner.downcase }_" +  "#{ @attr }_table_data"
+      end
+
       def data_methods
         (@options[:methods] || @attr).split('.')
       end
