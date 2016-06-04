@@ -10,7 +10,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
   def index
     @q_params = dashboard.filter_params(params)
     @search = Taxon.ransack(@q_params)
-    @taxons = @search.result.includes(:handyman).order(cert_requested_at: :desc).
+    @taxons = @search.result.includes(:handyman, :certified_by).order(cert_requested_at: :desc).
       page(params[:page]).per(10)
   end
 
