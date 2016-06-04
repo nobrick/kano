@@ -7,7 +7,6 @@ class Withdrawal::VerificationDashboard < AdminScaffold::BaseDashboard
     d.string "bank_code", i18n: true
     d.string "account_no"
     d.number "total"
-    d.number "handyman.unfrozen_balance", owner: "Handyman", methods: "handyman.unfrozen_balance"
     d.date_time "created_at"
     d.expand "verify_buttons", partial_path: "admin/finance/withdrawals/verifications"
   end
