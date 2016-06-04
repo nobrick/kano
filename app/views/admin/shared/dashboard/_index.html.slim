@@ -37,7 +37,7 @@
           - dashboard.attributes.each do |attr|
             td
               - if attr.expand?
-                = render partial: attr.data.new.partial_path, locals: { resource: r }
+               = render partial: attr.data_partial_path, locals: { resource: r }
               - else
                 - data = attr.data.new(r)
                 - if data.set_style?
