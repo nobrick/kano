@@ -75,6 +75,14 @@ class ApplicationController < ActionController::Base
     session['return_to'] || root_url
   end
 
+  def set_alert(message)
+    flash[:alert] = message
+  end
+
+  def set_notice(message)
+    flash[:notice] = message
+  end
+
   def set_return_path
     return if devise_controller? || request.xhr? || !request.get?
     excluding_paths = [ root_path, guides_index_path, handymen_path ]

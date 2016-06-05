@@ -1,8 +1,4 @@
 class Users::CheckoutsController < ApplicationController
-  around_action :serializable, only: [ :create, :update ]
-  before_action :set_order, only: [ :create, :update ]
-  before_action :check_order_permission, only: [ :create, :update ]
-
   # POST /orders/:id/checkout
   def create
     in_cash? ? pay_in_cash : pay_in_wechat
@@ -10,18 +6,24 @@ class Users::CheckoutsController < ApplicationController
 
   # PUT/PATCH /orders/:id/checkout
   def update
-    @payment = @order.ongoing_payment
-    case @payment.try(:check_and_transition!)
+    transition = serializable do
+      return unless authorize_order(set_order)
+      @payment = @order.ongoing_payment
+      @payment.try(:check_and_transition!)
+    end
+
+    case transition
     when :failed
-      redirect_to [ :user, @order ], notice: t('.payment_invalid')
+      set_notice(t '.payment_invalid')
     when :expired
-      redirect_to [ :user, @order ], notice: t('.payment_expired')
+      set_notice(t '.payment_expired')
     when :completed
       notify_wechat_accounts
-      redirect_to [ :user, @order ], notice: t('.payment_success')
+      set_notice(t '.payment_success')
     else
-      redirect_to [ :user, @order ], alert: t('.no_payment_result')
+      set_alert(t '.no_payment_result')
     end
+    redirect_to [ :user, @order ]
   end
 
   private
@@ -56,29 +58,28 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def pay_in_cash
-    return unless changeset
-    set_payment('cash')
-    if @payment.may_complete? && @payment.complete && @payment.save
-      notify_wechat_accounts
-      redirect_to [ :user, @order ], notice: t('.payment_success')
-    else
-      redirect_to [ :user, @order ], alert: failure_message
+    transition = serializable do
+      return unless authorize_order(set_order) && changeset
+      set_payment('cash')
+      @payment.may_complete? && @payment.complete && @payment.save
     end
+    transition ? notify_wechat_accounts : set_alert(failure_message)
+    redirect_to [ :user, @order ]
   end
 
   def pay_in_wechat
-    return unless changeset
     unless wechat_request? || debug_wechat?
-      message = t('.should_pay_in_wechat_client')
-      redirect_to [ :user, @order ], notice: message and return false
+      set_notice(t '.should_pay_in_wechat_client')
+      return false
     end
 
-    set_payment('pingpp_wx_pub')
-    if @payment.may_checkout? && @payment.checkout && @payment.save
-      redirect_to [ :user, @order ]
-    else
-      redirect_to [ :user, @order ], alert: failure_message
+    transition = serializable do
+      return unless authorize_order(set_order) && changeset
+      set_payment('pingpp_wx_pub')
+      @payment.may_checkout? && @payment.checkout && @payment.save
     end
+    set_alert(failure_message) unless transition
+    redirect_to [ :user, @order ]
   end
 
   def failure_message
@@ -87,16 +88,23 @@ class Users::CheckoutsController < ApplicationController
     "#{t('.payment_failure')}：#{message}"
   end
 
+  def authorize_order(order)
+    fallback_redirect unless order
+    if order.user == current_user && (order.contracted? || order.payment?)
+      true
+    else
+      fallback_redirect
+    end
+  end
+
   def set_order
     @order = Order.find_by(id: params[:id])
   end
 
-  def check_order_permission
-    if @order.nil? || @order.user != current_user || !(@order.contracted? || @order.payment?)
-      redirect_to user_orders_url, notice: t('.request_failure') and return false
-    else
-      true
-    end
+  def fallback_redirect
+    set_notice(t '.request_failure')
+    redirect_to user_orders_url
+    false
   end
 
   def set_payment(payment_method)
