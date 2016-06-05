@@ -25,6 +25,10 @@ class Admin::ProfilesController < Admin::ApplicationController
 
   private
 
+  def serializable
+    Account.serializable { yield }
+  end
+
   def profile_params
     params.require(:profile).permit(
       :name,

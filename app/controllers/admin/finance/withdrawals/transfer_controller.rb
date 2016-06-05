@@ -1,7 +1,12 @@
 class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationController
   helper_method :dashboard
+  around_action :serializable, only: [:update]
   before_action :set_withdrawal, only: [:update]
   before_action :set_authorizer, only: [:update]
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_finance_withdrawal_transfer_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
+
 
   def index
     q_params = dashboard.filter_params(params)
@@ -35,8 +40,12 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
 
   private
 
+  def serializable
+    Withdrawal.serializable { yield }
+  end
+
   def do_transfer
-    if @withdrawal.transfer && @withdrawal.save
+    if @withdrawal.may_transfer? && @withdrawal.transfer && @withdrawal.save
       flash[:success] = "确认转账成功"
     else
       flash[:alert] = @withdrawal.errors.full_messages
@@ -45,7 +54,7 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
 
   def do_decline
     @withdrawal.assign_attributes(reason_params)
-    if @withdrawal.decline && @withdrawal.save
+    if @withdrawal.may_decline? && @withdrawal.decline && @withdrawal.save
       flash[:success] = "确认转账失败"
     else
       flash[:alert] = @withdrawal.errors.full_messages

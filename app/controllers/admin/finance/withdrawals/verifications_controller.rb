@@ -1,6 +1,8 @@
 class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationController
   helper_method :dashboard
-  before_action :set_withdrawal, only: [:update]
+  rescue_from ActiveRecord::StatementInvalid do
+    redirect_to admin_finance_withdrawal_verifications_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+  end
 
   def index
     q_params = dashboard.filter_params(params)
@@ -20,12 +22,15 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
   #  withdrawal:
   #     audit_state: 'unaudited' or 'audited' or 'abnormal'
   def update
-    @withdrawal.assign_attributes(verify_params)
-    if @withdrawal.save
-      msg = mark_as_invalid_withdrawal? ? "已标记" : "已审核"
-      flash[:success] = msg
-    else
-      flash[:alert] = @withdrawal.errors.full_messages
+    Withdrawal.serializable do
+      set_withdrawal
+      @withdrawal.assign_attributes(verify_params)
+      if @withdrawal.save
+        msg = mark_as_invalid_withdrawal? ? "已标记" : "已审核"
+        flash[:success] = msg
+      else
+        flash[:alert] = @withdrawal.errors.full_messages
+      end
     end
     redirect_to admin_finance_withdrawal_verifications_path
   end

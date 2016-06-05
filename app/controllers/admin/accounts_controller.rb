@@ -1,6 +1,6 @@
 class Admin::AccountsController < Admin::ApplicationController
 
-  before_action :set_account, only: [:update_account_status, :show]
+  before_action :set_account, only: [:show]
 
   # params
   #   page: page num
@@ -17,14 +17,16 @@ class Admin::AccountsController < Admin::ApplicationController
   #   id: account id
   #   account_lock:  true or false
   def update_account_status
-    if lock_account?
-      @account.lock_access!
-      flash[:success] = i18n_t('lock_success', 'C')
-    elsif unlock_account? && @account.access_locked?
-      @account.unlock_access!
-      flash[:success] = i18n_t('unlock_success', 'C')
+    Account.serializable do
+      set_account
+      if lock_account?
+        @account.lock_access!
+        flash[:success] = i18n_t('lock_success', 'C')
+      elsif unlock_account? && @account.access_locked?
+        @account.unlock_access!
+        flash[:success] = i18n_t('unlock_success', 'C')
+      end
     end
-
     redirect_to redirect_path
   end
 

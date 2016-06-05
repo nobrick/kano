@@ -1,4 +1,6 @@
 class Taxon < ActiveRecord::Base
+  include Serializable
+
   class << self
     delegate :taxon_codes, :reason_codes, :items, :categories,
       :certified_status, :certified_statuses, to: '::Taxon::Config'
