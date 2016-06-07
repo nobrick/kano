@@ -13,7 +13,7 @@ module Admin::Handymen::AccountsHelper
   end
 
   def profit_per_order(handyman)
-    return 0 if handyman.orders.count == 0
+    return 0 if handyman.orders.finished.count == 0
     (handyman.balance / handyman.orders.finished.count).round(3)
   end
 end
