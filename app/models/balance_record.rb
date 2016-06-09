@@ -4,6 +4,8 @@ class BalanceRecord < ActiveRecord::Base
   belongs_to :adjustment_event, polymorphic: true
   scope :for_payment, -> { where(adjustment_event_type: 'Payment') }
   scope :for_withdrawal, -> { where(adjustment_event_type: 'Withdrawal') }
+  scope :five_days_since, ->(time) { where("created_at > :start_time AND created_at < :end_time", { start_time: time, end_time: time + 5.days }) }
+  scope :five_days_ago, ->(time) { where("created_at > :start_time AND created_at < :end_time", { start_time: time - 5.days, end_time: time }) }
   scope :in_cash, -> { where(in_cash: true) }
   scope :online, -> { where(in_cash: false) }
   scope :until, -> (time) { where('created_at <= ?', time) }
@@ -58,6 +60,12 @@ class BalanceRecord < ActiveRecord::Base
     handler.perform(self)
     raise 'Adjustment event is not present' if event.blank?
     raise 'Owner is not present' if owner.blank?
+  end
+
+  def around_records
+    before_records = owner.balance_records.five_days_since(created_at).order(created_at: :ASC).limit(4)
+    after_records = owner.balance_records.five_days_ago(created_at).limit(6).order(created_at: :ASC)
+    [*before_records, self, *after_records]
   end
 
   private

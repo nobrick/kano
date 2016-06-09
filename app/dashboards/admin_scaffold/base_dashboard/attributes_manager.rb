@@ -39,6 +39,13 @@ module AdminScaffold
 
       def define_attribute(attr_index, type, options = {})
         validate!(attr_index)
+        if options[:owner]
+          attr_owner = options[:owner]
+          options[:self_defined_owner] = true
+        else
+          attr_owner = @resource_class
+          options[:self_defined_owner] = false
+        end
         attr_owner = options.delete(:owner) || @resource_class
         @attributes[attr_index] = Attribute.new(original_attr(attr_index), attr_owner, type, options)
       end

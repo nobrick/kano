@@ -24,6 +24,15 @@ zh-CN:
         whitewash: '粉刷及内部修缮'
         lock: '门锁问题'
         other: '其它定制服务'
+  balance_record:
+    adjustment_event_types:
+      withdrawal: '提现'
+      payment: '交易'
+  payment:
+    payment_methods:
+      wechat: "微信支付"
+      pingpp_wx_pub: "网络支付"
+
   taxon:
     certified_statuses:
       under_review: '等待认证'
@@ -207,6 +216,18 @@ zh-CN:
         email: '邮箱'
         phone: '手机号码'
         last_sign_in_at: '最近一次登陆时间'
+      payment:
+        payment_method: '支付方式'
+      balance_record:
+        adjustment_event_type: '事件'
+        online_income_total: '网络收入总额'
+        withdrawal_total: '已提现金额'
+        balance: '账户余额'
+        created_at: '成交时间'
+        id: 'ID'
+        adjustment: '交易金额'
+        bonus_sum_total: '补贴总额'
+        cash_total: '现金收入总额'
       order:
         id: '订单 ID'
         created_at: '订单时间'

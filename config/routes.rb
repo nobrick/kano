@@ -67,6 +67,11 @@ Rails.application.routes.draw do
         end
 
         resources :orders, only: [:index]
+
+        namespace :finance do
+          resources :history, only: [:index]
+          resources :withdrawals, only: [:index, :show]
+        end
       end
 
       namespace :users, as: :user do

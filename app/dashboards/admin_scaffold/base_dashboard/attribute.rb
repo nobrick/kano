@@ -11,16 +11,20 @@ module AdminScaffold
         validate!
       end
 
+      def self_defined_owner?
+        !!@options[:self_defined_owner]
+      end
+
       def partial_path
         if expand?
-          @options[:partial_path] + "/#{ @owner.downcase }_" + "#{ @attr }_table_header"
+          @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @attr }_table_header"
         else
           ''
         end
       end
 
       def data_partial_path
-        @options[:partial_path] + "/#{ @owner.downcase }_" +  "#{ @attr }_table_data"
+        @options[:partial_path] + "/#{ @owner.underscore }_" +  "#{ @attr }_table_data"
       end
 
       def data_methods
