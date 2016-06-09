@@ -8,7 +8,7 @@ class Withdrawal::VerificationDashboard < AdminScaffold::BaseDashboard
     d.string "account_no"
     d.number "total"
     d.date_time "created_at"
-    d.expand "verify_buttons", partial_path: "admin/finance/withdrawals/verifications"
+    d.expand "verify_buttons", partial_path: "admin/finance/withdrawals/verifications", table_header: false
   end
 
   filters("admin_finance_withdrawal_verifications_path") do |f|

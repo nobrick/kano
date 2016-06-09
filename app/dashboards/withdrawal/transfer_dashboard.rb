@@ -9,7 +9,7 @@ class Withdrawal::TransferDashboard < AdminScaffold::BaseDashboard
     d.number "total"
     d.string "handyman.phone", owner: 'Handyman', methods: "handyman.phone"
     d.date_time "created_at"
-    d.expand "transfer_buttons", partial_path: "admin/finance/withdrawals/transfer"
+    d.expand "transfer_buttons", partial_path: "admin/finance/withdrawals/transfer", table_header: false
   end
 
   filters("admin_finance_withdrawal_transfer_index_path") do |f|

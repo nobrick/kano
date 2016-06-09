@@ -15,6 +15,10 @@ module AdminScaffold
         !!@options[:self_defined_owner]
       end
 
+      def has_header?
+        @options.fetch(:table_header, true)
+      end
+
       def partial_path
         if expand?
           @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @attr }_table_header"
