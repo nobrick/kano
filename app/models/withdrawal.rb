@@ -12,6 +12,7 @@ class Withdrawal < ActiveRecord::Base
   scope :audited, -> { where(audit_state: 'audited') }
   scope :abnormal, -> { where(audit_state: 'abnormal') }
   scope :processed, -> { where.not(state: 'requested') }
+  scope :unprocessed, ->{ where(state: 'requested') }
   validates :handyman, presence: true
   validates :unfrozen_record, presence: true
   validates :account_no, presence: true

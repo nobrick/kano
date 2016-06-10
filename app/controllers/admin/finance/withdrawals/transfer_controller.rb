@@ -35,7 +35,7 @@ class Admin::Finance::Withdrawals::TransferController < Admin::ApplicationContro
     elsif decline?
       do_decline
     end
-    redirect_to admin_finance_withdrawal_transfer_index_path
+    redirect_to params[:back_url] || admin_finance_withdrawal_transfer_index_path
   end
 
   private
