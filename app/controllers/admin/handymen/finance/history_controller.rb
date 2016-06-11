@@ -5,6 +5,7 @@ class Admin::Handymen::Finance::HistoryController < Admin::ApplicationController
     @handyman = Handyman.find params[:handyman_id]
     q_params = dashboard.filter_params(params)
     @search = @handyman.balance_records.ransack(q_params)
+    @unprocessed_withdrawals = @handyman.withdrawals.unprocessed
     @balance_records = @search.result.includes(:adjustment_event).page(params[:page]).per(10)
   end
 
