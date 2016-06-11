@@ -10,7 +10,7 @@ class Handyman::FinanceHistoryDashboard < AdminScaffold::BaseDashboard
     d.number "bonus_sum_total"
     d.number "online_income_total"
     d.number "cash_total"
-    d.expand "withdrawal_history", partial_path: "admin/handymen/finance/history"
+    d.expand "withdrawal_history", partial_path: "admin/handymen/finance/history", table_header: false
   end
 
   filters("admin_handyman_finance_history_index_path") do |f|
