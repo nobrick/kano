@@ -13,6 +13,9 @@
         =link_to "财务历史", ""
       li
         =link_to "提现申请", admin_handyman_finance_withdrawals_path(handyman_id: @handyman)
+      li
+        =link_to "异常提现", admin_handyman_finance_exceptions_path(handyman_id: @handyman)
+
 
 .col-md-12
   = render partial: 'admin/shared/dashboard/index', locals: { resources: @balance_records, dashboard: dashboard, instance: @search, filter_path_query: { handyman_id: @handyman.id }}

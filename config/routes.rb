@@ -70,7 +70,8 @@ Rails.application.routes.draw do
 
         namespace :finance do
           resources :history, only: [:index]
-          resources :withdrawals, only: [:index, :show]
+          resources :withdrawals, only: [:index]
+          resources :exceptions, only: [:index, :show]
         end
       end
 

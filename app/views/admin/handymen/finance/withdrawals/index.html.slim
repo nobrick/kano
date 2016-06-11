@@ -13,6 +13,8 @@
         =link_to "财务历史", admin_handyman_finance_history_index_path(handyman_id: @handyman)
       li.active
         =link_to "提现申请", ""
+      li
+        =link_to "异常提现", admin_handyman_finance_exceptions_path(handyman_id: @handyman)
 
 
 - if @requested_withdrawals.empty?

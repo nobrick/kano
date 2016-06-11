@@ -7,6 +7,8 @@ module Admin::Handymen::Finance::WithdrawalsHelper
       return { :css_class => 'label-warning', :value => '等待转账' }
     elsif audit_state == 'unaudited'
       return { :css_class => 'label-danger', :value => '审核未通过' }
+    elsif withdrawal.state == 'declined'
+      return { :css_class => 'label-danger', :value => '转账失败' }
     end
   end
 
