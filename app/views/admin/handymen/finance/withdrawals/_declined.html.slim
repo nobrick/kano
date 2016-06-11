@@ -1,0 +1,12 @@
+.withdrawal-info__row
+  label.withdrawal-info__item
+    |状态:
+    span.label class="label-danger"
+      | 转账失败
+.withdrawal-info__row
+  label.withdrawal-info__item
+    |失败原因:
+    span
+      | #{ @withdrawal.reason_message }
+
+
