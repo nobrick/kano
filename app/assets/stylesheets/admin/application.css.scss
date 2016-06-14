@@ -29,6 +29,47 @@ body {
   text-decoration: none;
 }
 
+.big-modal .modal-dialog {
+  width: 900px;
+}
+
+.blue-panel {
+  margin-top: 20px;
+  margin-bottom: 30px;
+  border-radius: 5px;
+  background-color: #EDFAFF;
+}
+
+.withdrawal-info {
+  margin-top: 25px;
+  margin-left: 30px;
+}
+
+.withdrawal-info__row {
+  width: 100%;
+  margin-bottom: 18px;
+}
+
+.withdrawal-info__item {
+  margin-right: 25px;
+}
+
+.withdrawal-info__item > span {
+  display: inline-block;
+  margin-left: 12px;
+  font-weight: normal;
+}
+
+.withdrawal-total {
+  margin-top: 30px;
+  margin-bottom: 25px;
+  border-right: 1px solid #CFC8C8;
+}
+
+.withdrawal-total > p {
+  font-size: 45px;
+  color: #F15959;
+}
 
 .taxonBox {
   text-align: left;

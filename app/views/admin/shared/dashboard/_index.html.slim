@@ -27,7 +27,7 @@
       tr
         - dashboard.attributes.each do |attr|
           th
-            - if attr.expand?
+            - if attr.expand? && attr.has_header?
               = render partial: attr.partial_path
             - else
               | #{ attr.name }

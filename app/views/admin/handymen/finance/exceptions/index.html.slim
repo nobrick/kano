@@ -1,0 +1,18 @@
+.row
+  .col-md-12
+    ol.breadcrumb
+      li
+        =link_to "#{ @handyman.full_or_nickname }主页(ID: #{ @handyman.id })", admin_handyman_account_path(@handyman)
+      li.active
+        | 财务信息
+
+.row
+  .col-md-12
+    ul.nav.nav-tabs
+      li
+        =link_to "财务历史", admin_handyman_finance_history_index_path(handyman_id: @handyman)
+      li.active
+        =link_to "异常提现", ""
+
+= render partial: 'admin/shared/dashboard/index', locals: { resources: @failed_withdrawals, dashboard: dashboard, instance: nil }
+

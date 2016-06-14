@@ -6,7 +6,22 @@ class BalanceRecord < ActiveRecord::Base
   scope :for_withdrawal, -> { where(adjustment_event_type: 'Withdrawal') }
   scope :in_cash, -> { where(in_cash: true) }
   scope :online, -> { where(in_cash: false) }
-  scope :until, -> (time) { where('created_at <= ?', time) }
+
+  def self.since(time)
+    where('created_at >= ?', time)
+  end
+
+  def self.until(time)
+    where('created_at <= ?', time)
+  end
+
+  def self.in_time_range(starts, ends)
+    if ends.is_a? ActiveSupport::Duration
+      starts, ends = *[ starts, starts + ends ].sort
+    end
+    where('created_at > ?', starts).where('created_at < ?', ends)
+  end
+
   alias_attribute :event, :adjustment_event
   validates :owner, presence: true, associated: true
   validates :adjustment_event, presence: true, associated: true
@@ -58,6 +73,23 @@ class BalanceRecord < ActiveRecord::Base
     handler.perform(self)
     raise 'Adjustment event is not present' if event.blank?
     raise 'Owner is not present' if owner.blank?
+  end
+
+  def around_records(options = {})
+    duration = options.fetch(:max_duration, 5.days)
+    after_limit = options.fetch(:after_limit, 5)
+    before_limit = options.fetch(:before_limit, after_limit - 1)
+    records = owner.balance_records
+
+    left_records = records.in_time_range(created_at, -duration)
+      .reorder(created_at: :desc)
+      .limit(before_limit)
+    records.in_time_range(created_at, duration)
+      .reorder(created_at: :asc)
+      .limit(after_limit)
+      .union_all(BalanceRecord.unscope(:order).where(id: id))
+      .union_all(left_records)
+      .order(created_at: :desc)
   end
 
   private

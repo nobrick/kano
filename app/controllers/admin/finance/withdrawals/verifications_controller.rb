@@ -32,7 +32,7 @@ class Admin::Finance::Withdrawals::VerificationsController < Admin::ApplicationC
         flash[:alert] = @withdrawal.errors.full_messages
       end
     end
-    redirect_to admin_finance_withdrawal_verifications_path
+    redirect_to params[:back_url] || admin_finance_withdrawal_verifications_path
   end
 
   private

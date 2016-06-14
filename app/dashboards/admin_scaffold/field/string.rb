@@ -2,8 +2,8 @@ module AdminScaffold
   module Field
     class String < Field::Base
       def to_s
-        if i18n?
-          I18n.t(@data, scope: i18n_scope)
+        if @data && i18n?
+          I18n.t(@data.downcase, scope: i18n_scope)
         else
           @data
         end
