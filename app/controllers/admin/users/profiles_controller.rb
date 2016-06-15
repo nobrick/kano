@@ -2,7 +2,7 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
   around_action :serializable, only: [:update, :set_primary_address]
   before_action :set_account, only: [:update, :show, :set_primary_address]
   rescue_from ActiveRecord::StatementInvalid do
-    redirect_to admin_user_accounts_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+    redirect_to admin_user_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
   # params:
