@@ -48,7 +48,7 @@
 
 
   .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_handyman_path }
+    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_handyman_path(@account) }
 
     .panel.panel-primary
       .panel-heading

@@ -55,16 +55,13 @@ Rails.application.routes.draw do
             match 'search' => 'certifications#search', via: :get
           end
         end
-
-        resources :profiles, only: [:update, :show] do
-          member do
-            put :update_taxons
-          end
-        end
       end
 
       resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
         scope module: "handymen" do
+          resource :profile, only: [:show, :update] do
+            put :update_taxons
+          end
           resources :orders, only: [:index]
 
           namespace :finance do

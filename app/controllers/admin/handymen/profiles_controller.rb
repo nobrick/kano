@@ -1,4 +1,4 @@
-class Admin::Handymen::ProfilesController < Admin::ProfilesController
+class Admin::Handymen::ProfilesController < Admin::ApplicationController
   around_action :serializable, only: [:update, :update_taxons]
   before_action :set_account, only: [:update, :show, :update_taxons]
   before_action :set_address, only: [:show]
@@ -6,8 +6,11 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
+  def show
+  end
+
   # params:
-  #   id: handyman id
+  #   handyman_id: handyman id
   #   profile:
   #     name:
   #     phone:
@@ -20,8 +23,15 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   #       content:
   def update
     @account.assign_attributes(primary_address_params)
+    @account.assign_attributes(profile_params)
 
-    super
+    if @account.save
+      flash[:success] = i18n_t('update_success', 'C')
+    else
+      flash[:alert] = @account.errors.full_messages
+    end
+
+    redirect_to redirect_path
   end
 
   # params
@@ -38,6 +48,29 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   end
 
   private
+
+  def serializable
+    Account.serializable { yield }
+  end
+
+  def profile_params
+    params.require(:profile).permit(
+      :name,
+      :phone,
+      :nickname,
+      :gender,
+      :email
+    )
+  end
+
+  def redirect_path
+    account_type = @account.type.downcase
+    send("admin_#{account_type}_profile_path", @account)
+  end
+
+  def set_account
+    @account = account_model_class.find params[:handyman_id]
+  end
 
   def primary_address_params
     params.require(:profile).permit(
