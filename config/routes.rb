@@ -71,8 +71,11 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :users, as: :user, shallow: true, only: [:index, :show, :update]
-
+      resources :users, as: :user, shallow: true, only: [:index, :show, :update] do
+        scope module: "users" do
+          resources :orders, only: [:index]
+        end
+      end
 
       namespace :users, as: :user do
         resources :profiles, only: [:update, :show], shallow: true do
@@ -81,8 +84,6 @@ Rails.application.routes.draw do
             post :set_primary_address
           end
         end
-
-        resources :orders, only: [:index]
       end
 
       namespace :managers, as: :manager do
