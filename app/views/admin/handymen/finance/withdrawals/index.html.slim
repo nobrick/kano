@@ -10,11 +10,11 @@
   .col-md-12
     ul.nav.nav-tabs
       li
-        =link_to "财务历史", admin_handyman_finance_history_index_path(handyman_id: @handyman)
+        =link_to "财务历史", admin_handyman_finance_history_index_path(@handyman)
       li.active
         =link_to "提现申请", ""
       li
-        =link_to "异常提现", admin_handyman_finance_exceptions_path(handyman_id: @handyman)
+        =link_to "异常提现", admin_handyman_finance_exceptions_path(@handyman)
 
 
 - if @requested_withdrawals.empty?
@@ -56,7 +56,7 @@
                 .btn-toolbar
                   = form_for :withdrawal, url: admin_finance_withdrawal_transfer_path(requested_withdrawal), method: :put, html: { data: {confirm: "确认已经进行过转账了吗？" }} do |t|
                     = hidden_field_tag 'go', 'transfer'
-                    = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(handyman_id: @handyman)
+                    = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(@handyman)
                     = t.submit "确认转账", class: "btn btn-sm btn-success js-table-nolink"
 
                   = button_tag '转账失败', class: 'btn btn-sm btn-danger js-table-nolink', type: 'button', data: { toggle: 'modal', target: '#transferFailModal' }
@@ -73,7 +73,7 @@
                         .modal-body
                           .form-group
                             = hidden_field_tag 'go', 'decline'
-                            = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(handyman_id: @handyman)
+                            = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(@handyman)
                             = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'withdrawal' }), class: "control-label col-sm-2"
                             .col-sm-9
                               = f.text_area :reason_message, class: "form-control", rows: 8
@@ -85,7 +85,7 @@
               - elsif waiting_for_audit?(requested_withdrawal)
                 = form_for :withdrawal, url: admin_finance_withdrawal_verification_path(requested_withdrawal), method: :put do |f|
                   = f.hidden_field :audit_state, value: 'audited'
-                  = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(handyman_id: @handyman)
+                  = hidden_field_tag 'back_url', admin_handyman_finance_withdrawals_path(@handyman)
                   = button_tag "通过审核", class: "btn btn-success btn-sm"
     .col-md-12
       h4 财务信息参考

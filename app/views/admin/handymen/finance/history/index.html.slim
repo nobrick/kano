@@ -12,14 +12,14 @@
       li.active
         =link_to "财务历史", ""
       li
-        =link_to "异常提现", admin_handyman_finance_exceptions_path(handyman_id: @handyman)
+        =link_to "异常提现", admin_handyman_finance_exceptions_path(@handyman)
 
 .row
   .col-md-12
     - @unprocessed_withdrawals.each do |w|
       .alert.alert-warning.withdrawal-panel
         | 管家有一个提现申请
-        = link_to "进行处理", admin_handyman_finance_withdrawal_path(w), class: 'btn btn-success withdrawal-panel__button'
+        = link_to "进行处理", admin_finance_withdrawal_path(w), class: 'btn btn-success withdrawal-panel__button'
 
 
 .col-md-12

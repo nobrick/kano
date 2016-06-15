@@ -70,7 +70,7 @@
             |#{ finished_orders_count_per_day(@account) }
     .row.statistics__more-info
       .col-md-12
-        = link_to "更多信息 》", admin_handyman_orders_path(handyman_id: @account), class: "pull-right"
+        = link_to "更多信息 》", admin_handyman_orders_path(@account), class: "pull-right"
 
 .col-md-10.col-md-offset-1
   .statistics__element
@@ -104,5 +104,5 @@
             |#{ profit_per_order(@account) }
     .row.statistics__more-info
       .col-md-12
-        a.pull-right href="#{ admin_handyman_finance_history_index_path(handyman_id: @account) }"
+        a.pull-right href="#{ admin_handyman_finance_history_index_path(@account) }"
           | 更多信息 》

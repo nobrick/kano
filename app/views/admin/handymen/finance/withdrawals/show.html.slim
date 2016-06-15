@@ -8,9 +8,9 @@
       - path = nil
       - case withdrawal_state(@withdrawal)
       - when 'declined'
-        - path = admin_handyman_finance_exceptions_path(handyman_id: handyman)
+        - path = admin_handyman_finance_exceptions_path(handyman)
       - else
-        - path = admin_handyman_finance_history_index_path(handyman_id: handyman)
+        - path = admin_handyman_finance_history_index_path(handyman)
       = link_to "财务信息", path
     li.active
       | 提现

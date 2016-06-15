@@ -65,13 +65,17 @@ Rails.application.routes.draw do
             put :update_taxons
           end
         end
+      end
 
-        resources :orders, only: [:index]
+      resources :handymen, as: :handyman, shallow: true, only: [] do
+        scope module: "handymen" do
+          resources :orders, only: [:index]
 
-        namespace :finance do
-          resources :history, only: [:index]
-          resources :withdrawals, only: [:index, :show]
-          resources :exceptions, only: [:index]
+          namespace :finance do
+            resources :history, only: [:index]
+            resources :withdrawals, only: [:index, :show]
+            resources :exceptions, only: [:index]
+          end
         end
       end
 
