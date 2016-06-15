@@ -6,5 +6,5 @@
 .withdrawal-info__row
   = form_for :withdrawal, url: admin_finance_withdrawal_verification_path(withdrawal), method: :put do |f|
     = f.hidden_field :audit_state, value: 'audited'
-    = hidden_field_tag 'back_url', admin_handyman_finance_withdrawal_path(withdrawal)
+    = hidden_field_tag 'back_url', admin_finance_withdrawal_path(withdrawal)
     = button_tag "通过审核", class: "btn btn-success btn-sm"

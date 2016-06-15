@@ -8,5 +8,5 @@ class Handyman::WithdrawalExecptionDashboard < AdminScaffold::BaseDashboard
     d.date_time "created_at"
   end
 
-  show_page 'admin_handyman_finance_withdrawal_path'
+  show_page 'admin_finance_withdrawal_path'
 end
