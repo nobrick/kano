@@ -3,7 +3,7 @@
 .col-md-12
   ol.breadcrumb
     li
-      = link_to "#{ handyman.full_or_nickname }主页(ID: #{ handyman.id })", admin_handyman_account_path(handyman)
+      = link_to "#{ handyman.full_or_nickname }主页(ID: #{ handyman.id })", admin_handyman_path(handyman)
     li
       - path = nil
       - case withdrawal_state(@withdrawal)

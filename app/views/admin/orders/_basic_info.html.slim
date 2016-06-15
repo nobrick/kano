@@ -43,7 +43,7 @@
             - handyman_nickname = order.handyman.nickname
             - if handyman_nickname.blank?
               -handyman_nickname = "(查看详情)"
-            = link_to "#{ handyman_nickname }", admin_handyman_account_path(order.handyman)
+            = link_to "#{ handyman_nickname }", admin_handyman_path(order.handyman)
           li
             | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;#{ order.handyman.name }
           li

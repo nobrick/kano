@@ -83,7 +83,7 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
       },
       {
         text: "师傅信息管理",
-        path: admin_handyman_accounts_path
+        path: admin_handyman_index_path
       }
     ]
   end
