@@ -10,12 +10,12 @@ class UserDashboard < AdminScaffold::BaseDashboard
     d.date_time "last_sign_in_at"
   end
 
-  search("admin_user_accounts_path") do |s|
+  search("admin_user_index_path") do |s|
     s.cont "name"
     s.cont "email"
     s.eq   "id"
     s.eq   "phone"
   end
 
-  show_page "admin_user_account_path"
+  show_page "admin_user_path"
 end

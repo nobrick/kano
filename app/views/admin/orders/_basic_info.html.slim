@@ -25,7 +25,7 @@
             - user_nickname = order.user.nickname
             - if user_nickname.blank?
               - user_nickname = "(查看详情)"
-            = link_to "#{ user_nickname }", admin_user_account_path(order.user)
+            = link_to "#{ user_nickname }", admin_user_path(order.user)
           li
             | 姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;#{ order.user.name }
           li
@@ -57,7 +57,7 @@
         ul
           li
             | 姓&nbsp;&nbsp;&nbsp;&nbsp;名:&nbsp;&nbsp;
-            = link_to "#{ order.user.name }", admin_user_account_path(order.user)
+            = link_to "#{ order.user.name }", admin_user_path(order.user)
           li
             | 昵&nbsp;&nbsp;&nbsp;&nbsp;称:&nbsp;&nbsp; #{ order.user.nickname }
           li

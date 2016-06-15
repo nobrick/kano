@@ -26,7 +26,7 @@
   .col-md-12
     ol.breadcrumb
       li
-        =link_to "主页", admin_user_account_path(@account)
+        =link_to "主页", admin_user_path(@account)
       li.active
         | 个人资料
 
@@ -37,7 +37,7 @@
 
 
   .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_user_account_path }
+    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_user_path(@account) }
 
     .panel.panel-primary
       .panel-heading
