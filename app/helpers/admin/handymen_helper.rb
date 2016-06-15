@@ -1,4 +1,4 @@
-module Admin::Handymen::AccountsHelper
+module Admin::HandymenHelper
   def finished_rate(handyman)
     orders_total = handyman.orders.count
     return "0%" if orders_total == 0

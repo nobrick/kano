@@ -54,11 +54,6 @@ Rails.application.routes.draw do
             match 'search' => 'certifications#search', via: :get
           end
         end
-        resources :accounts, only: [:index, :show] do
-          member do
-            post :update_account_status
-          end
-        end
 
         resources :profiles, only: [:update, :show] do
           member do
@@ -67,7 +62,7 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :handymen, as: :handyman, shallow: true, only: [] do
+      resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
         scope module: "handymen" do
           resources :orders, only: [:index]
 

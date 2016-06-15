@@ -1,8 +1,7 @@
-class Admin::Handymen::AccountsController < Admin::AccountsController
-  helper "admin/handymen/accounts"
+class Admin::HandymenController < Admin::AccountsController
   helper_method :dashboard, :tabs_info
   rescue_from ActiveRecord::StatementInvalid do
-    redirect_to admin_handyman_accounts_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+    redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
 
@@ -20,7 +19,7 @@ class Admin::Handymen::AccountsController < Admin::AccountsController
       },
       {
         text: "师傅信息管理",
-        path: admin_handyman_accounts_path
+        path: admin_handyman_index_path
       }
     ]
   end
