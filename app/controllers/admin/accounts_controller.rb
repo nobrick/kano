@@ -16,7 +16,7 @@ class Admin::AccountsController < Admin::ApplicationController
   # params
   #   id: account id
   #   account_lock:  true or false
-  def update_account_status
+  def update
     Account.serializable do
       set_account
       if lock_account?

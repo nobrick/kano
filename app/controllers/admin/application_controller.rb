@@ -13,7 +13,7 @@ class Admin::ApplicationController < ActionController::Base
   end
 
   def account_model_class
-    name = controller_path.match(/admin\/(\w+)\//)[1].singularize.capitalize
+    name = controller_path.match(/admin\/(\w+)/)[1].singularize.capitalize
     ActiveRecord.const_get(name)
   end
 
