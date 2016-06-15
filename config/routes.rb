@@ -72,13 +72,10 @@ Rails.application.routes.draw do
         end
       end
 
-      namespace :users, as: :user do
-        resources :accounts, only: [:index, :show] do
-          member do
-            post :update_account_status
-          end
-        end
+      resources :users, as: :user, shallow: true, only: [:index, :show, :update]
 
+
+      namespace :users, as: :user do
         resources :profiles, only: [:update, :show], shallow: true do
           resources :addresses, only: [:create, :update, :destroy]
           member do
