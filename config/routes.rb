@@ -82,9 +82,8 @@ Rails.application.routes.draw do
         end
       end
 
-      namespace :managers, as: :manager do
-        resources :accounts, only: [:index, :update, :show]
-      end
+      resources :managers, as: :manager, only: [:index, :update, :show]
+
       resources :orders, only: [:index, :update, :show] do
         collection do
           match 'search' => 'orders#search', via: :get

@@ -10,7 +10,7 @@ class ManagerDashboard < AdminScaffold::BaseDashboard
     d.date_time "last_sign_in_at"
   end
 
-  search("admin_manager_accounts_path") do |s|
+  search("admin_manager_index_path") do |s|
     s.cont "name"
     s.cont "email"
     s.eq   "id"
