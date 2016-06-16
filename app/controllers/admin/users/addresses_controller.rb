@@ -3,7 +3,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
   before_action :set_address, only: [:update, :destroy]
 
   def create
-    user = User.find params[:profile_id]
+    user = User.find params[:user_id]
     address = Address.new(address_params, addressable: user)
     address.addressable = user
 
