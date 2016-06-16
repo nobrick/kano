@@ -5,6 +5,9 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
     redirect_to admin_user_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
+  def show
+  end
+
   # params:
   #   id: user id
   #   profile:
@@ -19,8 +22,15 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
   #       content:
   def update
     assign_primary_address
+    @account.assign_attributes(profile_params)
 
-    super
+    if @account.save
+      flash[:success] = i18n_t('update_success', 'C')
+    else
+      flash[:alert] = @account.errors.full_messages
+    end
+
+    redirect_to redirect_path
   end
 
   # params:
@@ -38,6 +48,29 @@ class Admin::Users::ProfilesController < Admin::ProfilesController
   end
 
   private
+
+  def serializable
+    Account.serializable { yield }
+  end
+
+  def profile_params
+    params.require(:profile).permit(
+      :name,
+      :phone,
+      :nickname,
+      :gender,
+      :email
+    )
+  end
+
+  def redirect_path
+    account_type = @account.type.downcase
+    send("admin_#{account_type}_profile_path", @account)
+  end
+
+  def set_account
+    @account = account_model_class.find params[:user_id]
+  end
 
   def assign_primary_address
     code = primary_address_params[:code]

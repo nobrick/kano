@@ -75,15 +75,10 @@ Rails.application.routes.draw do
       resources :users, as: :user, shallow: true, only: [:index, :show, :update] do
         scope module: "users" do
           resources :orders, only: [:index]
-        end
-      end
-
-      namespace :users, as: :user do
-        resources :profiles, only: [:update, :show], shallow: true do
-          resources :addresses, only: [:create, :update, :destroy]
-          member do
+          resource :profile, only: [:update, :show] do
             post :set_primary_address
           end
+          resources :addresses, only: [:create, :update, :destroy], shallow_path: "users", shallow_prefix: "user"
         end
       end
 

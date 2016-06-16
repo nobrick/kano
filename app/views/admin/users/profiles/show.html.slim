@@ -1,5 +1,5 @@
 = render layout: "admin/shared/modal", locals: { title: "创建新地址", id: "addressCreate"} do
-  = form_for :address, url: admin_user_profile_addresses_path(@account), html: { class: "form-horizontal" } do |f|
+  = form_for :address, url: admin_user_addresses_path(@account), html: { class: "form-horizontal" } do |f|
     .city-group
       .form-group
         .col-md-offset-2.col-md-8
