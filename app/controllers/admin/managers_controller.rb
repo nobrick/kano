@@ -1,4 +1,4 @@
-class Admin::Managers::AccountsController < Admin::ApplicationController
+class Admin::ManagersController < Admin::ApplicationController
 
   helper_method :dashboard
 
