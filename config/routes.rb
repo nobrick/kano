@@ -56,6 +56,31 @@ Rails.application.routes.draw do
         end
       end
 
+      namespace :finance do
+        namespace :withdrawals, as: :withdrawal do
+          resources :verifications, only: [:index, :update] do
+            collection do
+              match 'search' => 'verifications#search', via: :get
+            end
+          end
+          resources :transfer, only: [:index, :update] do
+            collection do
+              match 'search' => 'transfer#search', via: :get
+            end
+          end
+          resources :history, only: [:index] do
+            collection do
+              match 'search' => 'history#search', via: :get
+            end
+          end
+          resources :exceptions, only: [:index] do
+            collection do
+              match 'search' => 'exceptions#search', via: :get
+            end
+          end
+        end
+      end
+
       resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
         scope module: "handymen" do
           resource :profile, only: [:show, :update] do
@@ -86,31 +111,6 @@ Rails.application.routes.draw do
       resources :orders, only: [:index, :update, :show] do
         collection do
           match 'search' => 'orders#search', via: :get
-        end
-      end
-
-      namespace :finance do
-        namespace :withdrawals, as: :withdrawal do
-          resources :verifications, only: [:index, :update] do
-            collection do
-              match 'search' => 'verifications#search', via: :get
-            end
-          end
-          resources :transfer, only: [:index, :update] do
-            collection do
-              match 'search' => 'transfer#search', via: :get
-            end
-          end
-          resources :history, only: [:index] do
-            collection do
-              match 'search' => 'history#search', via: :get
-            end
-          end
-          resources :exceptions, only: [:index] do
-            collection do
-              match 'search' => 'exceptions#search', via: :get
-            end
-          end
         end
       end
     end
