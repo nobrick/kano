@@ -47,7 +47,6 @@ class Admin::AccountsController < Admin::ApplicationController
 
   def lock_account?
     params[:account_lock] == 'true'
-
   end
 
   def unlock_account?
