@@ -1,4 +1,32 @@
 module Admin::HandymenHelper
+  def admin_handyman_render_tabs
+    tabs_info = [
+      {
+        text: "技能认证管理",
+        path: admin_handyman_certifications_path
+      },
+      {
+        text: "师傅信息管理",
+        path: admin_handyman_index_path
+      }
+    ]
+    admin_render_tabs(tabs_info)
+  end
+
+  def admin_handyman_finance_render_tabs(handyman)
+    tabs_info = [
+      {
+        text: "财务历史",
+        path: admin_handyman_finance_history_index_path(handyman)
+      },
+      {
+        text: "异常提现",
+        path: admin_handyman_finance_exceptions_path(handyman)
+      }
+    ]
+    admin_render_tabs(tabs_info)
+  end
+
   def finished_rate(handyman)
     orders_total = handyman.orders.count
     return "0%" if orders_total == 0
