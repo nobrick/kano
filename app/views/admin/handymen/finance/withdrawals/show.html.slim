@@ -1,19 +1,7 @@
 - unfrozen_record = @withdrawal.unfrozen_record
 - handyman = @withdrawal.handyman
 .col-md-12
-  ol.breadcrumb
-    li
-      = link_to "#{ handyman.full_or_nickname }主页(ID: #{ handyman.id })", admin_handyman_path(handyman)
-    li
-      - path = nil
-      - case withdrawal_state(@withdrawal)
-      - when 'declined'
-        - path = admin_handyman_finance_exceptions_path(handyman)
-      - else
-        - path = admin_handyman_finance_history_index_path(handyman)
-      = link_to "财务信息", path
-    li.active
-      | 提现
+  = render_admin_withdrawal_breadcrumb(handyman, @withdrawal)
 
 .col-md-12
   .blue-panel.col-md-12

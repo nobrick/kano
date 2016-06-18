@@ -22,14 +22,7 @@
 
 = render partial: 'admin/shared/accounts/address_modal', locals: { title: "编辑地址" }
 
-.tabs.row
-  .col-md-12
-    ol.breadcrumb
-      li
-        =link_to "主页", admin_user_path(@account)
-      li.active
-        | 个人资料
-
+= render_admin_account_breadcrumb(@account, "个人资料")
 
 .tabs__content.row
   .col-md-7
