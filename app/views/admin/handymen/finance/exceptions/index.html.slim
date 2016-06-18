@@ -1,10 +1,6 @@
-.row
-  ol.breadcrumb
-    li
-      =link_to "#{ @handyman.full_or_nickname }主页(ID: #{ @handyman.id })", admin_handyman_path(@handyman)
-    li.active
-      | 财务信息
+= render_admin_account_breadcrumb(@handyman, "财务信息")
 
 = admin_handyman_finance_render_tabs(@handyman)
+
 = render partial: 'admin/shared/dashboard/index', locals: { resources: @failed_withdrawals, dashboard: dashboard, instance: nil }
 
