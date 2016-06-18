@@ -1,5 +1,5 @@
 module Admin::Finance::WithdrawalsHelper
-  def admin_finance_withdrawal_render_tabs
+  def render_admin_finance_withdrawal_tabs
     tabs_info = [
       {
         text: "提现审核",
@@ -14,6 +14,6 @@ module Admin::Finance::WithdrawalsHelper
         path: admin_finance_withdrawal_history_index_path
       }
     ]
-    admin_render_tabs(tabs_info)
+    render_admin_tabs(tabs_info)
   end
 end

@@ -8,7 +8,7 @@ module Admin::ApplicationHelper
     end
   end
 
-  def admin_render_tabs(tabs_info)
+  def render_admin_tabs(tabs_info)
     list_items = tabs_info.map do |tab_info|
       tab_class = "active" if current_page?(tab_info[:path])
       content_tag(:li, class: tab_class) do

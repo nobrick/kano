@@ -1,5 +1,5 @@
 module Admin::HandymenHelper
-  def admin_handyman_render_tabs
+  def render_admin_handyman_tabs
     tabs_info = [
       {
         text: "技能认证管理",
@@ -10,10 +10,10 @@ module Admin::HandymenHelper
         path: admin_handyman_index_path
       }
     ]
-    admin_render_tabs(tabs_info)
+    render_admin_tabs(tabs_info)
   end
 
-  def admin_handyman_finance_render_tabs(handyman)
+  def render_admin_handyman_finance_tabs(handyman)
     tabs_info = [
       {
         text: "财务历史",
@@ -24,7 +24,7 @@ module Admin::HandymenHelper
         path: admin_handyman_finance_exceptions_path(handyman)
       }
     ]
-    admin_render_tabs(tabs_info)
+    render_admin_tabs(tabs_info)
   end
 
   def finished_rate(handyman)

@@ -3,7 +3,7 @@ module Admin::AccountsHelper
     tabs_info = [
       {
         text: "#{ account.full_or_nickname }主页(ID: #{ account.id })",
-        path: send("admin_#{ account.class.to_s.underscore }_path", account)
+        path: send("admin_#{ account.type.underscore }_path", account)
       },
       last_text
     ]
