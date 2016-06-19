@@ -1,8 +1,5 @@
 class Admin::ProfilesController < Admin::ApplicationController
 
-  def show
-  end
-
   # params:
   #   id: account id
   #   profile:
@@ -39,12 +36,18 @@ class Admin::ProfilesController < Admin::ApplicationController
     )
   end
 
+  def primary_address_params
+    params.require(:profile).permit(
+      primary_address_attributes: [
+        :id,
+        :code,
+        :content
+      ]
+    )
+  end
+
   def redirect_path
     account_type = @account.type.downcase
     send("admin_#{account_type}_profile_path", @account)
-  end
-
-  def set_account
-    @account = account_model_class.find params[:id]
   end
 end
