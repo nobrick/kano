@@ -1,5 +1,8 @@
 class Admin::ProfilesController < Admin::ApplicationController
 
+  def show
+  end
+
   # params:
   #   id: account id
   #   profile:
@@ -33,16 +36,6 @@ class Admin::ProfilesController < Admin::ApplicationController
       :nickname,
       :gender,
       :email
-    )
-  end
-
-  def primary_address_params
-    params.require(:profile).permit(
-      primary_address_attributes: [
-        :id,
-        :code,
-        :content
-      ]
     )
   end
 
