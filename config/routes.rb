@@ -80,6 +80,7 @@ Rails.application.routes.draw do
             end
           end
         end
+        resources :withdrawals, only: [:show]
       end
 
       resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
@@ -91,7 +92,7 @@ Rails.application.routes.draw do
 
           namespace :finance do
             resources :history, only: [:index]
-            resources :withdrawals, only: [:index, :show]
+            resources :withdrawals, only: [:index]
             resources :exceptions, only: [:index]
           end
         end

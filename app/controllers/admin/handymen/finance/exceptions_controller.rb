@@ -6,10 +6,6 @@ class Admin::Handymen::Finance::ExceptionsController < Admin::ApplicationControl
     @failed_withdrawals = @handyman.withdrawals.failed.page(params[:page]).per(10)
   end
 
-  def show
-    @withdrawal = Withdrawal.find params[:id]
-  end
-
   private
 
   def dashboard
