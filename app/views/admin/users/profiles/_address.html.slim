@@ -1,0 +1,18 @@
+dl.address
+  dt
+    | 地址 #{ address_counter + 1 }
+    - if address.primary?
+      span.label.label-warning.address__label
+        | 默认地址
+  dd.col-md-8
+    | #{ address }
+  .col-md-4
+    .btn-toolbar.pull-right
+      = button_tag "编辑", class: "btn btn-primary btn-xs", data: { toggle: "modal", target: "#js-addressEdit", city_code: address.city_code, district_code: address.code, content: address.content, url: admin_user_address_path(address) }
+      = link_to "删除", admin_user_address_path(address),
+      class: "btn btn-danger btn-xs",
+      method: :delete,
+      data: { confirm: "你是否确认删除该地址" }
+  .col-md-12
+    = button_to "设为默认", set_primary_address_admin_user_profile_path(@account), class: "address__link", params: { address_id: address.id }
+
