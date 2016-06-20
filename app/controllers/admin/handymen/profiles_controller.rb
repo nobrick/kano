@@ -6,9 +6,6 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
-  def show
-  end
-
   # params:
   #   handyman_id: handyman id
   #   profile:
@@ -50,5 +47,15 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     @account.build_primary_address(addressable: @account) if address.blank?
     @city_code = address.try(:city_code) || '431000'
     @district_code = address.try(:code) || '431001'
+  end
+
+  def primary_address_params
+    params.require(:profile).permit(
+      primary_address_attributes: [
+        :id,
+        :code,
+        :content
+      ]
+    )
   end
 end

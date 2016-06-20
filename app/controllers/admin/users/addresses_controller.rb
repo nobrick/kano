@@ -4,8 +4,7 @@ class Admin::Users::AddressesController < Admin::ApplicationController
 
   def create
     user = User.find params[:user_id]
-    address = Address.new(address_params, addressable: user)
-    address.addressable = user
+    address = user.addresses.new(address_params)
 
     if address.save
       flash[:success] = i18n_t('update_success', 'C')
