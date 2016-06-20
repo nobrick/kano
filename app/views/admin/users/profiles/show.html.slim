@@ -36,26 +36,7 @@
       .panel-heading
         | 地址管理
       .panel-body
-        - i = 0
-        - @account.addresses.order(:id).each do |address|
-          dl.address
-            dt
-              | 地址 #{ i += 1 }
-              - if address.primary?
-                span.label.label-warning.address__label
-                  | 默认地址
-            dd.col-md-8
-              | #{address}
-            .col-md-4
-              .btn-toolbar.pull-right
-                = button_tag "编辑", class: "btn btn-primary btn-xs", data: { toggle: "modal", target: "#js-addressEdit", city_code: address.city_code, district_code: address.code, content: address.content, url: admin_user_address_path(address) }
-                = link_to "删除", admin_user_address_path(address),
-                class: "btn btn-danger btn-xs",
-                method: :delete,
-                data: { confirm: "你是否确认删除该地址" }
-            = form_tag set_primary_address_admin_user_profile_path(@account), class: "col-md-12"
-              = hidden_field_tag 'address_id', address.id
-              = button_tag "设为默认", class: " address__link"
+        = render partial: "address", collection: @account.addresses
 
         .col-md-offset-10.col-md-2
           .pull-right
