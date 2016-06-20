@@ -9,4 +9,4 @@
       = link_to "进行处理", admin_finance_withdrawal_path(w), class: 'btn btn-success withdrawal-panel__button'
 
 
-= render partial: 'admin/shared/dashboard/index', locals: { resources: @balance_records, dashboard: dashboard, instance: @search, filter_path_query: { handyman_id: @handyman.id }}
+= render partial: 'admin/shared/dashboard/index', locals: { resources: @balance_records, dashboard: dashboard, instance: @search }

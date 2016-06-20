@@ -1,7 +1,5 @@
-- unfrozen_record = @withdrawal.unfrozen_record
-- handyman = @withdrawal.handyman
 .col-md-12
-  = render_admin_withdrawal_breadcrumb(handyman, @withdrawal)
+  = render_admin_withdrawal_breadcrumb(@handyman, @withdrawal)
 
 .col-md-12
   .blue-panel.col-md-12
@@ -14,16 +12,16 @@
         .withdrawal-info__row
           label.withdrawal-info__item
             |账户余额:
-            span #{ handyman.balance } 元
+            span #{ @handyman.balance } 元
           label.withdrawal-info__item
             |解冻金额:
-            span #{ unfrozen_record.balance } 元
+            span #{ @unfrozen_record.balance } 元
           label.withdrawal-info__item
             |解冻日期:
             span #{ l(@withdrawal.created_at.to_date, format: :long) }
           label.withdrawal-info__item
             |解冻财务 ID:
-            span #{ unfrozen_record.id }
+            span #{ @unfrozen_record.id }
         - state = withdrawal_state(@withdrawal)
         = render partial: "#{ state }", locals: { withdrawal: @withdrawal }
 
@@ -43,9 +41,9 @@
         th 网络收入总额
         th 现金收入总额
     tbody.table__content
-      - unfrozen_record.around_records.each do |r|
+      - @unfrozen_record.around_records.each do |r|
         - style = ""
-        - if r == unfrozen_record
+        - if r == @unfrozen_record
           - style ="red-row"
         tr class="#{style}"
           td #{ i18n_t(r.adjustment_event_type.downcase, 'D', model: 'balance_record', attr: 'adjustment_event_types') }
