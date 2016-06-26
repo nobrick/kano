@@ -8,7 +8,7 @@ namespace :db do
         else
           phone = "185200021#{n}"
         end
-        handyman = Account.create({
+        handman = Account.create({
           email: "abcd#{n}@qq.com",
           phone: phone,
           name:  "haha#{n}",
@@ -17,7 +17,7 @@ namespace :db do
         })
 
         Taxon.create({
-          handyman_id: handyman.id,
+          handyman_id: handman.id,
           code: "electronic/lighting",
           cert_requested_at: Time.now
         })

@@ -2,7 +2,7 @@ FactoryGirl.define do
   factory :handyman do
     transient { with_taxons false }
     primary_address_attributes { attributes_for(:address) }
-    email { "handy-#{rand(1...10**7)}@example.com" }
+    sequence(:email, 100) { |n| "handyman#{n}@example.com" }
     password 'abcdefg'
     name '小明'
     phone { "1#{rand(10**9...10**10)}" }
