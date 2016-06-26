@@ -1,7 +1,7 @@
 FactoryGirl.define do
   factory :user do
     primary_address_attributes { attributes_for(:address) }
-    sequence(:email, 100) { |n| "user#{n}@example.com" }
+    email { "user-#{rand(1...10**7)}@example.com" }
     password 'abcdefg'
     name '小明'
     phone { "1#{rand(10**9...10**10)}" }
@@ -9,7 +9,7 @@ FactoryGirl.define do
 
     trait :wechat do
       provider 'wechat'
-      sequence(:uid, 100) { |n| "BXxFyinSQsyM5r6EOUJRmebAM#{n}" }
+      uid { "UID-#{rand(1...10**7)}" }
     end
 
     trait :unverified do
