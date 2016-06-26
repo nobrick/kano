@@ -4,6 +4,8 @@ namespace :db do
   namespace :seed do
     desc 'Load the seed data for records'
     task :records do |t, args|
+      Rails.application.eager_load!
+      SeedHelper.eager_load!
       date_last_month = Time.now.last_month
       date_llm = Time.now - 2.months
 
