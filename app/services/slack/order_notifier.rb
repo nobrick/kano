@@ -4,10 +4,25 @@ module Slack
   module OrderNotifier
     def self.push_uncontracted_order(order)
       user_name = order.user.full_or_nickname
-      slack.ping({"attachments": [
+      pretext = "*#{user_name}* 有一个新的<#{url(order)}|未接订单>"
+      fallback = "#{user_name} 有一个未接订单 ##{order.id}"
+      payload = payload_for(order, pretext: pretext, fallback: fallback)
+      slack.ping(payload)
+    end
+
+    def self.push_expired_order(order)
+      user_name = order.user.full_or_nickname
+      pretext = "*#{user_name}* 的<#{url(order)}|过期订单>已被系统取消"
+      fallback = "#{user_name} 的过期订单已被系统取消 ##{order.id}"
+      payload = payload_for(order, pretext: pretext, fallback: fallback)
+      slack.ping(payload)
+    end
+
+    def self.payload_for(order, opts)
+      {"attachments": [
         {
-          "pretext": "*#{user_name}* 有一个新的<#{url(order)}|未接订单>",
-          "fallback": "#{user_name} 有一个未接订单 ##{order.id}",
+          "pretext": opts.fetch(:pretext),
+          "fallback": opts.fetch(:fallback),
           "color": "#7CD197",
           "fields": [
             {
@@ -48,7 +63,7 @@ module Slack
           ],
           "mrkdwn_in": ["pretext"]
         }
-      ]})
+      ]}
     end
 
     def self.url(order)
