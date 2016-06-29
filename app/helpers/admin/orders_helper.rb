@@ -6,7 +6,7 @@ module Admin::OrdersHelper
       nickname = user.nickname
     end
 
-    render partial: "item", locals: {
+    {
       title: "用户信息",
       items: [
         { name: "编号", value: "#{ user.id }" },
@@ -18,7 +18,7 @@ module Admin::OrdersHelper
   end
 
   def admin_handyman_info(handyman)
-    render partial: "item", locals: {
+    {
       title: "管家信息",
       items: [
         { name: "编号", value: "#{ handyman.id }" },
@@ -30,7 +30,7 @@ module Admin::OrdersHelper
   end
 
   def admin_order_content(order)
-    render partial: 'item', locals: {
+    {
       title: "维修信息",
       items: [
         { name: "维修项目", value: "#{ order.taxon_name }" },
@@ -41,7 +41,7 @@ module Admin::OrdersHelper
   end
 
   def admin_order_rate(order)
-    render partial: 'item', locals: {
+    {
       title: "评价详情",
       items: [
         { name: "评分", value: "#{ order.rating }" },
@@ -51,7 +51,7 @@ module Admin::OrdersHelper
   end
 
   def admin_order_report(order)
-    render partial: 'item', locals: {
+    {
       title: "投诉信息",
       items: [
         { name: "投诉类型", value: "#{ order.report_type }" },
@@ -61,7 +61,7 @@ module Admin::OrdersHelper
   end
 
   def admin_order_cancel(order)
-    render partial: 'item', locals: {
+    {
       title: "订单取消详情",
       items: [
         { name: "取消者 ID", value: "#{ order.canceler.id }" },
@@ -72,7 +72,7 @@ module Admin::OrdersHelper
   end
 
   def admin_user_payment(order)
-    render partial: 'item', locals: {
+    {
       title: "用户支付信息",
       items: [
         { name: "订单价格", value: "#{ order.user_total }" },
@@ -84,7 +84,7 @@ module Admin::OrdersHelper
   end
 
   def admin_handyman_payment(order)
-    render partial: 'item', locals: {
+    {
       title: "管家收益信息",
       items: [
         { name: "订单价格", value: "#{ order.user_total }" },
