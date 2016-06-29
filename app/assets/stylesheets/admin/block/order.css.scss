@@ -1,21 +1,73 @@
-.order-info {
-  border-top: 1px solid #EDEDED;
+.item {
+  border-bottom: 1px solid #EDEDED;
   padding: 10px 5px;
   margin: 0;
 }
 
-.order-info--first {
-  border-top: 0;
+.item ul {
+  list-style: none;
+  padding: 0;
 }
 
-.order-info dt {
+.item__title {
   margin-bottom: 4px;
   font-weight: 700;
 }
 
-.order-info ul {
-  list-style: none;
-  padding: 0;
+.item__element-title {
+  display: inline-block;
+  text-align-last: justify;
+  width: 65px;
+}
+.item__element-colon {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+.item--payment {
+  border: none;
+}
+
+.item--payment dd {
+  display: table;
+  height: 100px;
+  width: 100%;
+}
+
+.item--payment ul {
+  display: table-cell;
+  vertical-align: bottom;
+  text-align: center;
+}
+
+.item--payment li:last-child {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.item--payment .item__element-title {
+  text-align-last: right;
+  width: 100px;
+}
+
+.item--payment .item__element-value {
+  display: inline-block;
+  width: 100px;
+  text-align: left;
+}
+
+.item--payment li:last-child:before {
+  content: "";
+  text-align: center;
+  display: block;
+  border-top: 1px solid #ccc;
+  margin: auto;
+  margin-top: 10px;
+  width: 200px;
+}
+
+.item--payment li:last-child .item__element-value {
+  color: red;
 }
 
 .order__states {
@@ -34,30 +86,4 @@
 .order__history-uncompleted {
   vertical-align: middle;
   color: gray;
-}
-
-.order__price span {
-  text-align: right;
-  width: 200px;
-  display: inline-block;
-}
-
-.order__price--user {
-  margin-top: 23px;
-}
-
-.order__result {
-  text-align: center;
-  width: 200px;
-  margin-left: 80px;
-  font-size: 16px;
-  font-weight: 700;
-  margin-top: 10px;
-  border-top: 1px solid #ccc;
-}
-
-span.order__result-number {
-  display: inline;
-  font-size: 18px;
-  color: red;
 }
