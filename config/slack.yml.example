@@ -3,3 +3,6 @@ exception_notification:
   channel: '#exceptions'
   additional_parameters:
     mrkdwn: true
+orders_notification:
+  webhook_url: ''
+  channel: '#orders'

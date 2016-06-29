@@ -33,6 +33,7 @@ class Users::OrdersController < ApplicationController
   # POST /orders
   def create
     if request_order_and_save_phone(@phone)
+      Order::NoContractRemindWorker.perform_in(15.minutes, @order.id)
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       new
