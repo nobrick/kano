@@ -143,6 +143,7 @@ Rails.application.routes.draw do
   with_options constraints: ScopeRecognizer.new(:user), to: 'guides#index' do |v|
     v.get 'orders/new'
     v.get 'orders/:id'
+    v.get 'alpha/orders/:id'
   end
 
   with_options(
