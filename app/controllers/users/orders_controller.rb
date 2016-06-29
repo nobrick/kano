@@ -33,7 +33,7 @@ class Users::OrdersController < ApplicationController
   # POST /orders
   def create
     if request_order_and_save_phone(@phone)
-      Order::NoContractRemindWorker.perform_in(15.minutes, @order.id)
+      set_workers_after_create
       redirect_to [ :user, @order ], notice: t('.order_success')
     else
       new
@@ -110,6 +110,12 @@ class Users::OrdersController < ApplicationController
     else
       @sms_zone_hidden_class = ''
     end
+  end
+
+  def set_workers_after_create
+    expired_days = 14
+    Order::ExpiredCancelingWorker.perform_in(expired_days.days, @order.id, expired_days)
+    Order::NoContractRemindWorker.perform_in(15.minutes, @order.id)
   end
 
   def verify_vcode

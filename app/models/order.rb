@@ -56,7 +56,10 @@ class Order < ActiveRecord::Base
   validates :content, length: { minimum: 5 }
   validates :arrives_at, presence: true
   validates :user, presence: true
-  validates :taxon_code, inclusion: { in: Taxon.taxon_codes, message: '不能为空' }
+  validates :taxon_code, inclusion: {
+    in: Taxon.taxon_codes,
+    message: '不能为空'
+  }
   validates :state, presence: true
   validates :address, presence: true, associated: true
   validates :arrives_at, inclusion: {
@@ -65,7 +68,9 @@ class Order < ActiveRecord::Base
   }, if: :ignores_arrives_at_validation?
   validate :service_must_be_available, if: 'to? :requested'
   validates :handyman, presence: true, associated: true, if: 'to? :contracted'
-  validates :cancel_type, inclusion: { in: %w{ User Handyman Admin } }, if: 'to? :canceled'
+  validates :cancel_type, inclusion: {
+    in: %w{ User Handyman Admin System }
+  }, if: 'to? :canceled'
   validates_presence_of :canceled_at, :canceler, if: 'to? :canceled'
 
   attr_accessor :ignores_arrives_at_validation
@@ -323,7 +328,9 @@ class Order < ActiveRecord::Base
   def do_cancel
     self.canceled_at = Time.now
     raise 'Canceler cannot be nil' if canceler.nil?
-    self.cancel_type = if canceler.admin?
+    self.cancel_type = if cancel_type == 'System'
+                         'System'
+                       elsif canceler.admin?
                          'Admin'
                        elsif canceler.is_a? Handyman
                          'Handyman'
