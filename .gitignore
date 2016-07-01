@@ -46,6 +46,7 @@ coverage
 
 # Miscellaneous.
 public/assets
+public/uploads
 /vendor/cache
 spec/examples.txt
 dump.rdb

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160323144059) do
+ActiveRecord::Schema.define(version: 20160630123227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 20160323144059) do
     t.datetime "locked_at"
     t.integer  "last_balance_record_id"
     t.datetime "phone_verified_at"
+    t.string   "avatar"
   end
 
   add_index "accounts", ["admin"], name: "index_accounts_on_admin", using: :btree
