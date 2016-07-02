@@ -4,22 +4,28 @@ class AvatarUploader < CarrierWave::Uploader::Base
   include CarrierWave::MiniMagick
   storage :file
   process :validate_dimensions
+  process :crop
   process resize_and_pad: [ 256, 256, :transparent ]
 
   def store_dir
     "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
   end
 
-  # Provide a default URL as a default if there hasn't been a file uploaded:
-  # def default_url
-  #   # For Rails 3.1+ asset pipeline compatibility:
-  #   # ActionController::Base.helpers.asset_path("fallback/" + [version_name, "default.png"].compact.join('_'))
-  #
-  #   "/images/fallback/" + [version_name, "default.png"].compact.join('_')
-  # end
+  def default_url
+    name = [ version_name, 'default.png' ].compact.join('_')
+    "/images/avatar_fallback/" + name
+  end
 
-  version :thumb do
-    process resize_and_pad: [ 64, 64, :transparent]
+  def crop(crop_data = model.avatar_crop_data)
+    return if crop_data.blank?
+    manipulate! do |img|
+      x = crop_data[:x]
+      y = crop_data[:y]
+      w = crop_data[:width]
+      h = crop_data[:height]
+      img.crop("#{w}x#{h}+#{x}+#{y}")
+      img
+    end
   end
 
   def extension_white_list
@@ -27,12 +33,14 @@ class AvatarUploader < CarrierWave::Uploader::Base
   end
 
   def filename
-    if original_filename.present?
-      if model && model.read_attribute(mounted_as).present?
-        model.read_attribute(mounted_as)
-      else
-        "#{SecureRandom.uuid}.#{file.extension}"
-      end
-    end
+    "#{secure_token}.#{file.extension}" if original_filename.present?
+  end
+
+  protected
+
+  def secure_token
+    var = :"@#{mounted_as}_secure_token"
+    model.instance_variable_get(var) ||
+      model.instance_variable_set(var, SecureRandom.uuid)
   end
 end

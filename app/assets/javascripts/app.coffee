@@ -1,4 +1,5 @@
 #= require ./users/orders
+#= require ./handymen/avatars
 
 @Global =
   debug: false

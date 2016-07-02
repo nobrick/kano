@@ -13,6 +13,7 @@ class Account < ActiveRecord::Base
     :lockable,
     omniauth_providers: [ :wechat, :handyman_wechat ]
   mount_uploader :avatar, AvatarUploader
+  attr_accessor :avatar_crop_data
 
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'

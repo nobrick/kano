@@ -42,6 +42,7 @@ Rails.application.routes.draw do
       resource :profile, only: [ :show, :update ] do
         get :complete
       end
+      resource :avatar, only: [ :edit, :update ]
     end
   end
 
