@@ -68,11 +68,7 @@ class Users::CheckoutsController < ApplicationController
   end
 
   def pay_in_wechat
-    unless wechat_request? || debug_wechat?
-      set_notice(t '.should_pay_in_wechat_client')
-      return false
-    end
-
+    return unless check_wechat_env
     transition = serializable do
       return unless authorize_order(set_order) && changeset
       set_payment('pingpp_wx_pub')
@@ -80,6 +76,14 @@ class Users::CheckoutsController < ApplicationController
     end
     set_alert(failure_message) unless transition
     redirect_to [ :user, @order ]
+  end
+
+  def check_wechat_env
+    return true if wechat_request? || debug_wechat?
+    return false unless authorize_order(set_order)
+    set_notice(t '.should_pay_in_wechat_client')
+    redirect_to [ :user, @order ]
+    false
   end
 
   def failure_message
