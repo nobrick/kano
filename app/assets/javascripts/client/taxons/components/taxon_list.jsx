@@ -6,7 +6,7 @@ export default class TaxonList extends Component {
     return (
       <div className="taxonList">
         {this.props.taxons.map((taxon, index) =>
-          <Taxon {...taxon}
+          <Taxon {...taxon} key={taxon.code}
           onDeleteClick={code => this.props.onDeleteClick(code)} />
         )}
       </div>
