@@ -27,7 +27,7 @@ class Handymen::AvatarsController < ApplicationController
   end
 
   def profile_params
-    params.require(:profile).permit(:avatar)
+    params.fetch(:profile, {})
   end
 
   def crop_data
