@@ -1,8 +1,8 @@
-@Sels =
+Sels =
   orderNew: '.order-new-page'
   orderContracted: '.order-contracted-view'
 
-@Pricing =
+Pricing =
   calc: (trafficPrice, baseServicePrice, hour) ->
     times = switch hour
       when 20, 21 then 1.2

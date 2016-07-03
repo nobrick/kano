@@ -2,10 +2,11 @@
 [![Circle CI](https://circleci.com/gh/nobrick/kano.svg?style=svg&circle-token=524e74c362b8210de373f211ff35129cfaaf7a7a)](https://circleci.com/gh/nobrick/kano)
 
 ## Installation for Development
-Install and configure the following services:
+Install and configure the following packages:
 - PostgreSQL
 - Redis
 - NodeJS
+- ImageMagick
 
 Run the following commands for setup:
 ```

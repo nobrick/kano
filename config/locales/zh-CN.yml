@@ -116,6 +116,9 @@ zh-CN:
     users/orders/resends:
       resend_order_success: '订单已取消，您可重新预约新订单'
       resend_order_failure: '取消订单失败'
+    handymen/avatars:
+      avatar_saved: '头像已保存'
+      avatar_blank: '未上传头像'
     handymen/order_contracts:
       order_not_exist: '订单不存在'
     handymen/contracts/resends:

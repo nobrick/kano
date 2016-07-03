@@ -2,6 +2,7 @@
 @import 'font-awesome';
 @import 'bootstrap';
 @import 'material-design-lite/material.min';
+@import 'cropperjs/dist/cropper.min';
 @import 'bourbon';
 @import 'fonts';
 
@@ -115,6 +116,19 @@ h4, .h4 {
 .label.label-span {
   margin-left: 4px;
   margin-right: 4px;
+}
+
+.avatar {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  padding: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  max-width: 64px;
+}
+
+.avatar-thumb-square {
+  max-width: 32px;
 }
 
 .btn-normal {
@@ -626,12 +640,17 @@ p.small-text {
   min-height: 80px;
   .handyman-contact {
     margin-top: 11px;
-    .handyman-tag {
-      @extend .less-color;
-      margin-left: 4px;
-    }
-    .phone-link {
-      font-size: 16px;
+    .handyman-name-box {
+      padding-top: 10px;
+
+      .handyman-tag {
+        @extend .less-color;
+        margin-left: 4px;
+      }
+      .phone-link {
+        font-size: 16px;
+        padding-left: 0;
+      }
     }
   }
   .menu-in-less-height {
@@ -650,6 +669,13 @@ p.small-text {
   min-height: 135px;
   h2 {
     margin-top: 26px;
+  }
+}
+
+.order-completed-view {
+  #completed__supporting-text {
+    padding-top: 0px;
+    padding-bottom: 24px;
   }
 }
 
@@ -707,6 +733,9 @@ p.small-text {
     p {
       line-height: 18px;
     }
+    .avatar {
+      margin-right: 12px;
+    }
   }
 }
 
@@ -740,5 +769,27 @@ p.small-text {
     i.fa-plus {
       color: #ff6666;
     }
+  }
+}
+
+.avatar-edit-page {
+  span {
+    margin: 4px;
+  }
+  #avatar-box-container, #avatar-preview-container {
+    width: 270px;
+  }
+  #avatar-preview-container {
+    height: 270px;
+    border: 1px solid rgba(0, 0, 0, 0.5);
+    margin-bottom: 10px;
+
+    img#avatar-preview {
+      max-width: 100%;
+    }
+  }
+  .avatar {
+    display: block;
+    margin: 12px auto;
   }
 }

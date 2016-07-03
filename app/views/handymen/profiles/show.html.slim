@@ -2,6 +2,7 @@
   .handyman-profile-page
     .profile-card.mdl-card.mdl-shadow--2dp
       .mdl-card__title
+        = image_tag @account.avatar_url, class: 'avatar'
         h2.mdl-card__title-text = @account.full_or_nickname
       .mdl-card__supporting-text
         p
@@ -28,6 +29,8 @@
         = link_to '提现', handyman_withdrawals_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
         = link_to '技能', handyman_taxons_path,
+          class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
+        = link_to '头像', edit_handyman_avatar_path,
           class: 'mdl-button mdl-js-button mdl-button--accent mdl-js-ripple-effect'
 
     .details-card-layout

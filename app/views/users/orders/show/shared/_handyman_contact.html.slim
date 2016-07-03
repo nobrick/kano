@@ -1,6 +1,10 @@
-.handyman-contact.text-center
-  span.h2
-    = handyman.name
-  span.handyman-tag 师傅
-  h3 = phone_link_for handyman,
-    class: 'mdl-button mdl-js-button mdl-button--accent phone-link'
+.handyman-contact
+  .row
+    .col-xs-4
+      = image_tag handyman.avatar_url, class: 'avatar'
+    .col-xs-8.handyman-name-box
+      span.h2
+        = handyman.name
+      span.handyman-tag 师傅
+      h3 = phone_link_for handyman,
+        class: 'mdl-button mdl-js-button mdl-button--accent phone-link'

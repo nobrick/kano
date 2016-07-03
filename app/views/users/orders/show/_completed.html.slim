@@ -1,9 +1,10 @@
 .order-details-header-card.mdl-card.mdl-shadow--2dp
   .mdl-card__supporting-text
-    .text-center
-      = render 'users/orders/show/shared/handyman_contact',
-        handyman: @order.handyman
-  .mdl-card__supporting-text.card-divider
-    h3.text-center.less-color
-      ' 已支付
-      b =< number_to_currency @order.user_total, unit: '￥'
+    = render 'users/orders/show/shared/handyman_contact',
+      handyman: @order.handyman
+  .mdl-card__supporting-text#completed__supporting-text
+    .row
+      .col-xs-offset-4.col-xs-8
+        h3.less-color
+          ' 已支付
+          b =< number_to_currency @order.user_total, unit: '￥'

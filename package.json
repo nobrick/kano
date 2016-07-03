@@ -41,6 +41,7 @@
     "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "classnames": "^2.2.5",
+    "cropperjs": "^0.7.2",
     "immutable": "^3.8.1",
     "material-design-icons": "^2.2.3",
     "material-design-lite": "^1.1.3",

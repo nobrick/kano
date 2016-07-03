@@ -1,40 +1,42 @@
-.order-card.mdl-card.mdl-shadow--2dp
-  .mdl-card__title
-    h2.mdl-card__title-text = order.content_in_short(16)
-  .mdl-card__supporting-text
-    span.state-desc class="#{order.state}-state" = order.state_description
-    - if order.contracted?
-      span
-        b #{order.handyman.name}
-        '  师傅
-    .order-attr-bar
-      span.fa-icon
-        = fa_icon('clock-o', class: 'attr-bar-icon')
-      - if order.requested?
-        span 等待师傅中
-      - elsif order.arrives_at_valid?
-        span.arrives-at-attr
-          = timeago_tag order.arrives_at, lang: 'zh-CN', limit: nil
-          ' 到达
-      - else
-        span.created-at-attr
-          = timeago_tag order.created_at, lang: 'zh-CN', limit: nil
-          ' 下单
-      = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name
-  .mdl-card__actions.mdl-card--border
-    = link_to '查看详情', [ :user, order ],
-      class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
-  .mdl-card__menu
-    = link_to [ :user, order ], class: 'mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect'
-      i.material-icons.order-state-icon
-        - case order.state
-        - when 'requested'
-          ' &#xE2C2;
-        - when 'contracted'
-          ' mood
-        - when 'payment'
-          ' payment
-        - when 'completed'
-          ' check
-        - when 'canceled'
-          ' close
+= link_to [ :user, order ]
+  .order-card.mdl-card.mdl-shadow--2dp
+    .mdl-card__title
+      h2.mdl-card__title-text = order.content_in_short(16)
+    .mdl-card__supporting-text
+      span.state-desc class="#{order.state}-state" = order.state_description
+      - if order.contracted?
+        span
+          b #{order.handyman.name}
+          '  师傅
+      .order-attr-bar
+        span.fa-icon
+          = fa_icon('clock-o', class: 'attr-bar-icon')
+        - if order.requested?
+          span 等待师傅中
+        - elsif order.arrives_at_valid?
+          span.arrives-at-attr
+            = timeago_tag order.arrives_at, lang: 'zh-CN', limit: nil
+            ' 到达
+        - else
+          span.created-at-attr
+            = timeago_tag order.created_at, lang: 'zh-CN', limit: nil
+            ' 下单
+        = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name
+    .mdl-card__actions.mdl-card--border
+      = link_to '查看详情', [ :user, order ],
+        class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
+      = image_tag order.handyman.avatar_url(:thumb), class: 'avatar-thumb-square pull-right' if order.handyman
+    .mdl-card__menu
+      = link_to [ :user, order ], class: 'mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect'
+        i.material-icons.order-state-icon
+          - case order.state
+          - when 'requested'
+            ' &#xE2C2;
+          - when 'contracted'
+            ' mood
+          - when 'payment'
+            ' payment
+          - when 'completed'
+            ' check
+          - when 'canceled'
+            ' close

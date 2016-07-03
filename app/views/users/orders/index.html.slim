@@ -1,6 +1,5 @@
 - content_for :row
-  - time = Time.now
-  - cache [ '1.6', @orders, @orders.map { |o| o.arrives_at_valid?(time) } ] do
+  - cache cache_key_for_index_page(@orders, '1.7') do
     .order-index-page
       - if @orders.blank?
         .intro-container

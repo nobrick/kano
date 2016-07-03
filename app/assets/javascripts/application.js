@@ -11,4 +11,5 @@
 //= require material-design-lite/material.min
 //= require jweixin-1.0.0
 //= require pingpp
+//= require cropperjs/dist/cropper.min
 //= require app

@@ -1,0 +1,24 @@
+- content_for :container
+  .avatar-edit-page
+    div
+      = image_tag @account.avatar_url, class: 'avatar'
+    = form_for(@account, as: :profile,
+                         url: handyman_avatar_path) do |f|
+      = render 'shared/error_messages', model: @account
+      #avatar-box-container.container
+        = hidden_field_tag :crop_data
+        .row
+          #avatar-preview-container
+            = image_tag '', id: 'avatar-preview'
+        .row
+          .col-xs-6
+            = f.label :avatar, class: 'btn btn-default'
+              = f.file_field :avatar, accept: 'image/png,image/jpeg', class: 'avatar-input hidden'
+              span.fa-icon
+                = fa_icon('image')
+              span 选择图片
+          .col-xs-6
+            = button_to nil, class: 'btn btn-info' do
+              span.fa-icon.icon-in-button
+                = fa_icon('upload')
+              ' 上传头像

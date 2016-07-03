@@ -3,7 +3,7 @@
 
 set :application, 'kano'
 set :linked_files, %w{ config/database.yml config/secrets.yml config/unicorn.rb config/wechat.yml config/handyman_wechat.yml config/redis.yml config/sms.yml config/slack.yml }
-set :linked_dirs, %w{ log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system node_modules }
+set :linked_dirs, %w{ log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system public/uploads node_modules }
 # set :linked_dirs, fetch(:linked_dirs).push(%w{public/assets})
 set :keep_releases, 5
 set :rails_env, :production

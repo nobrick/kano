@@ -12,10 +12,13 @@ class Account < ActiveRecord::Base
     :omniauthable,
     :lockable,
     omniauth_providers: [ :wechat, :handyman_wechat ]
+  mount_uploader :avatar, AvatarUploader
+  attr_accessor :avatar_crop_data
 
   has_many :addresses, as: :addressable
   belongs_to :primary_address, class_name: 'Address'
   accepts_nested_attributes_for :primary_address
+  validates :avatar, file_size: { less_than: 500.kilobytes }
   validates :password, length: { in: 6..128 }, on: :create
   validates :password, length: { in: 6..128 }, on: :update, allow_blank: true
   validates :name, length: { in: 1..30 }, allow_blank: true
