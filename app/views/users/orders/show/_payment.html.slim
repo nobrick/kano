@@ -3,6 +3,8 @@
     .mdl-card__supporting-text
       = render 'users/orders/show/shared/handyman_contact', handyman: @order.handyman
     .mdl-card__actions.mdl-card--border
+      i.material-icons.order-show-payment__payment-icon
+        | payment
       h3.text-center.less-color
         ' 支付金额：
         b => number_to_currency @order.user_total, unit: '￥'
