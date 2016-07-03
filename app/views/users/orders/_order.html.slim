@@ -23,7 +23,7 @@
             ' 下单
         = render 'shared/orders/taxon_in_order_right', taxon_name: order.taxon_name
     .mdl-card__actions.mdl-card--border
-      = link_to '查看详情', [ :user, order ],
+      = link_to '详情', [ :user, order ],
         class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
       = image_tag order.handyman.avatar_url(:thumb), class: 'avatar-thumb-square index-order__avatar pull-right' if order.handyman
     .mdl-card__menu
