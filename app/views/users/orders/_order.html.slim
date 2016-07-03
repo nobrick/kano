@@ -25,7 +25,7 @@
     .mdl-card__actions.mdl-card--border
       = link_to '查看详情', [ :user, order ],
         class: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect'
-      = image_tag order.handyman.avatar_url(:thumb), class: 'avatar-thumb-square pull-right' if order.handyman
+      = image_tag order.handyman.avatar_url(:thumb), class: 'avatar-thumb-square index-order__avatar pull-right' if order.handyman
     .mdl-card__menu
       = link_to [ :user, order ], class: 'mdl-button mdl-button--icon mdl-js-button mdl-js-ripple-effect'
         i.material-icons.order-state-icon
