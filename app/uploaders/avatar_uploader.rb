@@ -7,14 +7,28 @@ class AvatarUploader < CarrierWave::Uploader::Base
   process :crop
   process resize_and_pad: [ 256, 256, :transparent ]
 
-  def store_dir
-    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  version :thumb do
+    process resize_and_pad: [ 64, 64, :transparent]
   end
 
   def default_url
     name = [ version_name, 'default.png' ].compact.join('_')
     "/images/avatar_fallback/" + name
   end
+
+  def extension_white_list
+    %w(jpg jpeg png)
+  end
+
+  def store_dir
+    "uploads/#{model.class.to_s.underscore}/#{mounted_as}/#{model.id}"
+  end
+
+  def filename
+    "#{secure_token}.#{file.extension}" if original_filename.present?
+  end
+
+  protected
 
   def crop(crop_data = model.avatar_crop_data)
     return if crop_data.blank?
@@ -27,16 +41,6 @@ class AvatarUploader < CarrierWave::Uploader::Base
       img
     end
   end
-
-  def extension_white_list
-    %w(jpg jpeg png)
-  end
-
-  def filename
-    "#{secure_token}.#{file.extension}" if original_filename.present?
-  end
-
-  protected
 
   def secure_token
     var = :"@#{mounted_as}_secure_token"
