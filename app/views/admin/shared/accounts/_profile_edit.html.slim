@@ -1,54 +1,57 @@
-= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{account.id})", id: "profileEdit" } do
-  = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
-    - [:name, :nickname, :phone].each do |attr|
-      .form-group
-        = f.label attr, class: "col-md-3 control-label"
-        .col-md-7
-          = f.text_field attr, class: "form-control"
-    .form-group
-      = f.label :gender, class: "col-md-3 control-label"
-      .col-md-7
-        label.radio-inline
-          = f.radio_button :gender, "male"
-          | 男
-        label.radio-inline
-          = f.radio_button :gender, "female"
-          | 女
-    .form-group
-      .col-md-offset-6.col-md-4
-        .btn-toolbar.pull-right
-          = f.submit "确认", class: "btn btn-primary"
-          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
-
-= render layout: "admin/shared/modal", locals: { title: "个人资料(ID: #{account.id})", id: "emailEdit"} do
-  = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
-    .alert.alert-warning.col-md-offset-2.col-md-8
-      strong 注意:
-      | 修改 Email 可能会影响用户登录
-
-    .form-group
-      = f.label :email, class: "col-md-3 control-label"
-      .col-md-7
-        = f.text_field :email, class: "form-control"
-    .form-group
-      .col-md-offset-6.col-md-4
-        .btn-toolbar.pull-right
-          = f.submit "确定", class: "btn btn-primary"
-          = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
-
-.panel.panel-primary
+.panel.panel-default
   .panel-heading
     | 个人信息
   .panel-body
     = image_tag(account.wechat_headimgurl || "avatar.png", class: "img-circle profile__img")
-    .profile
-      - attrs.each do |attr, modal_id|
-        .profile__group
-          = label :account, attr, class: "col-md-2 profile__label"
-          .col-md-8
-            p.profile__input
-              | #{ account.send(attr) }
-          - if modal_id
-            .col-md-offset-8.col-md-2
-              .pull-right
-                = button_tag "编辑资料", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: "#{modal_id}"}
+    = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
+      .form-group
+        = f.label :id, class: "control-label col-md-2"
+        .col-md-9
+          = f.text_field :id, class: "form-control", readonly: true
+
+      .form-group
+        = f.label :name, class: "control-label col-md-2"
+        .col-md-9
+          = f.text_field :name, class: "form-control"
+
+      .form-group
+        = f.label :nickname, class: "control-label col-md-2"
+        .col-md-9
+          = f.text_field :nickname, class: "form-control"
+
+      .form-group
+        = f.label :phone, class: "control-label col-md-2"
+        .col-md-9
+          = f.text_field :phone, class: "form-control"
+      .form-group
+        = f.label :gender, class: "control-label col-md-2"
+        .col-md-9
+          = label_tag :gender, class: "radio-inline"
+            = f.radio_button :gender, "male"
+            | 男
+          = label_tag :gender, class: "radio-inline"
+            = f.radio_button :gender, "female"
+            | 女
+      .form-group
+        .col-md-offset-2.col-md-9
+          = f.submit "更新信息", class: "btn btn-primary btn-sm"
+    = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
+      .form-group
+        = f.label :email, class: "control-label col-md-2"
+        .col-md-9
+          = f.text_field :email, class: "form-control"
+          span.help-block
+            |修改 Email 可能会影响用户登录
+        .col-md-offset-2.col-md-9
+          = f.submit "更新邮箱", class: "btn btn-primary btn-sm"
+
+    - if edit_primary_address?(account)
+      .form-horizontal
+        .form-group
+          = label_tag :address, class: "control-label col-md-2"
+            | 地址
+          .col-md-9
+            = text_field_tag :address, account.primary_address.full_content, class: "form-control", readonly: true
+        .form-group
+          .col-md-offset-2.col-md-9
+            = button_tag "编辑地址", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: address_modal_id }
