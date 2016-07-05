@@ -40,7 +40,7 @@
         = f.label :email, class: "control-label col-md-2"
         .col-md-9
           = f.text_field :email, class: "form-control"
-          span.help-block
+          span.help-block.help-block__warning
             |修改 Email 可能会影响用户登录
         .col-md-offset-2.col-md-9
           = f.submit "更新邮箱", class: "btn btn-primary btn-sm"

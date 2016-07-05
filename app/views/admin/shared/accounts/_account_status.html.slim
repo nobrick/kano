@@ -19,7 +19,7 @@
       .account-status__buttons.text-center
         = form_for account, url: path, method: :put do |f|
           = hidden_field_tag 'account_lock', true
-          = f.submit "冻结账号", class: "btn btn-danger btn-sm", style: "float:none"
+          = f.submit "冻结账号", class: "btn btn-danger btn-sm"
         = form_for account, url: path, method: :put do |f|
           = hidden_field_tag 'account_lock', false
-          = f.submit "解冻账号", class: "btn btn-success btn-sm", style: "float:none"
+          = f.submit "解冻账号", class: "btn btn-success btn-sm"
