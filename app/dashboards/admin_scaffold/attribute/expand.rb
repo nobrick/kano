@@ -16,11 +16,11 @@ module AdminScaffold::Attribute
     end
 
     def partial_path
-      @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @attr }_table_header"
+      @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @name }_table_header"
     end
 
     def data_partial_path
-      @options[:partial_path] + "/#{ @owner.underscore }_" +  "#{ @attr }_table_data"
+      @options[:partial_path] + "/#{ @owner.underscore }_" +  "#{ @name }_table_data"
     end
 
     def expand?

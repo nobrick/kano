@@ -8,37 +8,40 @@ module AdminScaffold
       end
 
       def string(attr_index, options = {})
-        define_attribute(attr_index, 'string', options)
+        define_attribute(attr_index, Attribute::String, options)
       end
 
       def date_time(attr_index, options = {})
-        define_attribute(attr_index, 'date_time', options)
+        define_attribute(attr_index, Attribute::DateTime, options)
       end
 
       def number(attr_index, options = {})
-        define_attribute(attr_index, 'number', options)
+        define_attribute(attr_index, Attribute::Number, options)
       end
 
       def expand(attr_index, options = {})
-        define_attribute(attr_index, 'expand', options)
+        define_attribute(attr_index, Attribute::Expand, options)
       end
 
-      def attribute(attr_index)
+      def all
+        @attributes.values
+      end
+
+      def [](attr_index)
         @attributes.fetch(attr_index)
       end
 
-      def attr_defined?(attr_index)
+      def has_defined?(attr_index)
         @attributes.has_key?(attr_index)
       end
 
       private
 
       def define_attribute(attr_index, type, options = {})
-        attr_class = const_get("attribute/#{ type }".camelize)
         validate!(attr_index)
         owner = options.fetch(:owner, @resource_class)
         name = original_attr(attr_index)
-        @attributes[attr_index] = attr_class.new(name, owner, options)
+        @attributes[attr_index] = type.new(name, owner, options)
       end
 
       def original_attr(attr)
@@ -50,7 +53,7 @@ module AdminScaffold
       end
 
       def validate!(attr)
-        if attr_defined?(attr)
+        if has_defined?(attr)
           raise AdminScaffold::ArgumentError, "#{ attr }: has been defined"
         end
       end

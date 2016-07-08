@@ -14,7 +14,7 @@ module AdminScaffold
     @@new_pages = {}
 
     def self.attributes(resource_class)
-      new_manager = AttributesManager.new(resource_class)
+      new_manager = Attributes.new(resource_class)
       @@attributes_managers[object_id] = new_manager
       yield new_manager
     end
@@ -84,7 +84,7 @@ module AdminScaffold
     end
 
     def attributes
-      @attribute_manager.attributes.values
+      @attribute_manager.all
     end
 
     def export?

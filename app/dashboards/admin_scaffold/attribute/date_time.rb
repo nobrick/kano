@@ -4,7 +4,7 @@ module AdminScaffold::Attribute
     private
 
     def readable_data(data)
-      data.nil? ? "" : I18n.l(data. format: :long)
+      data.nil? ? "" : I18n.l(data, format: :long)
     end
   end
 end

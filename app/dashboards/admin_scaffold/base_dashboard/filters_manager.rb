@@ -6,14 +6,14 @@ module AdminScaffold
 
       attr_reader :filter_path, :attributes_manager, :filter_groups
 
-      def initialize(attributes_manager, filter_path)
-        @attributes_manager = attributes_manager
+      def initialize(attributes, filter_path)
+        @attributes= attributes
         @filter_path = filter_path
-        @filter_groups = { default: FiltersGroup.new(@attributes_manager) }
+        @filter_groups = { default: FiltersGroup.new(@attributes) }
       end
 
       def filter_group(group_index, options = {})
-        new_group = FiltersGroup.new(@attributes_manager, options)
+        new_group = FiltersGroup.new(@attributes, options)
         @filter_groups[group_index] = new_group
         yield new_group
       end

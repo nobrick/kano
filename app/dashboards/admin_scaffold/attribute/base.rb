@@ -1,8 +1,10 @@
 module AdminScaffold::Attribute
   class Base
+    attr_reader :name, :owner
+
     def initialize(name, owner, options = {})
       @name = name
-      @owner = onwer
+      @owner = owner
       @options = options
     end
 
@@ -11,15 +13,15 @@ module AdminScaffold::Attribute
     end
 
     def data(resource, options = {})
-      original_data = options.fetch(original_data, false)
+      original_data = options.fetch(:original_data, false)
       if original_data
-        result = attr_data(resource)
-      else
         result = resource
+      else
+        result = attr_data(resource)
       end
       readable_result = readable_data(result)
       result_style = data_style(result)
-      Data.new(readable_result, result_style)
+      ::AdminScaffold::BaseDashboard::AttributeData.new(readable_result, result_style)
     end
 
     def expand?

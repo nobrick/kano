@@ -5,7 +5,7 @@ class CertifyDashboard < AdminScaffold::BaseDashboard
     d.expand "handyman.name", owner: "Handyman", partial_path: "admin/handymen/certifications"
     d.string "name"
     d.date_time "cert_requested_at"
-    d.string "certified_status", i18n: true, style: { "success" => :success, "failure" => :danger, "under_review" => :warning }
+    d.string "certified_status", i18n: true, styles: { "success" => :success, "failure" => :danger, "under_review" => :warning }
     d.date_time "certified_at"
     d.string "certified_by.name", owner: "Admin", methods: "certified_by.name"
     d.expand "certify_buttons", partial_path: "admin/handymen/certifications", table_header: false

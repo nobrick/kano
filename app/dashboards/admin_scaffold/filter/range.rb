@@ -10,22 +10,22 @@ module AdminScaffold
       end
 
       def predicate
-        attr_text = @attribute.attr
+        attr_text = @attribute.name
         [(attr_text + "_gteq").to_sym, (attr_text + "_lteq").to_sym]
       end
 
       def gt_predicate
-        attr_text = @attribute.attr
+        attr_text = @attribute.name
         (attr_text + "_gteq").to_sym
       end
 
       def lt_predicate
-        attr_text = @attribute.attr
+        attr_text = @attribute.name
         (attr_text + "_lteq").to_sym
       end
 
       def feedback(predicate_value_pair)
-        attr_name = @attribute.name
+        attr_name = @attribute.readable_name
         gteq_value = predicate_value_pair["gteq"]
         lteq_value = predicate_value_pair["lteq"]
         if !gteq_value.blank? && !lteq_value.blank?

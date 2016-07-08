@@ -1,7 +1,7 @@
 module AdminScaffold
   class BaseDashboard::FiltersGroup
-    def initialize(attributes_manager, options = {})
-      @attributes_manager = attributes_manager
+    def initialize(attributes, options = {})
+      @attributes = attributes
       @options = options
       @filters = {}
     end
@@ -26,41 +26,50 @@ module AdminScaffold
       @options[:type] || :modal
     end
 
+    def link_params
+      result = {}
+      filters.each do |filter|
+        result[filter.predicate] = filter.default_value
+      end
+      result
+    end
+
     def predicates
       @predicates ||= @filters.values.map { |filter| filter.predicate }.flatten
     end
 
     def eq(attr_index, options = {})
+      validate!(attr_index, Filter::Eq)
       define_filter(attr_index, Filter::Eq, options)
     end
 
     def time_range(attr_index, options = {})
+      validate!(attr_index, Filter::TimeRange)
+      attribute = @attributes[attr_index]
+      if attribute.class != Attribute::DateTime
+        raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be DateTime"
+      end
       define_filter(attr_index, Filter::TimeRange, options)
     end
 
     def range(attr_index, options = {})
+      validate!(attr_index, Filter::Range)
+      attribute = @attributes[attr_index]
+      if attribute.class != Attribute::Number
+        raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be number"
+      end
       define_filter(attr_index, Filter::Range, options)
     end
 
     def time_interval_gt(attr_index, options = {})
+      validate!(attr_index, Filter::TimeIntervalGt)
       define_filter(attr_index, Filter::TimeIntervalGt, options)
     end
 
     private
 
     def define_filter(attr_index, type, options)
-      validate!(attr_index, type)
-      attribute = @attributes_manager.attribute(attr_index)
-      if type == Filter::TimeRange
-        if attribute.type != Field::DateTime
-          raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be DateTime"
-        end
-      end
-      if type == Filter::Range
-        if attribute.type != Field::Number
-          raise AdminScaffold::ArgumentError, "#{attr_index}: The attribute type should be number"
-        end
-      end
+      attribute = @attributes[attr_index]
       filter = type.new(attribute, options)
       filter_index = attr_index + type.index_suffix
       @filters[filter_index] = type.new(attribute, options)
@@ -77,7 +86,7 @@ module AdminScaffold
     end
 
     def attr_exist?(attr_index)
-      @attributes_manager.attr_defined?(attr_index)
+      @attributes.has_defined?(attr_index)
     end
   end
 end
