@@ -19,7 +19,7 @@ RSpec.describe Admin::Users::ProfilesController, type: :controller do
       end
 
       it 'updates basic profile successful' do
-        put :update, id: user.id, profile: param
+        put :update, user_id: user.id, profile: param
 
         user.reload
 
@@ -38,7 +38,7 @@ RSpec.describe Admin::Users::ProfilesController, type: :controller do
       end
 
       it 'updates email successful' do
-        put :update, id: user.id, profile: param
+        put :update, user_id: user.id, profile: param
 
         user.reload
 
