@@ -40,11 +40,11 @@ module AdminScaffold
       def define_attribute(attr_index, type, options = {})
         validate!(attr_index)
         owner = options.fetch(:owner, @resource_class)
-        name = original_attr(attr_index)
+        name = attr_name(attr_index)
         @attributes[attr_index] = type.new(name, owner, options)
       end
 
-      def original_attr(attr)
+      def attr_name(attr)
         if !(attr =~ /\./)
           attr
         else

@@ -25,7 +25,7 @@ module AdminScaffold
       end
 
       def feedback(predicate_value_pair)
-        attr_name = @attribute.readable_name
+        attr_name = @attribute.humanize_name
         gteq_value = predicate_value_pair["gteq"]
         lteq_value = predicate_value_pair["lteq"]
         if !gteq_value.blank? && !lteq_value.blank?

@@ -14,7 +14,7 @@
       .input-group-btn
         = f.submit '搜索', class: 'btn btn-default'
 
-- if dashboard.has_feedback?(instance)
+- if dashboard.has_filters?
   .row.dashboard__filter-info
     - feedback = dashboard.feedback(instance)
     - feedback.each do |text|
@@ -28,9 +28,9 @@
         - dashboard.attributes.each do |attr|
           th
             - if attr.expand? && attr.expand_header?
-              = render partial: attr.partial_path
+              = render partial: attr.header_partial_path
             - else
-              | #{ attr.readable_name }
+              | #{ attr.humanize_name }
     tbody.table__content
       - resources.each do |r|
         tr data-url="#{dashboard.resource_path.nil? ? "" : send(dashboard.resource_path, r)}"

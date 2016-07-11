@@ -3,7 +3,7 @@ module AdminScaffold::Attribute
 
     private
 
-    def readable_data(data)
+    def humanize_value(data)
       data.nil? ? "" : I18n.l(data, format: :long)
     end
   end

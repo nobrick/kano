@@ -8,7 +8,7 @@ module AdminScaffold::Attribute
       @options = options
     end
 
-    def readable_name
+    def humanize_name
       I18n.t @name, scope: [:activerecord, :attributes, "#{ @owner.underscore }"]
     end
 
@@ -17,11 +17,11 @@ module AdminScaffold::Attribute
       if original_data
         result = resource
       else
-        result = attr_data(resource)
+        result = attr_value(resource)
       end
-      readable_result = readable_data(result)
-      result_style = data_style(result)
-      ::AdminScaffold::BaseDashboard::AttributeData.new(readable_result, result_style)
+      humanize_result = humanize_value(result)
+      result_style = value_style(result)
+      ::AdminScaffold::BaseDashboard::AttributeData.new(humanize_result, result_style)
     end
 
     def expand?
@@ -30,7 +30,7 @@ module AdminScaffold::Attribute
 
     private
 
-    def data_style(data)
+    def value_style(data)
       styles[data]
     end
 
@@ -38,11 +38,11 @@ module AdminScaffold::Attribute
       @options.fetch(:styles, {})
     end
 
-    def readable_data(data)
+    def humanize_value(data)
       data
     end
 
-    def attr_data(resource)
+    def attr_value(resource)
       data_methods.inject(resource) { |result, method| result.try(method) }
     end
 

@@ -7,7 +7,7 @@ module AdminScaffold::Attribute
       validate!
     end
 
-    def readable_name
+    def humanize_name
       @options.fetch(:header, '')
     end
 
@@ -15,8 +15,12 @@ module AdminScaffold::Attribute
       !!@options.fetch(:header, false)
     end
 
-    def partial_path
-      @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @name }_table_header"
+    def header_partial_path
+      if expand_header?
+        @options[:partial_path] + "/#{ @owner.underscore }_" + "#{ @name }_table_header"
+      else
+        ""
+      end
     end
 
     def data_partial_path

@@ -15,7 +15,7 @@ module AdminScaffold
 
       def feedback(predicate_value_pair)
         value = predicate_value_pair["time_interval_gt"]
-        "#{ @attribute.readable_name }: <=#{ @attribute.data(value, original_data: true) }"
+        "#{ @attribute.humanize_name }: <=#{ @attribute.data(value, original_data: true) }"
       end
     end
   end

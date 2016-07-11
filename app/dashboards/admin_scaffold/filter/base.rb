@@ -2,7 +2,7 @@ module AdminScaffold
   module Filter
     class Base
       extend Forwardable
-      def_delegators :@attribute, :readable_name
+      def_delegators :@attribute, :humanize_name
 
       def self.index_suffix
         "_eq"
@@ -29,7 +29,7 @@ module AdminScaffold
 
       def feedback(predicate_value_pair)
         value = predicate_value_pair["eq"]
-        "#{ @attribute.readable_name }: #{ @attribute.data(value, original_data: true) }"
+        "#{ @attribute.humanize_name }: #{ @attribute.data(value, original_data: true) }"
       end
     end
   end

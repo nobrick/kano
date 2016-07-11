@@ -3,7 +3,7 @@ module AdminScaffold::Attribute
 
     private
 
-    def readable_data(data)
+    def humanize_value(data)
       if data && i18n?
         I18n.t(data.downcase, scope: i18n_scope)
       else
