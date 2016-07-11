@@ -1,5 +1,5 @@
 module AdminScaffold
-  class BaseDashboard::FiltersGroup
+  class BaseDashboard::FilterGroup
     def initialize(attributes, options = {})
       @attributes = attributes
       @options = options

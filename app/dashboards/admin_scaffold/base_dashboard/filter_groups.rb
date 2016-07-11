@@ -1,31 +1,29 @@
 module AdminScaffold
   class BaseDashboard
-    class FiltersManager
+    class FilterGroups
       extend Forwardable
-      def_delegators "@filter_groups[:default]", :time_range, :range, :eq, :time_interval_gt
+      def_delegators "@groups[:default]", :time_range, :range, :eq, :time_interval_gt
 
-      attr_reader :filter_path, :attributes_manager, :filter_groups
+      attr_reader :filter_path, :attributes_manager
 
       def initialize(attributes, filter_path)
         @attributes= attributes
         @filter_path = filter_path
-        @filter_groups = { default: FiltersGroup.new(@attributes) }
+        @groups = { default: FilterGroup.new(@attributes) }
       end
 
       def filter_group(group_index, options = {})
-        new_group = FiltersGroup.new(@attributes, options)
-        @filter_groups[group_index] = new_group
+        new_group = FilterGroup.new(@attributes, options)
+        @groups[group_index] = new_group
         yield new_group
       end
 
-      def filter_groups
-        @filter_group_values ||= @filter_groups.values
+      def each(&block)
+        @groups.values.each(&block)
       end
 
-      def has_feedback?(ransack_search)
-        ransack_search.conditions.any? do |c|
-          filter_predicates.include?(c.key.to_sym)
-        end
+      def all
+        @groups.values
       end
 
       def filter_params(param)
@@ -35,16 +33,26 @@ module AdminScaffold
       end
 
       def feedback(ransack_search)
-        conditions = ransack_search.conditions
-        feedback_info = []
-        predicates_from_user(conditions).each_pair do |filter_index, predicates|
-          group = filter_groups.find { |group| group.has_filter?(filter_index) }
-          feedback_info << group.filter(filter_index).feedback(predicates)
+        if has_feedback?(ransack_search)
+          conditions = ransack_search.conditions
+          feedback_info = []
+          predicates_from_user(conditions).each_pair do |filter_index, predicates|
+            group = all.find { |group| group.has_filter?(filter_index) }
+            feedback_info << group.filter(filter_index).feedback(predicates)
+          end
+          feedback_info
+        else
+          []
         end
-        feedback_info
       end
 
       private
+
+      def has_feedback?(ransack_search)
+        ransack_search.conditions.any? do |c|
+          filter_predicates.include?(c.key.to_sym)
+        end
+      end
 
       def filter_index_suffix(predicate)
         case predicate
@@ -87,7 +95,7 @@ module AdminScaffold
       end
 
       def filter_predicates
-        @filter_predicates ||= @filter_groups.values.map { |group| group.predicates }.flatten.uniq
+        @filter_predicates ||= @groups.values.map { |group| group.predicates }.flatten.uniq
       end
     end
   end

@@ -10,7 +10,7 @@
           - group.filters.each do |filter|
             .form-group
               label.col-md-3.control-label
-                | #{ filter.readable_name }
+                | #{ filter.humanize_name }
               - case filter.type
               - when :eq
                 - case filter.view_display
