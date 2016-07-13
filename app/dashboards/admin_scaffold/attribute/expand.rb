@@ -12,7 +12,7 @@ module AdminScaffold::Attribute
     end
 
     def expand_header?
-      !!@options.fetch(:header, false)
+      @options.fetch(:expand_header, false)
     end
 
     def header_partial_path
