@@ -9,44 +9,31 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
       span.label.label-success
         | #{ @order.state_description }
     .panel-body
-      = render partial: "basic_info", locals: { order: @order }
+      .col-md-12
+        = admin_order_content(@order)
+
+      - if @order.did_contract?
+        .col-md-6
+          = admin_user_info(@order.user)
+        .col-md-6
+          = admin_handyman_info(@order.handyman)
+      - else
+        .col-md-12
+          = admin_user_info(@order.user)
 
       - if @order.did_complete?
-        = render partial: 'payment_info', locals: { order: @order }
+        .col-md-6
+          = admin_user_payment(@order)
+        .col-md-6
+          = admin_handyman_payment(@order)
 
       - if @order.did_rate?
         .col-md-12
-          dl.order-info
-            dt
-              | 评价详情
-            dd
-              ul
-                li
-                  | 评分: #{ @order.rating }
-                li
-                  | 评价: #{ @order.rating_content }
+          = admin_order_rate(@order)
 
       - if @order.did_report?
         .col-md-12
-          dl.order-info
-            dt
-              | 投诉信息
-            dd
-              ul
-                li
-                  | 投诉类型: #{ @order.report_type }
-                li
-                  | 投诉内容: #{ @order.report_content }
+          = admin_order_report(@order)
       - if @order.did_cancel?
         .col-md-12
-          dl.order-info
-            dt
-              | 订单取消详情
-            dd
-              ul
-                li
-                  | 取消者 ID: #{ @order.canceler.id }
-                li
-                  | 取&nbsp;&nbsp;消&nbsp;&nbsp;者: #{ @order.canceler.full_or_nickname }
-                li
-                  | 取消理由: #{ @order.cancel_reason }
+          = admin_order_cancel(@order)

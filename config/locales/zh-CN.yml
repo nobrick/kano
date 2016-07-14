@@ -143,10 +143,10 @@ zh-CN:
       update_success: '修改成功'
     admin/users/profiles:
       update_success: '修改成功'
-    admin/handymen/accounts:
+    admin/handymen:
       unlock_success: '解锁成功'
       lock_success: '锁定成功'
-    admin/users/accounts:
+    admin/users:
       unlock_success: '解锁成功'
       lock_success: '锁定成功'
     admin/users/addresses:

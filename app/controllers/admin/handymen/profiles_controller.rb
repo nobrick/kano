@@ -3,11 +3,11 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   before_action :set_account, only: [:update, :show, :update_taxons]
   before_action :set_address, only: [:show]
   rescue_from ActiveRecord::StatementInvalid do
-    redirect_to admin_handyman_accounts_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
+    redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
 
   # params:
-  #   id: handyman id
+  #   handyman_id: handyman id
   #   profile:
   #     name:
   #     phone:
@@ -20,7 +20,6 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   #       content:
   def update
     @account.assign_attributes(primary_address_params)
-
     super
   end
 
@@ -39,6 +38,17 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
 
   private
 
+  def set_account
+    @account = account_model_class.find params[:handyman_id]
+  end
+
+  def set_address
+    address = @account.primary_address
+    @account.build_primary_address(addressable: @account) if address.blank?
+    @city_code = address.try(:city_code) || '431000'
+    @district_code = address.try(:code) || '431001'
+  end
+
   def primary_address_params
     params.require(:profile).permit(
       primary_address_attributes: [
@@ -47,12 +57,5 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
         :content
       ]
     )
-  end
-
-  def set_address
-    address = @account.primary_address
-    @account.build_primary_address(addressable: @account) if address.blank?
-    @city_code = address.try(:city_code) || '431000'
-    @district_code = address.try(:code) || '431001'
   end
 end

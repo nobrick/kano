@@ -1,10 +1,4 @@
-ul.nav.nav-tabs.row
-  li
-    = link_to "提现审核", admin_finance_withdrawal_verifications_path
-  li
-    = link_to "待处理提现", admin_finance_withdrawal_transfer_index_path
-  li
-    = link_to "已处理提现", admin_finance_withdrawal_history_index_path
+= render_admin_finance_withdrawal_tabs
 
 .tabs__content
   = render partial: 'admin/shared/dashboard/index', locals: { resources: @withdrawals, dashboard: dashboard, instance: @search }

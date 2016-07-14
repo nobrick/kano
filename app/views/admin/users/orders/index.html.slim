@@ -1,6 +1,3 @@
-ol.breadcrumb.row
-  li
-    =link_to "#{ @user.full_or_nickname }主页(ID: #{ @user.id })", admin_user_account_path(@user)
-  li.active
-    | 订单信息
-= render partial: 'admin/shared/dashboard/index', locals: { resources: @orders, dashboard: dashboard, instance: @search, filter_path_query: { user_id: @user.id }}
+= render_admin_account_breadcrumb(@user, "订单信息")
+
+= render partial: 'admin/shared/dashboard/index', locals: { resources: @orders, dashboard: dashboard, instance: @search }

@@ -55,51 +55,6 @@ Rails.application.routes.draw do
             match 'search' => 'certifications#search', via: :get
           end
         end
-        resources :accounts, only: [:index, :show] do
-          member do
-            post :update_account_status
-          end
-        end
-
-        resources :profiles, only: [:update, :show] do
-          member do
-            put :update_taxons
-          end
-        end
-
-        resources :orders, only: [:index]
-
-        namespace :finance do
-          resources :history, only: [:index]
-          resources :withdrawals, only: [:index, :show]
-          resources :exceptions, only: [:index]
-        end
-      end
-
-      namespace :users, as: :user do
-        resources :accounts, only: [:index, :show] do
-          member do
-            post :update_account_status
-          end
-        end
-
-        resources :profiles, only: [:update, :show], shallow: true do
-          resources :addresses, only: [:create, :update, :destroy]
-          member do
-            post :set_primary_address
-          end
-        end
-
-        resources :orders, only: [:index]
-      end
-
-      namespace :managers, as: :manager do
-        resources :accounts, only: [:index, :update, :show]
-      end
-      resources :orders, only: [:index, :update, :show] do
-        collection do
-          match 'search' => 'orders#search', via: :get
-        end
       end
 
       namespace :finance do
@@ -124,6 +79,40 @@ Rails.application.routes.draw do
               match 'search' => 'exceptions#search', via: :get
             end
           end
+        end
+        resources :withdrawals, only: [:show]
+      end
+
+      resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
+        scope module: "handymen" do
+          resource :profile, only: [:show, :update] do
+            put :update_taxons
+          end
+          resources :orders, only: [:index]
+
+          namespace :finance do
+            resources :history, only: [:index]
+            resources :withdrawals, only: [:index]
+            resources :exceptions, only: [:index]
+          end
+        end
+      end
+
+      resources :users, as: :user, shallow: true, only: [:index, :show, :update] do
+        scope module: "users" do
+          resources :orders, only: [:index]
+          resource :profile, only: [:update, :show] do
+            post :set_primary_address
+          end
+          resources :addresses, only: [:create, :update, :destroy], shallow_path: "users", shallow_prefix: "user"
+        end
+      end
+
+      resources :managers, as: :manager, only: [:index, :update, :show]
+
+      resources :orders, only: [:index, :update, :show] do
+        collection do
+          match 'search' => 'orders#search', via: :get
         end
       end
     end

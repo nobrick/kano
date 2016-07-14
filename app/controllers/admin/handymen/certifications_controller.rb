@@ -1,6 +1,6 @@
 class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
-  helper_method :tabs_info, :dashboard
+  helper_method :dashboard
 
   before_action :set_taxon, only: [:show]
   rescue_from ActiveRecord::StatementInvalid do
@@ -73,19 +73,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   def dashboard
     @dashboard ||= ::CertifyDashboard.new
-  end
-
-  def tabs_info
-    [
-      {
-        text: "技能认证管理",
-        path: admin_handyman_certifications_path
-      },
-      {
-        text: "师傅信息管理",
-        path: admin_handyman_accounts_path
-      }
-    ]
   end
 
   def status_param

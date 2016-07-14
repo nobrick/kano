@@ -7,7 +7,7 @@
   .btn-toolbar
     = form_for :withdrawal, url: admin_finance_withdrawal_transfer_path(withdrawal), method: :put, html: { data: {confirm: "确认已经进行过转账了吗？" }} do |t|
       = hidden_field_tag 'go', 'transfer'
-      = hidden_field_tag 'back_url', admin_handyman_finance_withdrawal_path(withdrawal)
+      = hidden_field_tag 'back_url', admin_finance_withdrawal_path(withdrawal)
       = t.submit "确认转账", class: "btn btn-sm btn-success js-table-nolink"
 
     = button_tag '转账失败', class: 'btn btn-sm btn-danger js-table-nolink', type: 'button', data: { toggle: 'modal', target: '#transferFailModal' }
@@ -25,7 +25,7 @@
           .modal-body
             .form-group
               = hidden_field_tag 'go', 'decline'
-              = hidden_field_tag 'back_url', admin_handyman_finance_withdrawal_path(withdrawal)
+              = hidden_field_tag 'back_url', admin_finance_withdrawal_path(withdrawal)
               = f.label :reason_message, i18n_t('reason_message', 'M', { model: 'withdrawal' }), class: "control-label col-sm-2"
               .col-sm-9
                 = f.text_area :reason_message, class: "form-control", rows: 8

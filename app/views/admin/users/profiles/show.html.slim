@@ -1,5 +1,5 @@
 = render layout: "admin/shared/modal", locals: { title: "创建新地址", id: "addressCreate"} do
-  = form_for :address, url: admin_user_profile_addresses_path(@account), html: { class: "form-horizontal" } do |f|
+  = form_for :address, url: admin_user_addresses_path(@account), html: { class: "form-horizontal" } do |f|
     .city-group
       .form-group
         .col-md-offset-2.col-md-8
@@ -22,14 +22,7 @@
 
 = render partial: 'admin/shared/accounts/address_modal', locals: { title: "编辑地址" }
 
-.tabs.row
-  .col-md-12
-    ol.breadcrumb
-      li
-        =link_to "主页", admin_user_account_path(@account)
-      li.active
-        | 个人资料
-
+= render_admin_account_breadcrumb(@account, "个人资料")
 
 .tabs__content.row
   .col-md-7
@@ -37,32 +30,13 @@
 
 
   .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_user_account_path }
+    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_user_path(@account) }
 
     .panel.panel-primary
       .panel-heading
         | 地址管理
       .panel-body
-        - i = 0
-        - @account.addresses.order(:id).each do |address|
-          dl.address
-            dt
-              | 地址 #{ i += 1 }
-              - if address.primary?
-                span.label.label-warning.address__label
-                  | 默认地址
-            dd.col-md-8
-              | #{address}
-            .col-md-4
-              .btn-toolbar.pull-right
-                = button_tag "编辑", class: "btn btn-primary btn-xs", data: { toggle: "modal", target: "#js-addressEdit", city_code: address.city_code, district_code: address.code, content: address.content, url: admin_user_address_path(address) }
-                = link_to "删除", admin_user_address_path(address),
-                class: "btn btn-danger btn-xs",
-                method: :delete,
-                data: { confirm: "你是否确认删除该地址" }
-            = form_tag set_primary_address_admin_user_profile_path(@account), class: "col-md-12"
-              = hidden_field_tag 'address_id', address.id
-              = button_tag "设为默认", class: " address__link"
+        = render partial: "address", collection: @account.addresses
 
         .col-md-offset-10.col-md-2
           .pull-right

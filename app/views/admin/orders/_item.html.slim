@@ -1,0 +1,18 @@
+- payment_item = local_assigns.fetch(:payment_item, false)
+- if payment_item
+  - css_class = "item--payment"
+- else
+  - css_class = ""
+dl.item class="#{ css_class }"
+  dt.item__title
+    |#{ title }
+  dd
+    ul
+      - items.each do |item|
+        li
+          span.item__element-title
+            | #{ item[:name] }
+          span.item__element-colon
+            | :
+          span.item__element-value
+            = sanitize item[:value]

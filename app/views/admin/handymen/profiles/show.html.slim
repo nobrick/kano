@@ -33,14 +33,7 @@
           = f.submit "确定", class: "btn btn-primary"
           = button_tag "取消", class: "btn btn-default", data: { dismiss: "modal" }
 
-.tabs.row
-  .col-md-12
-    ol.breadcrumb
-      li
-        =link_to "主页", admin_handyman_account_path(@account)
-      li.active
-        | 个人资料
-
+= render_admin_account_breadcrumb(@account, "个人资料")
 
 .tabs__content.row
   .col-md-7
@@ -48,7 +41,7 @@
 
 
   .col-md-5
-    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: update_account_status_admin_handyman_account_path }
+    = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_handyman_path(@account) }
 
     .panel.panel-primary
       .panel-heading

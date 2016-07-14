@@ -43,8 +43,4 @@ class Admin::ProfilesController < Admin::ApplicationController
     account_type = @account.type.downcase
     send("admin_#{account_type}_profile_path", @account)
   end
-
-  def set_account
-    @account = account_model_class.find params[:id]
-  end
 end
