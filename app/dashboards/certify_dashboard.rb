@@ -20,6 +20,4 @@ class CertifyDashboard < AdminScaffold::BaseDashboard
     s.cont "handyman.name"
     s.eq   "handyman.id"
   end
-
-  show_page "admin_handyman_certification_path"
 end

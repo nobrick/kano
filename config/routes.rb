@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     namespace :admin, path: '/alpha' do
       root 'dashboard#index', as: :root
       namespace :handymen, as: :handyman do
-        resources :certifications, only: [:update, :index, :show] do
+        resources :certifications, only: [:update, :index] do
           collection do
             match 'search' => 'certifications#search', via: :get
           end

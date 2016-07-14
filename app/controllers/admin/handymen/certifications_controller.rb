@@ -2,7 +2,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
 
   helper_method :dashboard
 
-  before_action :set_taxon, only: [:show]
   rescue_from ActiveRecord::StatementInvalid do
     redirect_to admin_handyman_certifications_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
   end
@@ -44,11 +43,6 @@ class Admin::Handymen::CertificationsController < Admin::ApplicationController
     end
 
     redirect_to back_url || admin_handyman_certifications_path(q: params[:q])
-  end
-
-  # params
-  #   id: taxon id
-  def show
   end
 
   private
