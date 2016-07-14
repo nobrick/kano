@@ -12,19 +12,25 @@ module Admin::OrdersHelper
         { name: "编号", value: "#{ user.id }" },
         { name: "昵称", value: "#{ link_to(capture { nickname }, admin_user_path(user))}" },
         { name:"姓名", value: "#{ capture { user.name } }" },
-        { name: "联系方式", value: "#{ number_to_phone(user.phone) }" }
+        { name: "联系方式", value: "#{ user.readable_phone_number }" }
       ]
     }
   end
 
   def admin_handyman_info(handyman)
+    if handyman.nickname.blank?
+      nickname = "(查看详情)"
+    else
+      nickname = handyman.nickname
+    end
+
     {
       title: "管家信息",
       items: [
         { name: "编号", value: "#{ handyman.id }" },
-        { name: "昵称", value: "#{ link_to(capture { handyman.nickname }, admin_handyman_path(handyman)) }" },
+        { name: "昵称", value: "#{ link_to(capture { nickname }, admin_handyman_path(handyman)) }" },
         { name: "姓名" , value: "#{ capture { handyman.name } }" },
-        { name: "联系方式", value: "#{number_to_phone(handyman.phone)}" }
+        { name: "联系方式", value: "#{ handyman.readable_phone_number }" }
       ]
     }
   end
