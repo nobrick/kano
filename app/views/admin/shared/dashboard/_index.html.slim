@@ -22,7 +22,10 @@
         | #{ text }
 
 .row
-  table.table.table-striped.table-hover.col-md-12.table--more-info.js-table
+  - if dashboard.has_show_page?
+    - table_class = "table--more-info table-hover js-table-more-info"
+
+  table.table.table-striped.col-md-12 class="#{ table_class }"
     thead.table__header
       tr
         - dashboard.attributes.each do |attr|

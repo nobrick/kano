@@ -63,6 +63,10 @@ module AdminScaffold
       !@filters_manager.blank?
     end
 
+    def has_show_page?
+      !!@show_page
+    end
+
     def has_search?
       !@search_manager.blank?
     end
