@@ -240,7 +240,7 @@ zh-CN:
         taxon_code: '服务类别'
         content: '维修内容'
         arrives_at: '预约到达时间'
-        contracted_at: '管家接单时间'
+        contracted_at: '接单时间'
         completed_at: '订单完成时间'
         user_total: '订单价格'
         payment_total: '实际支付价格'

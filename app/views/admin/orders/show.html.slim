@@ -3,37 +3,37 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
 
 
 .col-md-offset-1.col-md-10
-  .panel.panel-primary
+  .panel.panel-default
     .panel-heading
       | 订单号:#{@order.id}&nbsp;&nbsp;&nbsp;
       span.label.label-success
         | #{ @order.state_description }
     .panel-body
       .col-md-12
-        = admin_order_content(@order)
+        = render partial: "item", locals: admin_order_content(@order)
 
       - if @order.did_contract?
         .col-md-6
-          = admin_user_info(@order.user)
+          = render partial: "item", locals: admin_user_info(@order.user)
         .col-md-6
-          = admin_handyman_info(@order.handyman)
+          = render partial: "item", locals: admin_handyman_info(@order.handyman)
       - else
         .col-md-12
-          = admin_user_info(@order.user)
+          = render partial: "item", locals: admin_user_info(@order.user)
 
       - if @order.did_complete?
         .col-md-6
-          = admin_user_payment(@order)
+          = render partial: "item", locals: admin_user_payment(@order)
         .col-md-6
-          = admin_handyman_payment(@order)
+          = render partial: "item", locals: admin_handyman_payment(@order)
 
       - if @order.did_rate?
         .col-md-12
-          = admin_order_rate(@order)
+          = render partial: "item", locals: admin_order_rate(@order)
 
       - if @order.did_report?
         .col-md-12
-          = admin_order_report(@order)
+          = render partial: "item", locals: admin_order_report(@order)
       - if @order.did_cancel?
         .col-md-12
-          = admin_order_cancel(@order)
+          = render partial: "item", locals: admin_order_cancel(@order)

@@ -9,4 +9,8 @@ module Admin::AccountsHelper
     ]
     render_admin_breadcrumb(tabs_info)
   end
+
+  def edit_primary_address?(account)
+    account.handyman?
+  end
 end

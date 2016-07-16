@@ -2,8 +2,8 @@ module AdminScaffold
   class BaseDashboard::SearchManager
     attr_reader :search_path
 
-    def initialize(attributes_manager, search_path)
-      @attributes_manager = attributes_manager
+    def initialize(attributes, search_path)
+      @attributes= attributes
       @search_path = search_path
       @predicates = []
     end
@@ -37,7 +37,7 @@ module AdminScaffold
     private
 
     def validate!(attr_index)
-      if !@attributes_manager.attr_defined?(attr_index)
+      if !@attributes.has_defined?(attr_index)
         raise AdminScaffold::ArgumentError, "#{ attr_index }: not been defined"
       end
     end

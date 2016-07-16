@@ -10,7 +10,7 @@
           - group.filters.each do |filter|
             .form-group
               label.col-md-3.control-label
-                | #{ filter.name }
+                | #{ filter.humanize_name }
               - case filter.type
               - when :eq
                 - case filter.view_display
@@ -49,11 +49,7 @@
                 = f.submit "确定", class: "btn btn-primary"
 
     - when :link
-      - link_params = {}
-      - group.filters.each do |filter|
-        - link_params[filter.predicate] = filter.default_value
-
-      = link_to "未及时接单", send(dashboard.filter_path, q: link_params), class: "btn btn-default"
+      = link_to "未及时接单", send(dashboard.filter_path, q: group.link_params), class: "btn btn-default"
 
   = link_to "重置", send(dashboard.filter_path, filter_path_query), class: "btn btn-default"
 
