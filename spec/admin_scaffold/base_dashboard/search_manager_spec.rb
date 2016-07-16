@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AdminScaffold::BaseDashboard::SearchManager do
-  let(:attribute_manager) { AdminScaffold::BaseDashboard::AttributesManager.new("TestClass") }
+  let(:attributes) { AdminScaffold::BaseDashboard::Attributes.new("TestClass") }
   before :each do
-    attribute_manager.string('string')
+    attributes.string('string')
   end
 
   context 'Search define' do
-    let(:search_manager) { AdminScaffold::BaseDashboard::SearchManager.new(attribute_manager, "search_path") }
+    let(:search_manager) { AdminScaffold::BaseDashboard::SearchManager.new(attributes, "search_path") }
 
     describe '#cont' do
       context 'with invlid param' do

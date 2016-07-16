@@ -10,12 +10,12 @@ module AdminScaffold
       end
 
       def predicate
-        "#{ @attribute.attr }_time_interval_gt".to_sym
+        "#{ @attribute.name }_time_interval_gt".to_sym
       end
 
       def feedback(predicate_value_pair)
         value = predicate_value_pair["time_interval_gt"]
-        "#{ @attribute.name }: <=#{ @attribute.data(true).new(value) }"
+        "#{ @attribute.humanize_name }: <=#{ @attribute.data(value, original_data: true) }"
       end
     end
   end

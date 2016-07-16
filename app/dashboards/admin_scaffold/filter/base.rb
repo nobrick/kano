@@ -2,7 +2,7 @@ module AdminScaffold
   module Filter
     class Base
       extend Forwardable
-      def_delegators :@attribute, :name
+      def_delegators :@attribute, :humanize_name
 
       def self.index_suffix
         "_eq"
@@ -15,7 +15,7 @@ module AdminScaffold
 
       def values
         @options[:values].map do |value|
-          [@attribute.data(true).new(value).to_s, value]
+          [@attribute.data(value, original_data: true).to_s, value]
         end.to_h
       end
 
@@ -24,12 +24,12 @@ module AdminScaffold
       end
 
       def predicate
-        "#{ @attribute.attr }_eq".to_sym
+        "#{ @attribute.name }_eq".to_sym
       end
 
       def feedback(predicate_value_pair)
         value = predicate_value_pair["eq"]
-        "#{ @attribute.name }: #{ @attribute.data(true).new(value) }"
+        "#{ @attribute.humanize_name }: #{ @attribute.data(value, original_data: true) }"
       end
     end
   end

@@ -37,13 +37,12 @@
 
 .tabs__content.row
   .col-md-7
-    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account,  path: admin_handyman_profile_path, attrs: { id: nil, name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit", primary_address: "#addressEdit" }}
-
+    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account, path: admin_handyman_profile_path, address_modal_id: "#addressEdit" }
 
   .col-md-5
     = render partial: "admin/shared/accounts/account_status", locals: { account: @account, path: admin_handyman_path(@account) }
 
-    .panel.panel-primary
+    .panel.panel-default
       .panel-heading
         | 技能
       .panel-body

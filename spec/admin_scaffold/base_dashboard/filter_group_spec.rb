@@ -1,9 +1,9 @@
 require 'rails_helper'
 
-RSpec.describe AdminScaffold::BaseDashboard::FiltersGroup do
+RSpec.describe AdminScaffold::BaseDashboard::FilterGroup do
   let(:attr_class) { "TestClass" }
-  let(:attributes_manager) do
-    manager = AdminScaffold::BaseDashboard::AttributesManager.new(attr_class)
+  let(:attributes) do
+    manager = AdminScaffold::BaseDashboard::Attributes.new(attr_class)
     manager.string "account_no"
     manager.string "bank_code"
     manager.date_time "created_at"
@@ -11,7 +11,7 @@ RSpec.describe AdminScaffold::BaseDashboard::FiltersGroup do
     manager
   end
   let(:filters_group) do
-    AdminScaffold::BaseDashboard::FiltersGroup.new(attributes_manager)
+    AdminScaffold::BaseDashboard::FilterGroup.new(attributes)
   end
 
   context 'Define filters' do
