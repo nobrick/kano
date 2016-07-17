@@ -114,6 +114,10 @@ module Admin::OrdersHelper
     }
   end
 
+  def could_cancel?(order)
+   !order.did_complete? && !order.did_cancel?
+  end
+
   private
 
   def last_row?(order, info_block)

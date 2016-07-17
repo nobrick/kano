@@ -1,0 +1,13 @@
+= button_tag "取消订单", class: "btn btn-danger", data: { toggle: "modal", target: "#order-cancel" }
+.modal.fade id="order-cancel"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4
+          | 订单取消原因
+      .modal-body
+        = form_for order, url: cancel_admin_order_path(order), method: :put do |f|
+          .form-group
+            = f.text_area :cancel_reason, rows: 6, class: "form-control"
+          .text-right
+            = f.submit "确认", class: "btn btn-primary"

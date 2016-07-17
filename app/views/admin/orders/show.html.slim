@@ -20,6 +20,9 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
       - else
         .col-md-12
           = render partial: "item", locals: admin_user_info(@order)
+      - if could_cancel?(@order)
+        .col-md-12
+          = render partial: "do_cancel", locals: { order: @order }
 
       - if @order.did_complete?
         .col-md-6

@@ -110,7 +110,10 @@ Rails.application.routes.draw do
 
       resources :managers, as: :manager, only: [:index, :update, :show]
 
-      resources :orders, only: [:index, :update, :show] do
+      resources :orders, only: [:index, :show] do
+        member do
+          put :cancel
+        end
         collection do
           match 'search' => 'orders#search', via: :get
         end

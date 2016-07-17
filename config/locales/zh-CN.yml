@@ -151,6 +151,9 @@ zh-CN:
       lock_success: '锁定成功'
     admin/users/addresses:
       update_success: '修改成功'
+    admin/orders:
+      cancel_order_success: '订单已取消'
+      cancel_order_failure: '取消订单失败'
   order:
     states:
       requested: '未接单'
