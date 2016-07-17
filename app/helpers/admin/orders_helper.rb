@@ -36,12 +36,16 @@ module Admin::OrdersHelper
   end
 
   def admin_order_content(order)
+    arrives_time = order.arrives_at
+    arrives_time = arrives_time.blank? ? "" : I18n.l(arrives_time, format: :long)
     {
       title: "维修信息",
       items: [
         { name: "维修项目", value: "#{ order.taxon_name }" },
         { name: "维修内容", value: "#{ capture { order.content } }" },
-        { name: "维修地址", value: "#{ capture { order.address.try :full_content } }" }
+        { name: "维修地址", value: "#{ capture { order.address.try :full_content } }" },
+        { name: "预约时间", value: "#{ arrives_time }" }
+
       ]
     }
   end
