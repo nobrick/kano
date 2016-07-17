@@ -1,8 +1,11 @@
 - payment_item = local_assigns.fetch(:payment_item, false)
+- last_row = local_assigns.fetch(:last_row, false)
+- css_class = ""
 - if payment_item
   - css_class = "item--payment"
-- else
-  - css_class = ""
+
+- if last_row
+  - css_class << " item--last"
 dl.item class="#{ css_class }"
   dt.item__title
     |#{ title }

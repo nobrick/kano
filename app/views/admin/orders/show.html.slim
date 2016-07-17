@@ -14,12 +14,12 @@ div.col-md-10.col-md-offset-1 style="text-align: center"
 
       - if @order.did_contract?
         .col-md-6
-          = render partial: "item", locals: admin_user_info(@order.user)
+          = render partial: "item", locals: admin_user_info(@order)
         .col-md-6
-          = render partial: "item", locals: admin_handyman_info(@order.handyman)
+          = render partial: "item", locals: admin_handyman_info(@order)
       - else
         .col-md-12
-          = render partial: "item", locals: admin_user_info(@order.user)
+          = render partial: "item", locals: admin_user_info(@order)
 
       - if @order.did_complete?
         .col-md-6

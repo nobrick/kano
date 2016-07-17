@@ -4,6 +4,10 @@
   margin: 0;
 }
 
+.item--last {
+  border: none;
+}
+
 .item ul {
   list-style: none;
   padding: 0;
@@ -22,10 +26,6 @@
 .item__element-colon {
   display: inline-block;
   margin-right: 10px;
-}
-
-.item--payment {
-  border: none;
 }
 
 .item--payment dd {

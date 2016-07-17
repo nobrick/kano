@@ -1,5 +1,8 @@
 module Admin::OrdersHelper
-  def admin_user_info(user)
+  def admin_user_info(order)
+    user = order.user
+    last_row = order.did_complete?
+
     if user.nickname.blank?
       nickname = "(查看详情)"
     else
@@ -13,11 +16,13 @@ module Admin::OrdersHelper
         { name: "昵称", value: "#{ link_to(capture { nickname }, admin_user_path(user))}" },
         { name:"姓名", value: "#{ capture { user.name } }" },
         { name: "联系方式", value: "#{ user.readable_phone_number }" }
-      ]
+      ],
+      last_row: last_row?(order, :profile)
     }
   end
 
-  def admin_handyman_info(handyman)
+  def admin_handyman_info(order)
+    handyman = order.handyman
     if handyman.nickname.blank?
       nickname = "(查看详情)"
     else
@@ -31,7 +36,8 @@ module Admin::OrdersHelper
         { name: "昵称", value: "#{ link_to(capture { nickname }, admin_handyman_path(handyman)) }" },
         { name: "姓名" , value: "#{ capture { handyman.name } }" },
         { name: "联系方式", value: "#{ handyman.readable_phone_number }" }
-      ]
+      ],
+      last_row: last_row?(order, :profile)
     }
   end
 
@@ -77,7 +83,8 @@ module Admin::OrdersHelper
         { name: "取消者 ID", value: "#{ order.canceler.id }" },
         { name: "取消者", value: "#{ capture { order.canceler.full_or_nickname } }" },
         { name: "取消理由", value: "#{ capture { order.cancel_reason } }" }
-      ]
+      ],
+      last_row: true
     }
   end
 
@@ -88,7 +95,8 @@ module Admin::OrdersHelper
         { name: "订单价格", value: "#{ order.user_total }" },
         { name: "- 价格优惠", value: "#{ order.user_promo_total }" },
         { name: "实际支付", value: "#{ order.payment_total }" }],
-      payment_item: true
+      payment_item: true,
+      last_row: true
     }
 
   end
@@ -101,7 +109,23 @@ module Admin::OrdersHelper
         { name: "- 价格优惠", value: "#{ order.user_promo_total }" },
         { name: "+ 奖励金额", value: "#{ order.handyman_bonus_total }" },
         { name: "实得金额", value: "#{ order.handyman_total }" }],
-      payment_item: true
+      payment_item: true,
+      last_row: true
     }
+  end
+
+  private
+
+  def last_row?(order, info_block)
+    case info_block
+    when :profile
+      if !order.did_complete? && !order.did_cancel?
+        true
+      else
+        false
+      end
+    else
+      true
+    end
   end
 end
