@@ -30,8 +30,8 @@ zh-CN:
       payment: '交易'
   payment:
     payment_methods:
-      wechat: "微信支付"
-      pingpp_wx_pub: "网络支付"
+      pingpp_wx_pub: "微信支付"
+      cash: "现金支付"
 
   taxon:
     certified_statuses:
