@@ -76,7 +76,7 @@ class BalanceRecord < ActiveRecord::Base
   end
 
   def around_records(options = {})
-    duration = options.fetch(:max_duration, 5.days)
+    duration = options.fetch(:max_duration, 30.days)
     after_limit = options.fetch(:after_limit, 5)
     before_limit = options.fetch(:before_limit, after_limit - 1)
     records = owner.balance_records
