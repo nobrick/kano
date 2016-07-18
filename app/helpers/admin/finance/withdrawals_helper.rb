@@ -16,4 +16,12 @@ module Admin::Finance::WithdrawalsHelper
     ]
     render_admin_tabs(tabs_info)
   end
+
+  def finance_detail_path(balance_record)
+    if balance_record.adjustment_event_type == "Withdrawal"
+      admin_finance_withdrawal_path(balance_record.adjustment_event)
+    else
+      admin_order_path(balance_record.adjustment_event.order)
+    end
+  end
 end

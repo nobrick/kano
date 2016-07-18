@@ -14,7 +14,7 @@
       .input-group-btn
         = f.submit '搜索', class: 'btn btn-default'
 
-- if dashboard.has_feedback?(instance)
+- if dashboard.has_filters?
   .row.dashboard__filter-info
     - feedback = dashboard.feedback(instance)
     - feedback.each do |text|
@@ -22,15 +22,18 @@
         | #{ text }
 
 .row
-  table.table.table-striped.table-hover.col-md-12.table--more-info.js-table
+  - if dashboard.has_show_page?
+    - table_class = "table--more-info table-hover js-table-more-info"
+
+  table.table.table-striped.col-md-12 class="#{ table_class }"
     thead.table__header
       tr
         - dashboard.attributes.each do |attr|
           th
-            - if attr.expand? && attr.has_header?
-              = render partial: attr.partial_path
+            - if attr.expand? && attr.expand_header?
+              = render partial: attr.header_partial_path
             - else
-              | #{ attr.name }
+              | #{ attr.humanize_name }
     tbody.table__content
       - resources.each do |r|
         tr data-url="#{dashboard.resource_path.nil? ? "" : send(dashboard.resource_path, r)}"
@@ -39,8 +42,8 @@
               - if attr.expand?
                = render partial: attr.data_partial_path, locals: { resource: r }
               - else
-                - data = attr.data.new(r)
-                - if data.set_style?
+                - data = attr.data(r)
+                - if data.has_style?
                   span class="label label-#{data.style}"
                     | #{ data.to_s }
                 - else

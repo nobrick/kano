@@ -3,7 +3,7 @@ module AdminScaffold
 
   class BaseDashboard
     extend Forwardable
-    def_delegators :@filters_manager, :filter_params, :filter_path, :filter_groups, :feedback, :seperate_filter_params
+    def_delegators :@filters_manager, :filter_params, :filter_path, :feedback, :seperate_filter_params
     def_delegators :@search_manager, :search_path, :search_params, :search_view_predicate
 
     @@attributes_managers = {}
@@ -14,14 +14,14 @@ module AdminScaffold
     @@new_pages = {}
 
     def self.attributes(resource_class)
-      new_manager = AttributesManager.new(resource_class)
+      new_manager = Attributes.new(resource_class)
       @@attributes_managers[object_id] = new_manager
       yield new_manager
     end
 
     def self.filters(filter_path)
       attribute_manager = @@attributes_managers[object_id]
-      new_manager = FiltersManager.new(attribute_manager, filter_path)
+      new_manager = FilterGroups.new(attribute_manager, filter_path)
       @@filters_managers[object_id] = new_manager
       yield new_manager
     end
@@ -55,8 +55,16 @@ module AdminScaffold
       @new_page = @@new_pages[class_id]
     end
 
+    def filter_groups
+      @filters_manager
+    end
+
     def has_filters?
       !@filters_manager.blank?
+    end
+
+    def has_show_page?
+      !!@show_page
     end
 
     def has_search?
@@ -84,7 +92,7 @@ module AdminScaffold
     end
 
     def attributes
-      @attribute_manager.attributes.values
+      @attribute_manager.all
     end
 
     def export?

@@ -1,5 +1,5 @@
 $ ->
-  $('.js-table')
+  $('.js-table-more-info')
     .on 'click', 'tbody tr', (event) ->
       target = $(event.target)
       tr = $(event.target).closest("tr")

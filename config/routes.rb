@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     namespace :admin, path: '/alpha' do
       root 'dashboard#index', as: :root
       namespace :handymen, as: :handyman do
-        resources :certifications, only: [:update, :index, :show] do
+        resources :certifications, only: [:update, :index] do
           collection do
             match 'search' => 'certifications#search', via: :get
           end
@@ -110,7 +110,10 @@ Rails.application.routes.draw do
 
       resources :managers, as: :manager, only: [:index, :update, :show]
 
-      resources :orders, only: [:index, :update, :show] do
+      resources :orders, only: [:index, :show] do
+        member do
+          put :cancel
+        end
         collection do
           match 'search' => 'orders#search', via: :get
         end

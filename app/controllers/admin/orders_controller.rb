@@ -19,7 +19,33 @@ class Admin::OrdersController < Admin::ApplicationController
     @order = Order.find params[:id]
   end
 
+  # PUT /admin/orders/:id/cancel
+  def cancel
+    opts = { whiny_transition: false }
+    transition = Order.serializable_trigger(:cancel, :save, opts) do
+      set_order
+      @order.assign_attributes(cancel_reason_params)
+      @order.tap { |o| o.canceler = current_user }
+    end
+
+    if transition
+      flash[:success] = i18n_t("cancel_order_success", "C")
+    else
+      flash[:alert] = i18n_t("cancel_order_failure", "C")
+    end
+
+    redirect_to admin_order_path(@order)
+  end
+
   private
+
+  def cancel_reason_params
+    params.require(:order).permit(:cancel_reason)
+  end
+
+  def set_order
+    @order = Order.find(params[:id])
+  end
 
   def dashboard
     @dashboard = ::OrderDashboard.new

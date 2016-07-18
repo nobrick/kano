@@ -27,5 +27,7 @@ class Withdrawal::HistoryDashboard < AdminScaffold::BaseDashboard
     s.eq   "handyman.id"
   end
 
+  show_page "admin_finance_withdrawal_path"
+
   excel_export
 end

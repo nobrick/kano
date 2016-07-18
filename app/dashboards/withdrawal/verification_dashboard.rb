@@ -22,4 +22,6 @@ class Withdrawal::VerificationDashboard < AdminScaffold::BaseDashboard
     s.eq   "id"
     s.eq   "handyman.id"
   end
+
+  show_page "admin_finance_withdrawal_path"
 end
