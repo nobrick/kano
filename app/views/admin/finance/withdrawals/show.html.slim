@@ -28,7 +28,7 @@
 
 .col-md-12
   h4 财务信息参考
-  table.table.table-striped.table-hover
+  table.table.table-striped
     thead.table__header
       tr
         th 事件
@@ -41,6 +41,7 @@
         th 补贴总额
         th 网络收入总额
         th 现金收入总额
+        th
     tbody.table__content
       - @unfrozen_record.around_records.each do |r|
         - style = ""
@@ -57,3 +58,5 @@
           td #{ r.bonus_sum_total }
           td #{ r.online_income_total }
           td #{ r.cash_total }
+          td
+            = link_to "查看详情", finance_detail_path(r)
