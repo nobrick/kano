@@ -24,4 +24,12 @@ module Admin::Finance::WithdrawalsHelper
       admin_order_path(balance_record.adjustment_event.order)
     end
   end
+
+  def payment_method(event)
+    if event.try(:payment_method).nil?
+      ""
+    else
+      t(event.payment_method, scope: 'payment.payment_methods')
+    end
+  end
 end

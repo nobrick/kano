@@ -52,7 +52,7 @@
           td #{ r.id }
           td #{ l(r.created_at, format: :long) }
           td #{ r.adjustment }
-          td #{ t(r.adjustment_event.try(:payment_method), scope: 'payment.payment_methods') }
+          td #{ payment_method(r.adjustment_event) }
           td #{ r.balance }
           td #{ r.withdrawal_total }
           td #{ r.bonus_sum_total }
