@@ -23,7 +23,21 @@ class Admin::ProfilesController < Admin::ApplicationController
     redirect_to redirect_path
   end
 
+  def update_avatar
+    @account.avatar = avatar_params[:avatar]
+    if @account.save
+      flash[:success] = "更新成功"
+    else
+      flash[:alert] = "更新失败"
+    end
+    redirect_to redirect_path
+  end
+
   private
+
+  def avatar_params
+    params.require(:profile).permit(:avatar)
+  end
 
   def serializable
     Account.serializable { yield }

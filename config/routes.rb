@@ -86,6 +86,7 @@ Rails.application.routes.draw do
       resources :handymen, as: :handyman, shallow: true, only: [:index, :update, :show] do
         scope module: "handymen" do
           resource :profile, only: [:show, :update] do
+            put :update_avatar
             put :update_taxons
           end
           resources :orders, only: [:index]
@@ -102,6 +103,7 @@ Rails.application.routes.draw do
         scope module: "users" do
           resources :orders, only: [:index]
           resource :profile, only: [:update, :show] do
+            put :update_avatar
             post :set_primary_address
           end
           resources :addresses, only: [:create, :update, :destroy], shallow_path: "users", shallow_prefix: "user"

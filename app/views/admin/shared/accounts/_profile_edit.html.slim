@@ -2,7 +2,12 @@
   .panel-heading
     | 个人信息
   .panel-body
-    = image_tag(account.wechat_headimgurl || "avatar.png", class: "img-circle profile__img")
+    = image_tag(account.avatar_url, class: "img-circle profile__img")
+    = form_for account, as: :profile, url: avatar_path, method: :put do |f|
+      = f.label :avatar
+      = f.file_field :avatar, accept: "image/png, image/jpeg"
+      = f.submit "上传头像"
+
     = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
       .form-group
         = f.label :id, class: "control-label col-md-2"

@@ -1,6 +1,6 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
   around_action :serializable, only: [:update, :update_taxons]
-  before_action :set_account, only: [:update, :show, :update_taxons]
+  before_action :set_account, only: [:update, :show, :update_taxons, :update_avatar]
   before_action :set_address, only: [:show]
   rescue_from ActiveRecord::StatementInvalid do
     redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
@@ -23,6 +23,16 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     super
   end
 
+  def update_avatar
+    @account.avatar = avatar_params[:avatar]
+    if @account.save
+      flash[:success] = "更新成功"
+    else
+      flash[:alert] = "更新失败"
+    end
+    redirect_to admin_handyman_profile_path
+  end
+
   # params
   #   id: handyman id
   #   taxon_codes: string  for examples: "elec/id, elec/fs"
@@ -37,6 +47,10 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   end
 
   private
+
+  def avatar_params
+    params.require(:profile).permit(:avatar)
+  end
 
   def set_account
     @account = account_model_class.find params[:handyman_id]
