@@ -36,7 +36,14 @@
 .profile__img {
   display: block;
   margin: auto;
-  max-width: 70px
+  max-width: 70px;
+  margin-bottom: 20px;
+  border: 1px solid white;
+}
+
+.profile__img:hover {
+  cursor: pointer;
+  border: 1px solid #5bc0de;
 }
 
 .profile__input {

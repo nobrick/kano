@@ -4,7 +4,9 @@
 //= require jquery-ui/datepicker
 //= require jquery-ui/datepicker-zh-CN
 //= require 'china_city/jquery.china_city'
+//= require cropperjs/dist/cropper.min
 //= require bootstrap
+//= require admin/avatar
 //= require admin/taxon-certify
 //= require admin/modal
 //= require admin/address-edit

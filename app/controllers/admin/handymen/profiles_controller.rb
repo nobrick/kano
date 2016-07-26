@@ -23,16 +23,6 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
     super
   end
 
-  def update_avatar
-    @account.avatar = avatar_params[:avatar]
-    if @account.save
-      flash[:success] = "更新成功"
-    else
-      flash[:alert] = "更新失败"
-    end
-    redirect_to admin_handyman_profile_path
-  end
-
   # params
   #   id: handyman id
   #   taxon_codes: string  for examples: "elec/id, elec/fs"
@@ -49,7 +39,7 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   private
 
   def avatar_params
-    params.require(:profile).permit(:avatar)
+    params.fetch(:profile, {})
   end
 
   def set_account
