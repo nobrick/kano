@@ -2,7 +2,8 @@
   .panel-heading
     | 个人信息
   .panel-body
-    = image_tag(account.wechat_headimgurl || "avatar.png", class: "img-circle profile__img")
+    = image_tag(account.avatar_url, class: "img-circle profile__img js-avatar-trigger")
+
     = form_for account, as: :profile, url: path, html: { class: "form-horizontal" } do |f|
       .form-group
         = f.label :id, class: "control-label col-md-2"
@@ -55,3 +56,24 @@
         .form-group
           .col-md-offset-2.col-md-9
             = button_tag "编辑地址", class: "btn btn-primary btn-sm", data: { toggle: "modal", target: address_modal_id }
+
+.modal.fade id="js-avatar-modal" class="js-avatar-edit"
+  .modal-dialog
+    .modal-content
+      .modal-header
+        h4
+          | 编辑头像
+      .modal-body
+        .avatar__img-container
+          = image_tag "", id: "js-avatar-preview"
+        = form_for account, as: :profile, url: avatar_path, method: :put, html: { id: "js-avatar-form", class: "js-avatar-edit avatar__edit-form" } do |f|
+          = hidden_field_tag :crop_data
+          .text-center
+            label.btn.btn-default.button-group
+              = f.file_field :avatar, accept: "image/png, image/jpeg", id: "js-avatar-input"
+              span.glyphicon.glyphicon-picture
+                | 选择图片
+            = f.button class: "btn btn-primary" do
+              span.glyphicon.glyphicon-open
+                | 上传图片
+

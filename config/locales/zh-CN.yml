@@ -141,8 +141,12 @@ zh-CN:
       taxon_missing: '技能不存在'
     admin/handymen/profiles:
       update_success: '修改成功'
+      avatar_blank: "未选择头像"
+      avatar_update_success: "头像上传成功"
     admin/users/profiles:
       update_success: '修改成功'
+      avatar_blank: "未选择头像"
+      avatar_update_success: "头像上传成功"
     admin/handymen:
       unlock_success: '解锁成功'
       lock_success: '锁定成功'

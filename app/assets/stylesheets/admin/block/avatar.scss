@@ -1,0 +1,21 @@
+.avatar__img-container img {
+  max-width: 100%;
+}
+
+.avatar__img-container {
+  height: 300px;
+  border: 1px solid black;
+  background: gray;
+}
+
+.avatar__edit-form {
+  margin-top: 20px;
+}
+
+.avatar__edit-form input[type="file"]{
+  display: none;
+}
+
+.avatar__edit-form .button-group {
+  margin-right: 10px;
+}

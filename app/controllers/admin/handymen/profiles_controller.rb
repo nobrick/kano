@@ -1,6 +1,6 @@
 class Admin::Handymen::ProfilesController < Admin::ProfilesController
   around_action :serializable, only: [:update, :update_taxons]
-  before_action :set_account, only: [:update, :show, :update_taxons]
+  before_action :set_account, only: [:update, :show, :update_taxons, :update_avatar]
   before_action :set_address, only: [:show]
   rescue_from ActiveRecord::StatementInvalid do
     redirect_to admin_handyman_index_path, flash: { alert: i18n_t('statement_invalid', 'RC') }
@@ -37,6 +37,10 @@ class Admin::Handymen::ProfilesController < Admin::ProfilesController
   end
 
   private
+
+  def avatar_params
+    params.fetch(:profile, {})
+  end
 
   def set_account
     @account = account_model_class.find params[:handyman_id]

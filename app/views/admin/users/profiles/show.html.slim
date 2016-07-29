@@ -26,7 +26,7 @@
 
 .tabs__content.row
   .col-md-7
-    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account, path: admin_user_profile_path, attrs: { name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit" }}
+    = render partial: "admin/shared/accounts/profile_edit", locals: { account: @account, path: admin_user_profile_path, avatar_path: update_avatar_admin_user_profile_path, attrs: { name: nil, nickname: nil, phone: nil, gender: "#profileEdit", email: "#emailEdit" }}
 
 
   .col-md-5

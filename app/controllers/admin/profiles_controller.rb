@@ -23,7 +23,34 @@ class Admin::ProfilesController < Admin::ApplicationController
     redirect_to redirect_path
   end
 
+  def update_avatar
+    avatar = avatar_params[:avatar]
+    if avatar.blank?
+      flash[:notice] = i18n_t('avatar_blank', 'C')
+      render :show and return
+    end
+
+    @account.avatar_crop_data = crop_data
+    @account.avatar = avatar
+    if @account.save
+      flash[:success] = i18n_t('avatar_update_success', 'C')
+    end
+    redirect_to redirect_path
+  end
+
   private
+
+  def crop_data
+    json = params[:crop_data]
+    return nil if json.blank?
+    ActiveSupport::JSON.decode(json).transform_keys do |key|
+      key.underscore.to_sym
+    end
+  end
+
+  def avatar_params
+    params.require(:profile).permit(:avatar)
+  end
 
   def serializable
     Account.serializable { yield }
