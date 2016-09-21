@@ -46,7 +46,7 @@
           .form-group
             .col-md-offset-3.col-md-7 style="padding: 0px"
               .pull-right
-                = f.submit "确定", class: "btn btn-primary"
+                = f.submit "确定", name: nil, class: "btn btn-primary"
 
     - when :link
       = link_to "未及时接单", send(dashboard.filter_path, q: group.link_params), class: "btn btn-default"

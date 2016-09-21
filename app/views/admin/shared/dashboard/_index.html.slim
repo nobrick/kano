@@ -12,7 +12,7 @@
     = search_form_for instance, url: send(dashboard.search_path), class: "dashboard__right-filter col-md-offset-9 col-md-3 input-group" do |f|
       = f.text_field dashboard.search_view_predicate, placeholder: '你在寻找什么...', class: "form-control"
       .input-group-btn
-        = f.submit '搜索', class: 'btn btn-default'
+        = f.submit '搜索', name: nil, class: 'btn btn-default'
 
 - if dashboard.has_filters?
   .row.dashboard__filter-info
